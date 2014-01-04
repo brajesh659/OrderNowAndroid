@@ -20,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.ordernowandroid.adapter.NavDrawerListAdapter;
+import com.example.ordernowandroid.fragments.IndividualMenuTabFragment;
 import com.example.ordernowandroid.fragments.MenuFragment;
 import com.example.ordernowandroid.model.NavDrawerItem;
 
@@ -185,9 +186,14 @@ public class FoodMenuActivity extends FragmentActivity {
         Fragment fragment = null;
         switch (position) {
         case 2:
-            fragment = new MenuFragment();
+            //fragment = new MenuFragment();
+        	fragment = IndividualMenuTabFragment.newInstance(navMenuTitles[2],getItemListForCategory(navMenuTitles[2]));
             break;
         case 3:
+        	//fragment = new MenuFragment();
+        	fragment = IndividualMenuTabFragment.newInstance(navMenuTitles[3], new ArrayList<String>(Arrays.asList("item1","item2","item3","item4","item5","item6")));
+            break;
+        case 4:
             fragment = new MenuFragment();
             break;
         default:
@@ -206,8 +212,18 @@ public class FoodMenuActivity extends FragmentActivity {
             mDrawerLayout.closeDrawer(mDrawerList);
         } else {
             // error in creating fragment
-            Log.e("MainActivity", "Error in creating fragment");
+            Log.e("FoodMenuActivity", "Error in creating fragment");
         }
+    }
+    
+    private ArrayList<String> getItemListForCategory(String categoryName) {
+    	// slide menu items
+        String[] itemNames;
+    	if(categoryName.equalsIgnoreCase("soups")) {
+    		itemNames = getResources().getStringArray(R.array.soups);
+    		return new ArrayList<String>(Arrays.asList(itemNames));
+    	}
+    	return new ArrayList<String>();
     }
 
 }

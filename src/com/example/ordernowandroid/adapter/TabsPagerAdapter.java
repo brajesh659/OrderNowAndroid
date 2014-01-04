@@ -1,5 +1,7 @@
 package com.example.ordernowandroid.adapter;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.example.ordernowandroid.fragments.IndividualMenuTabFragment;
@@ -19,7 +21,7 @@ public class TabsPagerAdapter extends FragmentStatePagerAdapter {
 	
 	@Override
 	public Fragment getItem(int index) {
-		return IndividualMenuTabFragment.newInstance(TITLES.get(index));
+		return IndividualMenuTabFragment.newInstance(TITLES.get(index), new ArrayList<String>(Arrays.asList("item1","item2","item3","item4","item5","item6")));
 		//return null;
 		
 	}

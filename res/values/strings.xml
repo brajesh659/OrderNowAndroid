@@ -31,6 +31,15 @@
         <item>@drawable/ic_launcher</item>
     </array>
      
+    
+    <string-array name="soups">
+        <item>Tomato Soup</item>
+        <item>Hot n Sour Soup</item>
+        <item>Mushroom</item>
+        <item>Manchow</item>
+        <item>Lemon Corriander Soup</item>
+    </string-array>
+    
     <!-- Content Description -->
     <string name="desc_list_item_icon">Item Icon</string>
 
