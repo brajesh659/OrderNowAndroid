@@ -2,17 +2,15 @@ package com.example.ordernowandroid.adapter;
 
 import java.util.List;
 
-import com.example.ordernowandroid.R;
-import com.example.ordernowandroid.model.MyOrderItem;
-
 import android.content.Context;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
+import com.example.ordernowandroid.R;
+import com.example.ordernowandroid.model.MyOrderItem;
 
 //public class MyOrderFragment extends Fragment {
 //	public MyOrderFragment() {
@@ -45,10 +43,10 @@ public class MyOrderAdapter extends ArrayAdapter<MyOrderItem> {
 
 		TextView item = (TextView) convertView.findViewById(R.id.item);
 
-		TextView price = (TextView) convertView.findViewById(R.id.price);
+		TextView price = (TextView) convertView.findViewById(R.id.quantity);
 
 		item.setText(orders.get(position).getItem());
-		price.setText(Float.toString(orders.get(position).getQuantity()));
+		price.setText(Integer.toString(orders.get(position).getQuantity()));
 		return convertView;
 	}
 }

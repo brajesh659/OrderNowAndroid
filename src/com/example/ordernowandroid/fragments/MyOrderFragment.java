@@ -1,5 +1,6 @@
 package com.example.ordernowandroid.fragments;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -15,9 +16,18 @@ import com.example.ordernowandroid.adapter.MyOrderAdapter;
 import com.example.ordernowandroid.model.MyOrderItem;
 
 public class MyOrderFragment extends Fragment {
+	
+	private List<MyOrderItem> myOrders;
+	
+	public void setMyOrders(List<MyOrderItem> myOrders) {
+		this.myOrders = myOrders;
+	}
 
 	public MyOrderFragment() {
+		myOrders = new ArrayList<MyOrderItem>();
 	}
+
+
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -25,11 +35,7 @@ public class MyOrderFragment extends Fragment {
 
 		View rootView = inflater.inflate(R.layout.my_order, container, false);
 		ListView myOrderListView = (ListView) rootView.findViewById(R.id.listMyOrder);
-		List<MyOrderItem> orders = new LinkedList<MyOrderItem>();
-		orders.add(new MyOrderItem("item1", 25));
-		orders.add(new MyOrderItem("item2", 26));
-		orders.add(new MyOrderItem("item3", 27));
-		MyOrderAdapter myOrderAdapter = new MyOrderAdapter(getActivity(), orders);
+		MyOrderAdapter myOrderAdapter = new MyOrderAdapter(getActivity(), myOrders);
 		myOrderListView.setAdapter(myOrderAdapter);
 		return rootView;
 	}

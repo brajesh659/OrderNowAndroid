@@ -86,7 +86,7 @@ public class IndividualMenuTabFragment extends Fragment {
 				
 				final NumberPicker np = (NumberPicker)layout.findViewById(R.id.numberPicker1);
 				np.setMinValue(1);
-				np.setMaxValue(100);
+				np.setMaxValue(10);
 				np.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
 				 
 				 

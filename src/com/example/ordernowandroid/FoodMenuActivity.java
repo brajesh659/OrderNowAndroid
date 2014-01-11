@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
@@ -26,6 +25,7 @@ import com.example.ordernowandroid.adapter.NavDrawerListAdapter;
 import com.example.ordernowandroid.fragments.IndividualMenuTabFragment;
 import com.example.ordernowandroid.fragments.MenuFragment;
 import com.example.ordernowandroid.fragments.MyOrderFragment;
+import com.example.ordernowandroid.model.MyOrderItem;
 import com.example.ordernowandroid.model.NavDrawerItem;
 
 public class FoodMenuActivity extends FragmentActivity implements IndividualMenuTabFragment.numListener {
@@ -34,7 +34,7 @@ public class FoodMenuActivity extends FragmentActivity implements IndividualMenu
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
     
-    Map<String, Integer> orderItems;
+    private List<MyOrderItem> orderItems;
  
     // nav drawer title
     private CharSequence mDrawerTitle;
@@ -54,7 +54,7 @@ public class FoodMenuActivity extends FragmentActivity implements IndividualMenu
         super.onCreate(savedInstanceState);
         setContentView(R.layout.food_menu);
         
-        orderItems = new HashMap<String, Integer>();
+        orderItems = new ArrayList<MyOrderItem>();
  
         mTitle = mDrawerTitle = getTitle();
  
@@ -195,7 +195,9 @@ public class FoodMenuActivity extends FragmentActivity implements IndividualMenu
         switch (position) {
         case 0:
         	
-        	fragment = new MyOrderFragment();
+        	MyOrderFragment myfragment = new MyOrderFragment();
+        	myfragment.setMyOrders(orderItems);
+        	fragment = myfragment;
         	break;
         case 2:
             //fragment = new MenuFragment();
@@ -240,9 +242,10 @@ public class FoodMenuActivity extends FragmentActivity implements IndividualMenu
 	@Override
 	public void onQtyChange(String itemName, int quantity) {
 		if(orderItems == null) {
-			orderItems = new HashMap<String, Integer>();
+			orderItems = new ArrayList<MyOrderItem>();
 		}
-		orderItems.put(itemName, quantity);
+		MyOrderItem orderItem = new MyOrderItem(itemName, quantity);
+		orderItems.add(orderItem);
 		Toast.makeText(this, orderItems.toString(),Toast.LENGTH_SHORT).show();
 		
 	}
