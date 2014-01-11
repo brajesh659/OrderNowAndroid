@@ -32,14 +32,15 @@ public class MainActivity extends Activity {
         }
     }
 
-    public void launchQRScanner(View v) {
+    public void launchQRScanner(View v) {        
         if (isCameraAvailable()) {
             Intent intent = new Intent(this, ZBarScannerActivity.class);
             intent.putExtra(ZBarConstants.SCAN_MODES, new int[]{Symbol.QRCODE});
-            startActivityForResult(intent, ZBAR_SCANNER_REQUEST);
+            startActivityForResult(intent, ZBAR_QR_SCANNER_REQUEST);
         } else {
             Toast.makeText(this, "Rear Facing Camera Unavailable", Toast.LENGTH_SHORT).show();
         }
+        
     }
 
     public boolean isCameraAvailable() {
@@ -54,6 +55,8 @@ public class MainActivity extends Activity {
             case ZBAR_QR_SCANNER_REQUEST:
                 if (resultCode == RESULT_OK) {
                     Toast.makeText(this, "Scan Result = " + data.getStringExtra(ZBarConstants.SCAN_RESULT), Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(this, FoodMenuActivity.class);
+                    startActivity(intent);
                 } else if(resultCode == RESULT_CANCELED && data != null) {
                     String error = data.getStringExtra(ZBarConstants.ERROR_INFO);
                     if(!TextUtils.isEmpty(error)) {

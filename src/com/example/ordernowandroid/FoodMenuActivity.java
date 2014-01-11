@@ -2,8 +2,9 @@ package com.example.ordernowandroid;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
@@ -19,20 +20,21 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
-import com.example.ordernowandroid.adapter.MyOrderAdapter;
 import com.example.ordernowandroid.adapter.NavDrawerListAdapter;
 import com.example.ordernowandroid.fragments.IndividualMenuTabFragment;
 import com.example.ordernowandroid.fragments.MenuFragment;
 import com.example.ordernowandroid.fragments.MyOrderFragment;
-import com.example.ordernowandroid.model.MyOrderItem;
 import com.example.ordernowandroid.model.NavDrawerItem;
 
-public class FoodMenuActivity extends FragmentActivity {
+public class FoodMenuActivity extends FragmentActivity implements IndividualMenuTabFragment.numListener {
 	
 	private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
+    
+    Map<String, Integer> orderItems;
  
     // nav drawer title
     private CharSequence mDrawerTitle;
@@ -51,6 +53,8 @@ public class FoodMenuActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.food_menu);
+        
+        orderItems = new HashMap<String, Integer>();
  
         mTitle = mDrawerTitle = getTitle();
  
@@ -232,5 +236,15 @@ public class FoodMenuActivity extends FragmentActivity {
     	}
     	return new ArrayList<String>();
     }
+
+	@Override
+	public void onQtyChange(String itemName, int quantity) {
+		if(orderItems == null) {
+			orderItems = new HashMap<String, Integer>();
+		}
+		orderItems.put(itemName, quantity);
+		Toast.makeText(this, orderItems.toString(),Toast.LENGTH_SHORT).show();
+		
+	}
 
 }
