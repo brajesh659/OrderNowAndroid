@@ -2,6 +2,7 @@ package com.example.ordernowandroid;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import android.content.res.Configuration;
@@ -19,9 +20,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.example.ordernowandroid.adapter.MyOrderAdapter;
 import com.example.ordernowandroid.adapter.NavDrawerListAdapter;
 import com.example.ordernowandroid.fragments.IndividualMenuTabFragment;
 import com.example.ordernowandroid.fragments.MenuFragment;
+import com.example.ordernowandroid.fragments.MyOrderFragment;
+import com.example.ordernowandroid.model.MyOrderItem;
 import com.example.ordernowandroid.model.NavDrawerItem;
 
 public class FoodMenuActivity extends FragmentActivity {
@@ -185,6 +189,10 @@ public class FoodMenuActivity extends FragmentActivity {
         // update the main content by replacing fragments
         Fragment fragment = null;
         switch (position) {
+        case 0:
+        	
+        	fragment = new MyOrderFragment();
+        	break;
         case 2:
             //fragment = new MenuFragment();
         	fragment = IndividualMenuTabFragment.newInstance(navMenuTitles[2],getItemListForCategory(navMenuTitles[2]));
@@ -204,16 +212,15 @@ public class FoodMenuActivity extends FragmentActivity {
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.frame_container, fragment).commit();
- 
-            // update selected item and title, then close the drawer
-            mDrawerList.setItemChecked(position, true);
-            mDrawerList.setSelection(position);
-            setTitle(navMenuTitles[position]);
-            mDrawerLayout.closeDrawer(mDrawerList);
         } else {
             // error in creating fragment
             Log.e("FoodMenuActivity", "Error in creating fragment");
         }
+        // update selected item and title, then close the drawer
+        mDrawerList.setItemChecked(position, true);
+        mDrawerList.setSelection(position);
+        setTitle(navMenuTitles[position]);
+        mDrawerLayout.closeDrawer(mDrawerList);
     }
     
     private ArrayList<String> getItemListForCategory(String categoryName) {
