@@ -35,8 +35,7 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> {
 		View rowView = inflater.inflate(R.layout.food_menu_item, parent, false);
 
 		TextView itemName = (TextView) rowView.findViewById(R.id.itemName);
-		TextView itemPrice = (TextView) rowView.findViewById(R.id.itemPrice);
-		Log.d("foodMenuItems.get(position).getItemPrice()", Integer.toString(foodMenuItems.get(position).getItemPrice()));		
+		TextView itemPrice = (TextView) rowView.findViewById(R.id.itemPrice);				
 		
 		itemName.setText(foodMenuItems.get(position).getItemName());
 		itemPrice.setText(Integer.toString(foodMenuItems.get(position).getItemPrice()));

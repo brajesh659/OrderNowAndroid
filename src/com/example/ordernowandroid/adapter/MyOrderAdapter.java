@@ -36,17 +36,19 @@ public class MyOrderAdapter extends ArrayAdapter<MyOrderItem> {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		if (convertView == null) {
-			LayoutInflater vi = (LayoutInflater) getContext().getSystemService(
-					Context.LAYOUT_INFLATER_SERVICE);
+			LayoutInflater vi = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			convertView = vi.inflate(R.layout.my_order, null);
 		}
 
-		TextView item = (TextView) convertView.findViewById(R.id.item);
+		TextView itemName = (TextView) convertView.findViewById(R.id.itemName);
+		//TextView itemUnitPrice = (TextView) convertView.findViewById(R.id.itemUnitPrice);
+		TextView quantity = (TextView) convertView.findViewById(R.id.quantity);
+		TextView itemTotalPrice = (TextView) convertView.findViewById(R.id.itemTotalPrice);
 
-		TextView price = (TextView) convertView.findViewById(R.id.quantity);
-
-		item.setText(orders.get(position).getItem());
-		price.setText(Integer.toString(orders.get(position).getQuantity()));
+		itemName.setText(orders.get(position).getFoodMenuItem().getItemName());
+		//itemUnitPrice.setText(Integer.toString(orders.get(position).getFoodMenuItem().getItemPrice()));
+		quantity.setText(Integer.toString(orders.get(position).getQuantity()));
+		itemTotalPrice.setText(Integer.toString(orders.get(position).getFoodMenuItem().getItemPrice() * orders.get(position).getQuantity()));
 		return convertView;
 	}
 }

@@ -2,6 +2,12 @@ package com.example.ordernowandroid.model;
 
 import java.io.Serializable;
 
+/**
+ * 
+ * @author Rohit
+ *
+ */
+
 public class FoodMenuItem implements Serializable {
 
 	private static final long serialVersionUID = 1L;

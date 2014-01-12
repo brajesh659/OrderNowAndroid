@@ -3,27 +3,25 @@ package com.example.ordernowandroid.model;
 import java.io.Serializable;
 
 public class MyOrderItem implements Serializable {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 
-	public MyOrderItem(String item, Integer quantity) {
+	public MyOrderItem(FoodMenuItem foodMenuItem, Integer quantity) {
 		super();
-		this.item = item;
+		this.foodMenuItem = foodMenuItem;
 		this.quantity = quantity;
 	}
 
 	@Override
 	public String toString() {
-		return "MyOrderItem [item=" + item + ", quantity=" + quantity + "]";
+		return "MyOrderItem [item=" + foodMenuItem + ", quantity=" + quantity + "]";
 	}
 
-	private String item;
+	private FoodMenuItem foodMenuItem;
 	private Integer quantity;
 
-	public String getItem() {
-		return item;
+	public FoodMenuItem getFoodMenuItem() {
+		return foodMenuItem;
 	}
 
 	public Integer getQuantity() {

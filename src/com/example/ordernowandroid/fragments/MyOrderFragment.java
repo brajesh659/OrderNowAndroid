@@ -33,7 +33,7 @@ public class MyOrderFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		View rootView = inflater.inflate(R.layout.my_order, container, false);
+		View rootView = inflater.inflate(R.layout.my_order_summary, container, false);
 		ListView myOrderListView = (ListView) rootView.findViewById(R.id.listMyOrder);
 		MyOrderAdapter myOrderAdapter = new MyOrderAdapter(getActivity(), myOrders);
 		myOrderListView.setAdapter(myOrderAdapter);

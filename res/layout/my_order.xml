@@ -4,36 +4,41 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:padding="5dip" >
- 
+
     <!-- Food Item -->
+
     <TextView
-        android:id="@+id/item"
+        android:id="@+id/itemName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:typeface="sans"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:typeface="sans" />
 
- 
-    <!-- Rightend Duration -->
+   <!--  <TextView
+        android:id="@+id/itemUnitPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/itemName"
+        android:textStyle="bold"
+        android:typeface="sans" /> -->
+
     <TextView
         android:id="@+id/quantity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:typeface="sans"
-        android:textStyle="bold"/>
-    
-            <!-- Listview to display order menu -->
+        android:layout_centerHorizontal="true"
+        android:textStyle="bold"
+        android:typeface="sans" />
 
-     <ListView
-        android:id="@+id/listMyOrder"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:choiceMode="singleChoice"
-        android:divider="@color/red"
-        android:dividerHeight="1dp" />
-    
- 
+    <!-- Rightend Duration -->
+
+    <TextView
+        android:id="@+id/itemTotalPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:textStyle="bold"
+        android:typeface="sans" />
+
 </RelativeLayout>

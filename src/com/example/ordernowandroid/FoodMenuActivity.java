@@ -241,7 +241,7 @@ public class FoodMenuActivity extends FragmentActivity implements IndividualMenu
 		if(orderItems == null) {
 			orderItems = new ArrayList<MyOrderItem>();
 		}
-		MyOrderItem orderItem = new MyOrderItem(foodMenuItem.getItemName(), quantity);
+		MyOrderItem orderItem = new MyOrderItem(foodMenuItem, quantity);
 		orderItems.add(orderItem);
 		Toast.makeText(this, orderItems.toString(),Toast.LENGTH_SHORT).show();		
 	}
