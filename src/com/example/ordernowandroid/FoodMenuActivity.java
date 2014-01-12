@@ -18,11 +18,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.example.ordernowandroid.adapter.NavDrawerListAdapter;
 import com.example.ordernowandroid.fragments.IndividualMenuTabFragment;
-import com.example.ordernowandroid.fragments.MenuFragment;
 import com.example.ordernowandroid.fragments.MyOrderFragment;
 import com.example.ordernowandroid.model.FoodMenuItem;
 import com.example.ordernowandroid.model.MyOrderItem;
@@ -54,8 +52,7 @@ public class FoodMenuActivity extends FragmentActivity implements IndividualMenu
 		navMenuTitles = getResources().getStringArray(R.array.nav_drawer_items);
 
 		// nav drawer icons from resources
-		navMenuIcons = getResources()
-				.obtainTypedArray(R.array.nav_drawer_icons);
+		navMenuIcons = getResources().obtainTypedArray(R.array.nav_drawer_icons);
 
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
@@ -189,14 +186,21 @@ public class FoodMenuActivity extends FragmentActivity implements IndividualMenu
 			myfragment.setMyOrders(orderItems);
 			fragment = myfragment;
 			break;
-		case 2:			
+		case 2:
 			fragment = IndividualMenuTabFragment.newInstance(navMenuTitles[2], getItemListForCategory(navMenuTitles[2]));
 			break;
 		case 3:        	
 			fragment = IndividualMenuTabFragment.newInstance(navMenuTitles[3], getItemListForCategory(navMenuTitles[3]));
 			break;
 		case 4:
-			fragment = new MenuFragment();
+			fragment = IndividualMenuTabFragment.newInstance(navMenuTitles[4], getItemListForCategory(navMenuTitles[4]));
+			//fragment = new MenuFragment();
+			break;
+		case 5:
+			fragment = IndividualMenuTabFragment.newInstance(navMenuTitles[5], getItemListForCategory(navMenuTitles[5]));
+			break;
+		case 6:
+			fragment = IndividualMenuTabFragment.newInstance(navMenuTitles[6], getItemListForCategory(navMenuTitles[6]));
 			break;
 		default:
 			break;
@@ -217,22 +221,41 @@ public class FoodMenuActivity extends FragmentActivity implements IndividualMenu
 	}
 
 	private ArrayList<FoodMenuItem> getItemListForCategory(String categoryName) {
-		// slide menu items
-		String[] itemNames;
-		int[] itemPrices;
-		ArrayList<FoodMenuItem> foodMenuItem = new ArrayList<FoodMenuItem>();
 
-		if(categoryName.equalsIgnoreCase("soups")) {
+		if(categoryName == null || categoryName.trim() == ""){
+			return null;
+		}		
+
+		String[] itemNames = null;
+		int[] itemPrices = null;
+		ArrayList<FoodMenuItem> foodMenuItem = new ArrayList<FoodMenuItem>();		
+
+		categoryName = categoryName.toLowerCase();
+		if(categoryName.equals("soups")) {
+			//TODO
+			/*int itemNameIdentifier = getResources().getIdentifier(categoryName, "id", getPackageName());
+			int itemPriceIdentifier = getResources().getIdentifier(categoryName + "_prices", "id", getPackageName());*/
 			itemNames = getResources().getStringArray(R.array.soups);
-			itemPrices = getResources().getIntArray(R.array.soups_prices);
-			for(int i=0; i<itemNames.length; i++){
-				foodMenuItem.add(new FoodMenuItem(itemNames[i], itemPrices[i]));    			
-			}    		
-		} else {
-			for(int i=1; i<=6; i++){
-				foodMenuItem.add(new FoodMenuItem("Item " + i, i*10));	
-			}
+			itemPrices = getResources().getIntArray(R.array.soups_prices);			
+		} else if (categoryName.equals("starters")){
+			itemNames = getResources().getStringArray(R.array.starters);
+			itemPrices = getResources().getIntArray(R.array.starters_prices);
+		} else if (categoryName.equals("salads")){
+			itemNames = getResources().getStringArray(R.array.salads);
+			itemPrices = getResources().getIntArray(R.array.salads_prices);
+		}  else if (categoryName.equals("sizzlers")){
+			itemNames = getResources().getStringArray(R.array.sizzlers);
+			itemPrices = getResources().getIntArray(R.array.sizzlers_prices);
+		}  else if (categoryName.equals("favourites")){
+			itemNames = getResources().getStringArray(R.array.favourites);
+			itemPrices = getResources().getIntArray(R.array.favourites_prices);
 		}
+		
+		
+		for(int i=0; itemNames !=null && i<itemNames.length; i++){
+			foodMenuItem.add(new FoodMenuItem(itemNames[i], itemPrices[i]));    			
+		}
+
 		return foodMenuItem;
 	}
 
@@ -243,7 +266,7 @@ public class FoodMenuActivity extends FragmentActivity implements IndividualMenu
 		}
 		MyOrderItem orderItem = new MyOrderItem(foodMenuItem, quantity);
 		orderItems.add(orderItem);
-		Toast.makeText(this, orderItems.toString(),Toast.LENGTH_SHORT).show();		
+		//Toast.makeText(this, orderItems.toString(),Toast.LENGTH_SHORT).show();		
 	}
 
 }

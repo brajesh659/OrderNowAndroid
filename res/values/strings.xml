@@ -14,10 +14,10 @@
         <item>My Order</item>
         <item>Request Bill</item>
         <item>Soups</item>
-        <item>Snacks</item>
-        <item>Tandoori Item</item>
-        <item>Roti ki Tokari</item>
-        <item>Chawal k dhane</item>
+        <item>Starters</item>
+        <item>Salads</item>
+        <item>Sizzlers</item>
+        <item>Favourites</item>
     </string-array>
      
     <!-- Nav Drawer List Item Icons -->
@@ -34,19 +34,83 @@
      
     
     <string-array name="soups">
-        <item>Tomato Soup</item>
-        <item>Hot n Sour Soup</item>
-        <item>Mushroom</item>
-        <item>Manchow</item>
-        <item>Lemon Corriander Soup</item>
+        <item>Cream of Veg</item>
+        <item>Roasted Bell Pepper Soup</item>
+        <item>Baked French Onion</item>
+        <item>Consomme Soup</item>
+        <item>Spicy Sea Food Soup</item>
     </string-array>
     
     <integer-array name="soups_prices">
-        <item>80</item>
-        <item>80</item>
-        <item>100</item>
-        <item>120</item>
-        <item>140</item>
+        <item>95</item>
+        <item>115</item>
+        <item>115</item>
+        <item>125</item>
+        <item>125</item>
+    </integer-array>
+    
+    <string-array name="starters">
+        <item>Nachos with Cheese Sauce</item>
+        <item>Italian Cheese Fingers</item>
+        <item>BBQ Chicken Wings</item>
+        <item>Roasted Lamb</item>
+        <item>Lamb Chops</item>
+    </string-array>
+    
+    <integer-array name="starters_prices">
+        <item>165</item>
+        <item>175</item>
+        <item>195</item>
+        <item>245</item>
+        <item>295</item>
+    </integer-array>
+    
+    <string-array name="salads">
+        <item>Mexican Salad</item>
+        <item>Tossed Salad</item>
+        <item>Greek Salad</item>
+        <item>Cesar Salad</item>
+        <item>Chicken Hawaian Salad</item>
+    </string-array>
+    
+    <integer-array name="salads_prices">
+        <item>125</item>
+        <item>125</item>
+        <item>125</item>
+        <item>125</item>
+        <item>145</item>
+    </integer-array>
+    
+    <string-array name="sizzlers">
+        <item>Corn N Potato Sizzler</item>
+        <item>Cottage Cheese Sizzler</item>
+        <item>Chicken Sizzler</item>
+        <item>Lamb Sizzler</item>
+        <item>Grilled Fish Sizzler</item>
+        <item>Prawns Sizzler</item>
+    </string-array>
+    
+    <integer-array name="sizzlers_prices">
+        <item>245</item>
+        <item>275</item>
+        <item>275</item>
+        <item>325</item>
+        <item>325</item>
+        <item>325</item>
+    </integer-array>
+
+    <string-array name="favourites">
+        <item>Chicken Stroganoff</item>
+        <item>Chicken Alakin</item>
+        <item>Lamb Marango</item>
+        <item>Lamb Stroganoff</item>
+    </string-array>
+    
+    <integer-array name="favourites_prices">
+        <item>275</item>
+        <item>275</item>
+        <item>345</item>
+        <item>345</item>
     </integer-array>
         
     <!-- Content Description -->
