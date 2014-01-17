@@ -2,7 +2,9 @@ package com.example.ordernowandroid;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
@@ -18,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.ordernowandroid.adapter.NavDrawerListAdapter;
 import com.example.ordernowandroid.fragments.IndividualMenuTabFragment;
@@ -38,6 +41,7 @@ public class FoodMenuActivity extends FragmentActivity implements IndividualMenu
 	private TypedArray navMenuIcons;
 	private ArrayList<NavDrawerItem> navDrawerItems;
 	private NavDrawerListAdapter adapter;
+	private Map<FoodMenuItem, Integer> foodItemQuantityMap;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +49,7 @@ public class FoodMenuActivity extends FragmentActivity implements IndividualMenu
 		setContentView(R.layout.food_menu);
 
 		orderItems = new ArrayList<MyOrderItem>();
+		foodItemQuantityMap = new HashMap<FoodMenuItem, Integer>();
 
 		mTitle = mDrawerTitle = getTitle();
 
@@ -183,7 +188,12 @@ public class FoodMenuActivity extends FragmentActivity implements IndividualMenu
 		switch (position) {
 		case 0:        	
 			MyOrderFragment myfragment = new MyOrderFragment();
-			myfragment.setMyOrders(orderItems);
+			if(foodItemQuantityMap != null) {
+				for (FoodMenuItem key : foodItemQuantityMap.keySet()) {
+					orderItems.add(new MyOrderItem(key, foodItemQuantityMap.get(key)));
+				}
+			myfragment.setMyOrders(orderItems);			
+			}
 			fragment = myfragment;
 			break;
 		case 2:
@@ -267,6 +277,44 @@ public class FoodMenuActivity extends FragmentActivity implements IndividualMenu
 		MyOrderItem orderItem = new MyOrderItem(foodMenuItem, quantity);
 		orderItems.add(orderItem);
 		//Toast.makeText(this, orderItems.toString(),Toast.LENGTH_SHORT).show();		
+	}
+
+	@Override
+	public Integer getQuantity(FoodMenuItem foodMenuItem) {
+		if(foodItemQuantityMap.get(foodMenuItem) != null) {
+			return foodItemQuantityMap.get(foodMenuItem);
+		}
+		return 0;
+	}
+
+	@Override
+	public void incrementQuantity(FoodMenuItem foodMenuItem) {
+		int quantity = 0;
+		if(foodItemQuantityMap.get(foodMenuItem) != null) {
+			quantity = foodItemQuantityMap.get(foodMenuItem);
+		}
+		quantity++;
+		foodItemQuantityMap.put(foodMenuItem, quantity);
+		Toast.makeText(this, foodMenuItem.toString() + " " + quantity,Toast.LENGTH_SHORT).show();
+	}
+
+	@Override
+	public void decrementQuantity(FoodMenuItem foodMenuItem) {
+		int quantity = 0;
+		if (foodItemQuantityMap.get(foodMenuItem) != null) {
+			quantity = foodItemQuantityMap.get(foodMenuItem);
+		}
+		if (quantity == 0) {
+			Toast.makeText(
+					this,
+					foodMenuItem.toString() + " " + quantity
+							+ " can't be decreased", Toast.LENGTH_SHORT).show();
+		} else {
+			quantity--;
+			foodItemQuantityMap.put(foodMenuItem, quantity);
+			Toast.makeText(this, foodMenuItem.toString() + " " + quantity,
+					Toast.LENGTH_SHORT).show();
+		}
 	}
 
 }

@@ -27,6 +27,12 @@ public class IndividualMenuTabFragment extends Fragment {
 
 	public interface numListener {
 		public void onQtyChange(FoodMenuItem foodMenuItem, int quantity);
+		
+		public Integer getQuantity(FoodMenuItem foodMenuItem);
+		
+		public void incrementQuantity(FoodMenuItem foodMenuItem);
+		
+		public void decrementQuantity(FoodMenuItem foodMenuItem);
 	}
 
 	numListener numCallBack;	
@@ -65,7 +71,7 @@ public class IndividualMenuTabFragment extends Fragment {
 		//return super.onCreateView(inflater, container, savedInstanceState);
 		
 		//ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, foodMenuItemList);		
-		FoodMenuItemAdapter foodMenuItemAdapter = new FoodMenuItemAdapter(getActivity(), foodMenuItemList);
+		FoodMenuItemAdapter foodMenuItemAdapter = new FoodMenuItemAdapter(getActivity(), foodMenuItemList, numCallBack);
 		
 		ListView lv = new ListView(getActivity());
 		lv.setAdapter(foodMenuItemAdapter);
