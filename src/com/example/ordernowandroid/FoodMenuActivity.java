@@ -3,9 +3,13 @@ package com.example.ordernowandroid;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import android.app.ActionBar;
+import android.app.ActionBar.Tab;
+import android.app.FragmentTransaction;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.os.Bundle;
@@ -29,255 +33,261 @@ import com.example.ordernowandroid.model.FoodMenuItem;
 import com.example.ordernowandroid.model.MyOrderItem;
 import com.example.ordernowandroid.model.NavDrawerItem;
 
-public class FoodMenuActivity extends FragmentActivity implements IndividualMenuTabFragment.numListener {
+public class FoodMenuActivity extends FragmentActivity implements IndividualMenuTabFragment.numListener,
+        ActionBar.TabListener {
 
-	private DrawerLayout mDrawerLayout;
-	private ListView mDrawerList;
-	private ActionBarDrawerToggle mDrawerToggle;
-	private List<MyOrderItem> orderItems;	
-	private CharSequence mDrawerTitle; // nav drawer title	
-	private CharSequence mTitle; // used to store app title
-	private String[] navMenuTitles; // slide menu items
-	private TypedArray navMenuIcons;
-	private ArrayList<NavDrawerItem> navDrawerItems;
-	private NavDrawerListAdapter adapter;
-	private Map<FoodMenuItem, Integer> foodItemQuantityMap;
+    private DrawerLayout mDrawerLayout;
+    private ListView mDrawerList;
+    private ActionBarDrawerToggle mDrawerToggle;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.food_menu);
+    private CharSequence mDrawerTitle; // nav drawer title
+    private CharSequence mTitle; // used to store app title
+    private String[] navMenuTitles; // slide menu items
+    private TypedArray navMenuIcons;
+    private ArrayList<NavDrawerItem> navDrawerItems;
+    private NavDrawerListAdapter adapter;
+    private ActionBar actionBar;
+    private Map<FoodMenuItem, Integer> foodItemQuantityMap = new HashMap<FoodMenuItem, Integer>();
 
-		orderItems = new ArrayList<MyOrderItem>();
-		foodItemQuantityMap = new HashMap<FoodMenuItem, Integer>();
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.food_menu);
+        displayActionTabBar();
+        mTitle = mDrawerTitle = getTitle();
+        Toast.makeText(this, "onCreate FoodMenuActivytCalled", Toast.LENGTH_SHORT).show();
+        // load slide menu items
+        navMenuTitles = getResources().getStringArray(R.array.nav_drawer_items);
 
-		mTitle = mDrawerTitle = getTitle();
+        // nav drawer icons from resources
+        navMenuIcons = getResources().obtainTypedArray(R.array.nav_drawer_icons);
 
-		// load slide menu items
-		navMenuTitles = getResources().getStringArray(R.array.nav_drawer_items);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
 
-		// nav drawer icons from resources
-		navMenuIcons = getResources().obtainTypedArray(R.array.nav_drawer_icons);
+        navDrawerItems = new ArrayList<NavDrawerItem>();
 
-		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-		mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
+        // add the drawer menu items
+        List<String> navMenuTitlesList = Arrays.asList(navMenuTitles);
+        for (int i = 0; i < navMenuTitlesList.size(); i++) {
+            navDrawerItems.add(new NavDrawerItem(navMenuTitlesList.get(i), navMenuIcons.getResourceId(i, -1)));
+        }
+        // how to add a counter example
+        // navDrawerItems.add(new NavDrawerItem(navMenuTitles[3],
+        // navMenuIcons.getResourceId(3, -1), true, "22"));
 
-		navDrawerItems = new ArrayList<NavDrawerItem>();
+        // Recycle the typed array
+        navMenuIcons.recycle();
 
-		//add the drawer menu items
-		List<String> navMenuTitlesList = Arrays.asList(navMenuTitles);
-		for(int i=0;i<navMenuTitlesList.size();i++) {
-			navDrawerItems.add(new NavDrawerItem(navMenuTitlesList.get(i), navMenuIcons.getResourceId(i, -1)));
-		}
-		//how to add a counter example
-		//navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1), true, "22"));
+        // setting the nav drawer list adapter
+        adapter = new NavDrawerListAdapter(getApplicationContext(), navDrawerItems);
+        mDrawerList.setAdapter(adapter);
 
-		// Recycle the typed array
-		navMenuIcons.recycle();
+        // enabling action bar app icon and behaving it as toggle button
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setHomeButtonEnabled(true);
 
-		// setting the nav drawer list adapter
-		adapter = new NavDrawerListAdapter(getApplicationContext(),
-				navDrawerItems);
-		mDrawerList.setAdapter(adapter);
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer, // nav
+                                                                                               // menu
+                                                                                               // toggle
+                                                                                               // icon
+                R.string.app_name, // nav drawer open - description for
+                                   // accessibility
+                R.string.app_name // nav drawer close - description for
+                                  // accessibility
+        ) {
+            public void onDrawerClosed(View view) {
+                getActionBar().setTitle(mTitle);
+                // calling onPrepareOptionsMenu() to show action bar icons
+                invalidateOptionsMenu();
+            }
 
-		// enabling action bar app icon and behaving it as toggle button
-		getActionBar().setDisplayHomeAsUpEnabled(true);
-		getActionBar().setHomeButtonEnabled(true);
+            public void onDrawerOpened(View drawerView) {
+                getActionBar().setTitle(mDrawerTitle);
+                // calling onPrepareOptionsMenu() to hide action bar icons
+                invalidateOptionsMenu();
+            }
+        };
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-				R.drawable.ic_drawer, //nav menu toggle icon
-				R.string.app_name, // nav drawer open - description for accessibility
-				R.string.app_name // nav drawer close - description for accessibility
-				){
-			public void onDrawerClosed(View view) {
-				getActionBar().setTitle(mTitle);
-				// calling onPrepareOptionsMenu() to show action bar icons
-				invalidateOptionsMenu();
-			}
+        if (savedInstanceState == null) {
+            // on first time display view for first menu item
+            displayView(2);
+        }
+        mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
+    }
 
-			public void onDrawerOpened(View drawerView) {
-				getActionBar().setTitle(mDrawerTitle);
-				// calling onPrepareOptionsMenu() to hide action bar icons
-				invalidateOptionsMenu();
-			}
-		};
-		mDrawerLayout.setDrawerListener(mDrawerToggle);
+    private void displayActionTabBar() {
+        actionBar = getActionBar();
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        actionBar.addTab(actionBar.newTab().setText(R.string.tabActionBarMyOrder).setTabListener(this));
+    }
 
-		if (savedInstanceState == null) {
-			// on first time display view for first menu item
-			displayView(2);
-		}
-		mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
-	}
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // toggle nav drawer on selecting action bar app icon/title
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+        // Handle action bar actions click
+        switch (item.getItemId()) {
+        case R.id.action_settings:
+            return true;
+        default:
+            return super.onOptionsItemSelected(item);
+        }
+    }
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// toggle nav drawer on selecting action bar app icon/title
-		if (mDrawerToggle.onOptionsItemSelected(item)) {
-			return true;
-		}
-		// Handle action bar actions click
-		switch (item.getItemId()) {
-		case R.id.action_settings:
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-	}
+    /***
+     * Called when invalidateOptionsMenu() is triggered
+     */
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        // if nav drawer is opened, hide the action items
+        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
+        menu.findItem(R.id.action_settings).setVisible(!drawerOpen);
+        return super.onPrepareOptionsMenu(menu);
+    }
 
-	/***
-	 * Called when invalidateOptionsMenu() is triggered
-	 */
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		// if nav drawer is opened, hide the action items
-		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
-		menu.findItem(R.id.action_settings).setVisible(!drawerOpen);
-		return super.onPrepareOptionsMenu(menu);
-	}
+    @Override
+    public void setTitle(CharSequence title) {
+        mTitle = title;
+        getActionBar().setTitle(mTitle);
+    }
 
-	@Override
-	public void setTitle(CharSequence title) {
-		mTitle = title;
-		getActionBar().setTitle(mTitle);
-	}
+    /**
+     * When using the ActionBarDrawerToggle, you must call it during
+     * onPostCreate() and onConfigurationChanged()...
+     */
 
-	/**
-	 * When using the ActionBarDrawerToggle, you must call it during
-	 * onPostCreate() and onConfigurationChanged()...
-	 */
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        mDrawerToggle.syncState();
+    }
 
-	@Override
-	protected void onPostCreate(Bundle savedInstanceState) {
-		super.onPostCreate(savedInstanceState);
-		// Sync the toggle state after onRestoreInstanceState has occurred.
-		mDrawerToggle.syncState();
-	}
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        // Pass any configuration change to the drawer toggls
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }
 
-	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
-		super.onConfigurationChanged(newConfig);
-		// Pass any configuration change to the drawer toggls
-		mDrawerToggle.onConfigurationChanged(newConfig);
-	}
+    /**
+     * Slide menu item click listener
+     * */
+    private class SlideMenuClickListener implements ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            // display view for selected nav drawer item
+            displayView(position);
+        }
+    }
 
-	/**
-	 * Slide menu item click listener
-	 * */
-	private class SlideMenuClickListener implements
-	ListView.OnItemClickListener {
-		@Override
-		public void onItemClick(AdapterView<?> parent, View view, int position,
-				long id) {
-			// display view for selected nav drawer item
-			displayView(position);
-		}
-	}
+    /**
+     * Diplaying fragment view for selected nav drawer list item
+     * */
+    private void displayView(int position) { // update the main content by
+                                             // replacing fragments
+        Fragment fragment = null;
+        fragment = IndividualMenuTabFragment
+                .newInstance(navMenuTitles[position], getItemListForCategory(navMenuTitles[position]));
 
-	/**
-	 * Diplaying fragment view for selected nav drawer list item
-	 * */
-	private void displayView(int position) { // update the main content by replacing fragments        
-		Fragment fragment = null;
-		switch (position) {
-		case 0:        	
-			MyOrderFragment myfragment = new MyOrderFragment();
-			if(foodItemQuantityMap != null) {
-				for (FoodMenuItem key : foodItemQuantityMap.keySet()) {
-					orderItems.add(new MyOrderItem(key, foodItemQuantityMap.get(key)));
-				}
-			myfragment.setMyOrders(orderItems);			
-			}
-			fragment = myfragment;
-			break;
-		case 2:
-			fragment = IndividualMenuTabFragment.newInstance(navMenuTitles[2], getItemListForCategory(navMenuTitles[2]));
-			break;
-		case 3:        	
-			fragment = IndividualMenuTabFragment.newInstance(navMenuTitles[3], getItemListForCategory(navMenuTitles[3]));
-			break;
-		case 4:
-			fragment = IndividualMenuTabFragment.newInstance(navMenuTitles[4], getItemListForCategory(navMenuTitles[4]));
-			//fragment = new MenuFragment();
-			break;
-		case 5:
-			fragment = IndividualMenuTabFragment.newInstance(navMenuTitles[5], getItemListForCategory(navMenuTitles[5]));
-			break;
-		case 6:
-			fragment = IndividualMenuTabFragment.newInstance(navMenuTitles[6], getItemListForCategory(navMenuTitles[6]));
-			break;
-		default:
-			break;
-		}
+        if (fragment != null) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit();
+        } else {
+            // error in creating fragment
+            Log.e("FoodMenuActivity", "Error in creating fragment");
+        }
+        // update selected item and title, then close the drawer
+        mDrawerList.setItemChecked(position, true);
+        mDrawerList.setSelection(position);
+        setTitle(navMenuTitles[position]);
+        mDrawerLayout.closeDrawer(mDrawerList);
+    }
 
-		if (fragment != null) {
-			FragmentManager fragmentManager = getSupportFragmentManager();
-			fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit();
-		} else {
-			// error in creating fragment
-			Log.e("FoodMenuActivity", "Error in creating fragment");
-		}
-		// update selected item and title, then close the drawer
-		mDrawerList.setItemChecked(position, true);
-		mDrawerList.setSelection(position);
-		setTitle(navMenuTitles[position]);
-		mDrawerLayout.closeDrawer(mDrawerList);
-	}
+    private ArrayList<FoodMenuItem> getItemListForCategory(String categoryName) {
 
-	private ArrayList<FoodMenuItem> getItemListForCategory(String categoryName) {
+        if (categoryName == null || categoryName.trim() == "") {
+            return null;
+        }
 
-		if(categoryName == null || categoryName.trim() == ""){
-			return null;
-		}		
+        String[] itemNames = null;
+        int[] itemPrices = null;
+        ArrayList<FoodMenuItem> foodMenuItem = new ArrayList<FoodMenuItem>();
 
-		String[] itemNames = null;
-		int[] itemPrices = null;
-		ArrayList<FoodMenuItem> foodMenuItem = new ArrayList<FoodMenuItem>();		
+        categoryName = categoryName.toLowerCase();
+        if (categoryName.equals("soups")) {
+            // TODO
+            /*
+             * int itemNameIdentifier =
+             * getResources().getIdentifier(categoryName, "id",
+             * getPackageName()); int itemPriceIdentifier =
+             * getResources().getIdentifier(categoryName + "_prices", "id",
+             * getPackageName());
+             */
+            itemNames = getResources().getStringArray(R.array.soups);
+            itemPrices = getResources().getIntArray(R.array.soups_prices);
+        } else if (categoryName.equals("starters")) {
+            itemNames = getResources().getStringArray(R.array.starters);
+            itemPrices = getResources().getIntArray(R.array.starters_prices);
+        } else if (categoryName.equals("salads")) {
+            itemNames = getResources().getStringArray(R.array.salads);
+            itemPrices = getResources().getIntArray(R.array.salads_prices);
+        } else if (categoryName.equals("sizzlers")) {
+            itemNames = getResources().getStringArray(R.array.sizzlers);
+            itemPrices = getResources().getIntArray(R.array.sizzlers_prices);
+        } else if (categoryName.equals("favourites")) {
+            itemNames = getResources().getStringArray(R.array.favourites);
+            itemPrices = getResources().getIntArray(R.array.favourites_prices);
+        }
 
-		categoryName = categoryName.toLowerCase();
-		if(categoryName.equals("soups")) {
-			//TODO
-			/*int itemNameIdentifier = getResources().getIdentifier(categoryName, "id", getPackageName());
-			int itemPriceIdentifier = getResources().getIdentifier(categoryName + "_prices", "id", getPackageName());*/
-			itemNames = getResources().getStringArray(R.array.soups);
-			itemPrices = getResources().getIntArray(R.array.soups_prices);			
-		} else if (categoryName.equals("starters")){
-			itemNames = getResources().getStringArray(R.array.starters);
-			itemPrices = getResources().getIntArray(R.array.starters_prices);
-		} else if (categoryName.equals("salads")){
-			itemNames = getResources().getStringArray(R.array.salads);
-			itemPrices = getResources().getIntArray(R.array.salads_prices);
-		}  else if (categoryName.equals("sizzlers")){
-			itemNames = getResources().getStringArray(R.array.sizzlers);
-			itemPrices = getResources().getIntArray(R.array.sizzlers_prices);
-		}  else if (categoryName.equals("favourites")){
-			itemNames = getResources().getStringArray(R.array.favourites);
-			itemPrices = getResources().getIntArray(R.array.favourites_prices);
-		}
-		
-		
-		for(int i=0; itemNames !=null && i<itemNames.length; i++){
-			foodMenuItem.add(new FoodMenuItem(itemNames[i], itemPrices[i]));    			
-		}
+        for (int i = 0; itemNames != null && i < itemNames.length; i++) {
+            foodMenuItem.add(new FoodMenuItem(itemNames[i], itemPrices[i]));
+        }
 
-		return foodMenuItem;
-	}
+        return foodMenuItem;
+    }
 
-	@Override
-	public void onQtyChange(FoodMenuItem foodMenuItem, int quantity) {
-		if(orderItems == null) {
-			orderItems = new ArrayList<MyOrderItem>();
-		}
-		MyOrderItem orderItem = new MyOrderItem(foodMenuItem, quantity);
-		orderItems.add(orderItem);
-		//Toast.makeText(this, orderItems.toString(),Toast.LENGTH_SHORT).show();		
-	}
+    @Override
+    public void onTabReselected(Tab arg0, FragmentTransaction arg1) {
+        Toast.makeText(this, "Tab reselected", Toast.LENGTH_SHORT).show();
+        displayMyOrders();
+        mDrawerLayout.closeDrawer(mDrawerList);
+    }
+
+    private void displayMyOrders() {
+        List<MyOrderItem> orderItems = new LinkedList<MyOrderItem>();
+        MyOrderFragment myfragment = new MyOrderFragment();
+        if(foodItemQuantityMap != null) {
+            for (FoodMenuItem key : foodItemQuantityMap.keySet()) {
+                orderItems.add(new MyOrderItem(key, foodItemQuantityMap.get(key)));
+            }
+        myfragment.setMyOrders(orderItems);         
+        }
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.frame_container, myfragment).commit();
+    }
+
+    @Override
+    public void onTabSelected(Tab arg0, FragmentTransaction arg1) {
+        Toast.makeText(this, "Tab selected", Toast.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    public void onTabUnselected(Tab arg0, FragmentTransaction arg1) {
+        Toast.makeText(this, "Tab unselected", Toast.LENGTH_SHORT).show();
+
+    }
 
 	@Override
 	public Integer getQuantity(FoodMenuItem foodMenuItem) {
@@ -285,36 +295,37 @@ public class FoodMenuActivity extends FragmentActivity implements IndividualMenu
 			return foodItemQuantityMap.get(foodMenuItem);
 		}
 		return 0;
-	}
+    }
 
-	@Override
-	public void incrementQuantity(FoodMenuItem foodMenuItem) {
-		int quantity = 0;
-		if(foodItemQuantityMap.get(foodMenuItem) != null) {
-			quantity = foodItemQuantityMap.get(foodMenuItem);
-		}
-		quantity++;
-		foodItemQuantityMap.put(foodMenuItem, quantity);
-		Toast.makeText(this, foodMenuItem.toString() + " " + quantity,Toast.LENGTH_SHORT).show();
-	}
+    @Override
+    public void incrementQuantity(FoodMenuItem foodMenuItem) {
+        int quantity = 0;
+        if (foodItemQuantityMap.get(foodMenuItem) != null) {
+            quantity = foodItemQuantityMap.get(foodMenuItem);
+        }
+        quantity++;
+        foodItemQuantityMap.put(foodMenuItem, quantity);
+        Toast.makeText(this, foodMenuItem.toString() + "  " + quantity, Toast.LENGTH_SHORT).show();
+    }
 
-	@Override
-	public void decrementQuantity(FoodMenuItem foodMenuItem) {
-		int quantity = 0;
-		if (foodItemQuantityMap.get(foodMenuItem) != null) {
-			quantity = foodItemQuantityMap.get(foodMenuItem);
-		}
-		if (quantity == 0) {
-			Toast.makeText(
-					this,
-					foodMenuItem.toString() + " " + quantity
-							+ " can't be decreased", Toast.LENGTH_SHORT).show();
-		} else {
-			quantity--;
-			foodItemQuantityMap.put(foodMenuItem, quantity);
-			Toast.makeText(this, foodMenuItem.toString() + " " + quantity,
-					Toast.LENGTH_SHORT).show();
-		}
-	}
+    @Override
+    public void decrementQuantity(FoodMenuItem foodMenuItem) {
+        int quantity = 0;
+        if (foodItemQuantityMap.get(foodMenuItem) != null) {
+            quantity = foodItemQuantityMap.get(foodMenuItem);
+        }
+        if (quantity == 0) {
+            Toast.makeText(this, foodMenuItem.toString() + " " + quantity + " can't be decreased", Toast.LENGTH_SHORT)
+                    .show();
+        } else {
+            quantity--;
+            if (quantity == 0) {
+                foodItemQuantityMap.remove(foodMenuItem);
+            } else {
+                foodItemQuantityMap.put(foodMenuItem, quantity);
+            }
+            Toast.makeText(this, foodMenuItem.toString() + "  " + quantity, Toast.LENGTH_SHORT).show();
+        }
+    }
 
 }

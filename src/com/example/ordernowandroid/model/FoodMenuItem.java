@@ -37,7 +37,23 @@ public class FoodMenuItem implements Serializable {
 
 	@Override
 	public String toString() {
-		return itemName + "              " + itemPrice;
+		return itemName + " " + itemPrice;
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+	    if (o instanceof FoodMenuItem) {
+	        FoodMenuItem fmi = (FoodMenuItem) o;
+	        if(this.itemName.equals(fmi.getItemName())) {
+	            return this.itemPrice.equals(fmi.getItemPrice());
+	        }
+	    }
+	    return false;
+	}
+	
+	@Override
+	public int hashCode() {
+	    return this.toString().hashCode();
 	}
 
 }

@@ -1,7 +1,6 @@
 package com.example.ordernowandroid.fragments;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import android.os.Bundle;
