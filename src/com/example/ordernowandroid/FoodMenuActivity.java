@@ -1,7 +1,6 @@
 package com.example.ordernowandroid;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -11,7 +10,6 @@ import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.FragmentTransaction;
 import android.content.res.Configuration;
-import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
@@ -26,13 +24,16 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.data.menu.Category;
+import com.data.menu.Dish;
 import com.data.menu.FoodType;
+import com.data.menu.Restaurant;
 import com.example.ordernowandroid.adapter.NavDrawerListAdapter;
 import com.example.ordernowandroid.fragments.IndividualMenuTabFragment;
 import com.example.ordernowandroid.fragments.MyOrderFragment;
+import com.example.ordernowandroid.model.CategoryNavDrawerItem;
 import com.example.ordernowandroid.model.FoodMenuItem;
 import com.example.ordernowandroid.model.MyOrderItem;
-import com.example.ordernowandroid.model.NavDrawerItem;
 
 public class FoodMenuActivity extends FragmentActivity implements IndividualMenuTabFragment.numListener,
         ActionBar.TabListener {
@@ -43,42 +44,37 @@ public class FoodMenuActivity extends FragmentActivity implements IndividualMenu
 
     private CharSequence mDrawerTitle; // nav drawer title
     private CharSequence mTitle; // used to store app title
-    private String[] navMenuTitles; // slide menu items
-    private TypedArray navMenuIcons;
-    private ArrayList<NavDrawerItem> navDrawerItems;
+    private ArrayList<CategoryNavDrawerItem> navDrawerItems;
     private NavDrawerListAdapter adapter;
     private ActionBar actionBar;
+    private Restaurant restaurant;
     private Map<FoodMenuItem, Integer> foodItemQuantityMap = new HashMap<FoodMenuItem, Integer>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        
         super.onCreate(savedInstanceState);
         setContentView(R.layout.food_menu);
         displayActionTabBar();
-        mTitle = mDrawerTitle = getTitle();
+        restaurant = getResturant();
+        mTitle = getTitle();
+        mDrawerTitle = restaurant.getName();
         Toast.makeText(this, "onCreate FoodMenuActivytCalled", Toast.LENGTH_SHORT).show();
-        // load slide menu items
-        navMenuTitles = getResources().getStringArray(R.array.nav_drawer_items);
-
-        // nav drawer icons from resources
-        navMenuIcons = getResources().obtainTypedArray(R.array.nav_drawer_icons);
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
 
-        navDrawerItems = new ArrayList<NavDrawerItem>();
-
-        // add the drawer menu items
-        List<String> navMenuTitlesList = Arrays.asList(navMenuTitles);
-        for (int i = 0; i < navMenuTitlesList.size(); i++) {
-            navDrawerItems.add(new NavDrawerItem(navMenuTitlesList.get(i), navMenuIcons.getResourceId(i, -1)));
+        navDrawerItems = new ArrayList<CategoryNavDrawerItem>();
+       
+        for (Category category : getCategories()) {
+            CategoryNavDrawerItem categoryNavDrawerItem = new CategoryNavDrawerItem(category);
+            navDrawerItems.add(categoryNavDrawerItem);
         }
+      
         // how to add a counter example
         // navDrawerItems.add(new NavDrawerItem(navMenuTitles[3],
         // navMenuIcons.getResourceId(3, -1), true, "22"));
 
-        // Recycle the typed array
-        navMenuIcons.recycle();
 
         // setting the nav drawer list adapter
         adapter = new NavDrawerListAdapter(getApplicationContext(), navDrawerItems);
@@ -116,6 +112,10 @@ public class FoodMenuActivity extends FragmentActivity implements IndividualMenu
             displayView(2);
         }
         mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
+    }
+
+    private List<Category> getCategories() {
+        return restaurant.getMenu().getCategories();
     }
 
     private void displayActionTabBar() {
@@ -198,8 +198,9 @@ public class FoodMenuActivity extends FragmentActivity implements IndividualMenu
     private void displayView(int position) { // update the main content by
                                              // replacing fragments
         Fragment fragment = null;
+        Category category = getCategories().get(position);
         fragment = IndividualMenuTabFragment
-                .newInstance(navMenuTitles[position], getItemListForCategory(navMenuTitles[position]));
+                .newInstance(category.getName(), getItemListForCategory(category.getDishes()));
 
         if (fragment != null) {
             FragmentManager fragmentManager = getSupportFragmentManager();
@@ -211,54 +212,15 @@ public class FoodMenuActivity extends FragmentActivity implements IndividualMenu
         // update selected item and title, then close the drawer
         mDrawerList.setItemChecked(position, true);
         mDrawerList.setSelection(position);
-        setTitle(navMenuTitles[position]);
+        setTitle(category.getName());
         mDrawerLayout.closeDrawer(mDrawerList);
     }
 
-    private ArrayList<FoodMenuItem> getItemListForCategory(String categoryName) {
-
-        if (categoryName == null || categoryName.trim() == "") {
-            return null;
-        }
-
-        String[] itemNames = null;
-        int[] itemPrices = null;
+    private ArrayList<FoodMenuItem> getItemListForCategory(List<Dish> dishes) {
         ArrayList<FoodMenuItem> foodMenuItem = new ArrayList<FoodMenuItem>();
-
-        categoryName = categoryName.toLowerCase();
-        if (categoryName.equals("soups")) {
-            // TODO
-            /*
-             * int itemNameIdentifier =
-             * getResources().getIdentifier(categoryName, "id",
-             * getPackageName()); int itemPriceIdentifier =
-             * getResources().getIdentifier(categoryName + "_prices", "id",
-             * getPackageName());
-             */
-            itemNames = getResources().getStringArray(R.array.soups);
-            itemPrices = getResources().getIntArray(R.array.soups_prices);
-        } else if (categoryName.equals("starters")) {
-            itemNames = getResources().getStringArray(R.array.starters);
-            itemPrices = getResources().getIntArray(R.array.starters_prices);
-        } else if (categoryName.equals("salads")) {
-            itemNames = getResources().getStringArray(R.array.salads);
-            itemPrices = getResources().getIntArray(R.array.salads_prices);
-        } else if (categoryName.equals("sizzlers")) {
-            itemNames = getResources().getStringArray(R.array.sizzlers);
-            itemPrices = getResources().getIntArray(R.array.sizzlers_prices);
-        } else if (categoryName.equals("favourites")) {
-            itemNames = getResources().getStringArray(R.array.favourites);
-            itemPrices = getResources().getIntArray(R.array.favourites_prices);
-        }
-
-        for (int i = 0; itemNames != null && i < itemNames.length; i++) {
-        	if(i%2==0) {
-        	    foodMenuItem.add(new FoodMenuItem(itemNames[i], itemPrices[i],FoodType.Veg));
-        	} else {
-        		foodMenuItem.add(new FoodMenuItem(itemNames[i], itemPrices[i],FoodType.NonVeg));
-        	}
-        }
-
+        for (Dish dish : dishes) {
+            foodMenuItem.add(new FoodMenuItem(dish));
+        }  
         return foodMenuItem;
     }
 
@@ -333,4 +295,58 @@ public class FoodMenuActivity extends FragmentActivity implements IndividualMenu
         }
     }
 
+    
+    public Restaurant getResturant() {
+        List<Integer> categoryItemName = new LinkedList<Integer>();
+        categoryItemName.add(R.array.soups);
+        categoryItemName.add(R.array.starters);
+        categoryItemName.add(R.array.salads);
+        categoryItemName.add(R.array.sizzlers);
+        categoryItemName.add(R.array.favourites);
+        
+        List<Integer> categoryItemPrice = new LinkedList<Integer>();
+        categoryItemPrice.add(R.array.soups_prices);
+        categoryItemPrice.add(R.array.starters_prices);
+        categoryItemPrice.add(R.array.salads_prices);
+        categoryItemPrice.add(R.array.sizzlers_prices);
+        categoryItemPrice.add(R.array.favourites_prices);
+        String[] categoryNames = getResources().getStringArray(R.array.nav_drawer_items);
+        List<Category> categories = new LinkedList<Category>();
+        for (int i = 0; i < categoryNames.length; i++) {
+            Category category = new Category();
+            getCategory(categoryNames[i], categoryItemName.get(i), categoryItemPrice.get(i), category);
+            categories.add(category);
+        }
+
+        com.data.menu.Menu menu= new com.data.menu.Menu();
+        menu.setCategories(categories);
+        Restaurant restaurant = new Restaurant();
+        restaurant.setName("Eat 3");
+        restaurant.setMenu(menu);
+        return restaurant;
+    }
+
+    private void getCategory(String categoryName, int itemNameResource, int itemPriceResource, Category soupCategory) {
+        soupCategory.setName(categoryName);
+        List<Dish> dishes = new LinkedList<Dish>();
+        getDishes(dishes, itemNameResource, itemPriceResource);
+        soupCategory.setDishes(dishes);
+    }
+
+    private void getDishes(List<Dish> soupDishes, int soups, int soupsPrices) {
+        String[] itemNames = getResources().getStringArray(soups);
+        int[] itemPrices = getResources().getIntArray(soupsPrices);
+
+        for (int i = 0; itemNames != null && i < itemNames.length; i++) {
+            Dish dish = new Dish();
+            dish.setName(itemNames[i]);
+            dish.setPrice(itemPrices[i]);
+            if (i % 2 == 0) {
+                dish.setType(FoodType.Veg);
+            } else {
+                dish.setType(FoodType.NonVeg);
+            }
+            soupDishes.add(dish);
+        }
+    }
 }

@@ -1,68 +1,57 @@
 package com.example.ordernowandroid.model;
 
 import java.io.Serializable;
-
 import com.data.menu.FoodType;
+import com.data.menu.Dish;
 
 /**
  * 
  * @author Rohit
- *
+ * 
  */
 
 public class FoodMenuItem implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-	private String itemName;
-	private Integer itemPrice;
-	private FoodType foodType;
+    private static final long serialVersionUID = 1L;
+    private Dish dish;
 
-	public FoodMenuItem(String itemName, Integer itemPrice, FoodType foodType){
-		this.setItemName(itemName);
-		this.setItemPrice(itemPrice);
-		this.foodType = foodType;
-	}
+    public FoodMenuItem(Dish dish) {
+        this.dish = dish;
+    }
 
-	public String getItemName() {
-		return itemName;
-	}
+    public String getItemName() {
+        return dish.getName();
+    }
 
-	private void setItemName(String itemName) {
-		this.itemName = itemName;
-	}
+    public Float getItemPrice() {
+        return dish.getPrice();
+    }
 
-	public Integer getItemPrice() {
-		return itemPrice;
-	}
+    public FoodType getFoodType() {
+        return dish.getType();
+    }
 
-	private void setItemPrice(Integer itemPrice) {
-		this.itemPrice = itemPrice;
-	}	
-	
-	public FoodType getFoodType() {
-		
-		return foodType;
-	}
+    @Override
+    public String toString() {
+        return dish.toString();
+    }
 
-	@Override
-	public String toString() {
-		return itemName + " " + itemPrice;
-	}
-	
-	@Override
-	public boolean equals(Object o) {
-	    if (o instanceof FoodMenuItem) {
-	        FoodMenuItem fmi = (FoodMenuItem) o;
-	        if(this.itemName.equals(fmi.getItemName())) {
-	            return this.itemPrice.equals(fmi.getItemPrice());
-	        }
-	    }
-	    return false;
-	}
-	
-	@Override
-	public int hashCode() {
-	    return this.toString().hashCode();
-	}
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof FoodMenuItem) {
+            FoodMenuItem fmi = (FoodMenuItem) o;
+            return this.dish.equals(fmi.getDish());
+        }
+        return false;
+    }
+
+    private Dish getDish() {
+        return this.dish;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.toString().hashCode();
+    }
 
 }

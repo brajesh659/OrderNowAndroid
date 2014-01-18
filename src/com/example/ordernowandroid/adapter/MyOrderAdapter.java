@@ -12,18 +12,6 @@ import android.widget.TextView;
 import com.example.ordernowandroid.R;
 import com.example.ordernowandroid.model.MyOrderItem;
 
-//public class MyOrderFragment extends Fragment {
-//	public MyOrderFragment() {
-//	}
-//	
-//	@Override
-//	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-//			Bundle savedInstanceState) {
-//		View rootView = inflater.inflate(resource, root)
-//		return super.onCreateView(inflater, container, savedInstanceState);
-//	}
-//}
-
 public class MyOrderAdapter extends ArrayAdapter<MyOrderItem> {
 
 	private List<MyOrderItem> orders;
@@ -48,7 +36,7 @@ public class MyOrderAdapter extends ArrayAdapter<MyOrderItem> {
 		itemName.setText(orders.get(position).getFoodMenuItem().getItemName());
 		//itemUnitPrice.setText(Integer.toString(orders.get(position).getFoodMenuItem().getItemPrice()));
 		quantity.setText(Integer.toString(orders.get(position).getQuantity()));
-		itemTotalPrice.setText(Integer.toString(orders.get(position).getFoodMenuItem().getItemPrice() * orders.get(position).getQuantity()));
+		itemTotalPrice.setText(Float.toString(orders.get(position).getFoodMenuItem().getItemPrice() * orders.get(position).getQuantity()));
 		return convertView;
 	}
 }
