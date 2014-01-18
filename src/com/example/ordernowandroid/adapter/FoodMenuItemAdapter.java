@@ -1,6 +1,7 @@
 package com.example.ordernowandroid.adapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,10 +9,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.data.menu.FoodType;
 import com.example.ordernowandroid.R;
 import com.example.ordernowandroid.fragments.IndividualMenuTabFragment.numListener;
 import com.example.ordernowandroid.model.FoodMenuItem;
@@ -22,15 +26,19 @@ import com.example.ordernowandroid.model.FoodMenuItem;
  *         displays the toString() implementation of the object for each list
  *         row
  */
-public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> {
+public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements Filterable {
 
     private ArrayList<FoodMenuItem> foodMenuItems;
+    private ArrayList<FoodMenuItem> allfoodMenuItems;
 
     private numListener numCallBack;
+	private ModelFilter filter;
 
 
     public FoodMenuItemAdapter(Context context, ArrayList<FoodMenuItem> foodMenuItems, numListener numCallBack) {
         super(context, R.layout.food_menu_item, foodMenuItems);
+        allfoodMenuItems = new ArrayList<FoodMenuItem>();
+        allfoodMenuItems.addAll(foodMenuItems);
         this.foodMenuItems = foodMenuItems;
         this.numCallBack = numCallBack;
     }
@@ -63,23 +71,27 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> {
             holder.txt_itemPrice = (TextView) convertView.findViewById(R.id.dish_price);
             holder.itemImage = (ImageView) convertView.findViewById(R.id.dish_photo);
             holder.addItem = (Button) convertView.findViewById(R.id.addbutton);
-            holder.addItem.setTag(foodItem);
+
             
             holder.subItem = (ImageButton) convertView.findViewById(R.id.subbutton);
-            holder.subItem.setTag(foodItem);
-            if (numCallBack.getQuantity(foodItem) == 0)
-                holder.subItem.setVisibility(View.INVISIBLE);
-            else {
-                holder.addItem.setText(numCallBack.getQuantity(foodItem).toString());
-            }
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
+        holder.addItem.setTag(foodItem);
+        holder.subItem.setTag(foodItem);
         holder.txt_itemName.setText(foodItem.getItemName());
         holder.txt_itemDescription.setText("item description comes here");
         holder.txt_itemPrice.setText(foodItem.getItemPrice().toString());
         holder.itemImage.setImageResource(R.drawable.bb1);
+		if (numCallBack.getQuantity(foodItem) == 0) {
+			holder.subItem.setVisibility(View.INVISIBLE);
+			holder.addItem.setText("0");
+		}
+		else {
+			holder.addItem.setText(numCallBack.getQuantity(foodItem).toString());
+			holder.subItem.setVisibility(View.VISIBLE);
+		}
 
         holder.addItem.setOnClickListener(new View.OnClickListener() {
 
@@ -120,6 +132,53 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> {
         ImageView itemImage;
         Button addItem;
         ImageButton subItem;
+    }
+    
+    
+    @Override
+    public Filter getFilter() {
+    	if(filter == null) {
+    		filter = new ModelFilter();
+    	}
+    	return filter;
+    }
+    
+    private class ModelFilter extends Filter {
+
+		@Override
+		protected FilterResults performFiltering(CharSequence constraint) {
+			FilterResults filterResults = new FilterResults();
+			List<FoodMenuItem> filteredItemList = new ArrayList<FoodMenuItem>();
+			if(constraint.equals(FoodType.Veg.toString())) {
+				for(FoodMenuItem foodItem : allfoodMenuItems) {
+					if(foodItem.getFoodType().equals(FoodType.Veg)) {
+						filteredItemList.add(foodItem);
+					}
+				}
+			} else if(constraint.equals(FoodType.NonVeg.toString())) {
+				for(FoodMenuItem foodItem : allfoodMenuItems) {
+					if(foodItem.getFoodType().equals(FoodType.NonVeg)) {
+						filteredItemList.add(foodItem);
+					}
+				}
+			} else {
+			filteredItemList.addAll(allfoodMenuItems);
+			}
+			filterResults.count = filteredItemList.size();
+			filterResults.values = filteredItemList;
+			return filterResults;
+		}
+
+		@Override
+		protected void publishResults(CharSequence constraint,
+				FilterResults results) {
+			List<FoodMenuItem> filteredItemList = (List<FoodMenuItem>) results.values;
+			foodMenuItems.clear();
+			foodMenuItems.addAll(filteredItemList);
+			notifyDataSetChanged();
+			
+		}
+    	
     }
 
 }

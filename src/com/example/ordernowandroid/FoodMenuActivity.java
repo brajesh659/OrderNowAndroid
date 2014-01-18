@@ -26,6 +26,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.data.menu.FoodType;
 import com.example.ordernowandroid.adapter.NavDrawerListAdapter;
 import com.example.ordernowandroid.fragments.IndividualMenuTabFragment;
 import com.example.ordernowandroid.fragments.MyOrderFragment;
@@ -202,7 +203,7 @@ public class FoodMenuActivity extends FragmentActivity implements IndividualMenu
 
         if (fragment != null) {
             FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit();
+            fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).addToBackStack(null).commit();
         } else {
             // error in creating fragment
             Log.e("FoodMenuActivity", "Error in creating fragment");
@@ -251,7 +252,11 @@ public class FoodMenuActivity extends FragmentActivity implements IndividualMenu
         }
 
         for (int i = 0; itemNames != null && i < itemNames.length; i++) {
-            foodMenuItem.add(new FoodMenuItem(itemNames[i], itemPrices[i]));
+        	if(i%2==0) {
+        	    foodMenuItem.add(new FoodMenuItem(itemNames[i], itemPrices[i],FoodType.Veg));
+        	} else {
+        		foodMenuItem.add(new FoodMenuItem(itemNames[i], itemPrices[i],FoodType.NonVeg));
+        	}
         }
 
         return foodMenuItem;
@@ -274,7 +279,7 @@ public class FoodMenuActivity extends FragmentActivity implements IndividualMenu
         myfragment.setMyOrders(orderItems);         
         }
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.frame_container, myfragment).commit();
+        fragmentManager.beginTransaction().replace(R.id.frame_container, myfragment).addToBackStack(null).commit();
     }
 
     @Override

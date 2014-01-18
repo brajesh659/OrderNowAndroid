@@ -2,6 +2,8 @@ package com.example.ordernowandroid.model;
 
 import java.io.Serializable;
 
+import com.data.menu.FoodType;
+
 /**
  * 
  * @author Rohit
@@ -13,10 +15,12 @@ public class FoodMenuItem implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String itemName;
 	private Integer itemPrice;
+	private FoodType foodType;
 
-	public FoodMenuItem(String itemName, Integer itemPrice){
+	public FoodMenuItem(String itemName, Integer itemPrice, FoodType foodType){
 		this.setItemName(itemName);
 		this.setItemPrice(itemPrice);
+		this.foodType = foodType;
 	}
 
 	public String getItemName() {
@@ -34,6 +38,11 @@ public class FoodMenuItem implements Serializable {
 	private void setItemPrice(Integer itemPrice) {
 		this.itemPrice = itemPrice;
 	}	
+	
+	public FoodType getFoodType() {
+		
+		return foodType;
+	}
 
 	@Override
 	public String toString() {

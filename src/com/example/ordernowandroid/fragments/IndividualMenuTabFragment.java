@@ -7,9 +7,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckedTextView;
 import android.widget.ListView;
 
-import com.example.ordernowandroid.FoodMenuActivity;
+import com.data.menu.FoodType;
+import com.example.ordernowandroid.R;
 import com.example.ordernowandroid.adapter.FoodMenuItemAdapter;
 import com.example.ordernowandroid.model.FoodMenuItem;
 
@@ -63,13 +65,50 @@ public class IndividualMenuTabFragment extends Fragment {
 	@Override
 	public View onCreateView(final LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {		
-		FoodMenuItemAdapter foodMenuItemAdapter = new FoodMenuItemAdapter(getActivity(), foodMenuItemList, numCallBack);
-		ListView lv = new ListView(getActivity());
+		View foodCategoryView = inflater.inflate(R.layout.category_page, null);
+		final FoodMenuItemAdapter foodMenuItemAdapter = new FoodMenuItemAdapter(getActivity(), foodMenuItemList, numCallBack);
+		ListView lv = (ListView) foodCategoryView.findViewById(R.id.dish_list);
+		final CheckedTextView veg = (CheckedTextView)foodCategoryView.findViewById(R.id.checked_veg);
+		final CheckedTextView nonveg = (CheckedTextView)foodCategoryView.findViewById(R.id.checked_nonveg);
+		
+		veg.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				veg.toggle();
+				if(veg.isChecked() && nonveg.isChecked()) {
+					foodMenuItemAdapter.getFilter().filter("");
+				} else if(veg.isChecked()) {
+					foodMenuItemAdapter.getFilter().filter(FoodType.Veg.toString());
+				} else if(nonveg.isChecked()){
+					foodMenuItemAdapter.getFilter().filter(FoodType.NonVeg.toString());
+				} else {
+					foodMenuItemAdapter.getFilter().filter("");
+				}
+				
+			}
+		});
+		nonveg.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				nonveg.toggle();
+				if(veg.isChecked() && nonveg.isChecked()) {
+					foodMenuItemAdapter.getFilter().filter("");
+				} else if(veg.isChecked()) {
+					foodMenuItemAdapter.getFilter().filter(FoodType.Veg.toString());
+				} else if(nonveg.isChecked()){
+					foodMenuItemAdapter.getFilter().filter(FoodType.NonVeg.toString());
+				} else {
+					foodMenuItemAdapter.getFilter().filter("");
+				}
+				
+			}
+		});
+		
 		lv.setAdapter(foodMenuItemAdapter);
 		lv.setOnCreateContextMenuListener(getActivity());
-		return lv;
+		return foodCategoryView;
 	}
-
-
 
 }
