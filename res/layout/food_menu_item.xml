@@ -1,46 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent"
-	android:layout_height="fill_parent">
-	<ImageView 
-   		android:id="@+id/dish_photo"
-   		android:layout_width="wrap_content"
-   		android:layout_height="wrap_content"
-   		android:contentDescription="@string/scan_qr_codes"
-		android:paddingRight="15dp"
-		android:paddingTop="10dp" />
-	<TextView android:id="@+id/dish_name"
-		android:textSize="14sp" 
-		android:textStyle="bold" 
-		android:textColor="#FFFF00" 
-		android:layout_width="wrap_content" 
-		android:layout_height="wrap_content"
-		android:paddingTop="5sp"
-		android:layout_toRightOf="@id/dish_photo"/>
-	<TextView android:id="@+id/dish_description"
-		android:layout_width="wrap_content" 
-		android:layout_height="wrap_content"
-		android:layout_below="@id/dish_name"
-		android:layout_toRightOf="@id/dish_photo" />
-	<TextView android:id="@+id/dish_price" 
-		android:textSize="19sp" 
-		android:textStyle="bold" 
-		android:textColor="#32cd32" 
-		android:layout_width="wrap_content" 
-		android:layout_height="wrap_content"
-		android:layout_below="@id/dish_description"
-		android:layout_toRightOf="@id/dish_photo" />
-	
-	 <ImageButton
-	     android:id="@+id/subbutton"
-	     android:layout_width="wrap_content"
-	     android:layout_height="wrap_content"
-	     android:layout_below="@id/dish_description"
-	     android:layout_marginLeft="10sp"
-	     android:layout_marginRight="8sp"
-	     android:layout_toRightOf="@id/dish_price"
-	     android:src="@drawable/sub" />
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <ImageView
+        android:id="@+id/dish_photo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/scan_qr_codes"
+        android:paddingRight="15dp"
+        android:paddingTop="10dp" />
+
+    <TextView
+        android:id="@+id/dish_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/dish_photo"
+        android:paddingTop="5sp"
+        android:textColor="#FFFF00"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/dish_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/dish_name"
+        android:layout_toRightOf="@id/dish_photo" />
+
+    <TextView
+        android:id="@+id/dish_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/dish_description"
+        android:layout_toRightOf="@id/dish_photo"
+        android:textColor="#32cd32"
+        android:textSize="19sp"
+        android:textStyle="bold" />
+
+    <ImageButton
+        android:id="@+id/subbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/dish_description"
+        android:layout_marginLeft="10sp"
+        android:layout_marginRight="8sp"
+        android:layout_toRightOf="@id/dish_price"
+        android:src="@drawable/sub" />
 
     <Button
         android:id="@+id/addbutton"
@@ -48,9 +54,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_below="@id/dish_description"
-        android:drawableLeft="@drawable/add"
         android:layout_toRightOf="@id/subbutton"
+        android:drawableLeft="@drawable/add"
         android:text="0" />
-	
-	
+
 </RelativeLayout>

@@ -5,19 +5,64 @@
 
     <ListView
         android:id="@+id/listMyOrder"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:choiceMode="singleChoice"
-        android:divider="@color/red"
-        android:dividerHeight="1dp" />
-
-    <Button
-        android:id="@+id/sendToKitchenButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:text="@string/send_to_kitchen" />
+        android:layout_gravity="start"
+        android:choiceMode="singleChoice"
+        android:divider="@color/black"
+        android:dividerHeight="1dp" />
+
+    <TextView
+        android:id="@+id/total"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/listMyOrder"
+        android:text="@string/total"
+        android:textStyle="bold"
+        android:typeface="sans" 
+        android:textColor="#FFFF00"
+        android:textSize="19sp"/>
+
+    <TextView
+        android:id="@+id/totalAmount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/listMyOrder"
+        android:textStyle="bold"
+        android:typeface="sans" 
+        android:textColor="@color/green"
+        android:textSize="19sp"/>
+
+    <Button
+        android:id="@+id/addMoreItemsButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/total"
+        android:layout_marginLeft="10sp"
+        android:layout_marginRight="10sp"
+        android:text="@string/add_more_items_btn" />
+
+    <Button
+        android:id="@+id/cancelOrderButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/addMoreItemsButton"
+        android:layout_marginLeft="10sp"
+        android:layout_marginRight="10sp"
+        android:text="@string/cancel_order_btn" />
+
+    <Button
+        android:id="@+id/confirmOrderButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/addMoreItemsButton"
+        android:layout_marginLeft="10sp"
+        android:layout_marginRight="10sp"
+        android:text="@string/confirm_order_btn" />
 
 </RelativeLayout>

@@ -20,6 +20,14 @@ public class MyOrderItem implements Serializable {
 	private FoodMenuItem foodMenuItem;
 	private Integer quantity;
 
+	public void setFoodMenuItem(FoodMenuItem foodMenuItem) {
+		this.foodMenuItem = foodMenuItem;
+	}
+
+	public void setQuantity(Integer quantity) {
+		this.quantity = quantity;
+	}
+
 	public FoodMenuItem getFoodMenuItem() {
 		return foodMenuItem;
 	}

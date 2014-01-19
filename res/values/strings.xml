@@ -10,7 +10,13 @@
     <string name="send_to_kitchen">"Send To Kitchen"</string>
     <string name="veg">"Veg"</string>
     <string name="nonveg">"NonVeg"</string>
-     
+    <string name="cancel_order_btn">"Cancel Order"</string>
+    <string name="confirm_order_btn">"Confirm Order"</string>
+    <string name="add_more_items_btn">"Add More Items"</string>
+    <string name="total">"Total"</string>
+    <string name="ok">"OK"</string>
+    <string name="cancel">"Cancel"</string>    
+
     <!-- Nav Drawer Menu Items -->
     <string-array name="nav_drawer_items">
         <item>Soups</item>
@@ -19,7 +25,7 @@
         <item>Sizzlers</item>
         <item>Favourites</item>
     </string-array>
-     
+
     <!-- Nav Drawer List Item Icons -->
     <!-- Keep them in order as the titles are in -->
     <array name="nav_drawer_icons">
@@ -29,8 +35,7 @@
         <item>@drawable/ic_launcher</item>
         <item>@drawable/ic_launcher</item>
     </array>
-     
-    
+
     <string-array name="soups">
         <item>Cream of Veg</item>
         <item>Roasted Bell Pepper Soup</item>
@@ -38,7 +43,7 @@
         <item>Consomme Soup</item>
         <item>Spicy Sea Food Soup</item>
     </string-array>
-    
+
     <integer-array name="soups_prices">
         <item>95</item>
         <item>115</item>
@@ -46,7 +51,7 @@
         <item>125</item>
         <item>125</item>
     </integer-array>
-    
+
     <string-array name="starters">
         <item>Nachos with Cheese Sauce</item>
         <item>Italian Cheese Fingers</item>
@@ -54,7 +59,7 @@
         <item>Roasted Lamb</item>
         <item>Lamb Chops</item>
     </string-array>
-    
+
     <integer-array name="starters_prices">
         <item>165</item>
         <item>175</item>
@@ -62,7 +67,7 @@
         <item>245</item>
         <item>295</item>
     </integer-array>
-    
+
     <string-array name="salads">
         <item>Mexican Salad</item>
         <item>Tossed Salad</item>
@@ -70,7 +75,7 @@
         <item>Cesar Salad</item>
         <item>Chicken Hawaian Salad</item>
     </string-array>
-    
+
     <integer-array name="salads_prices">
         <item>125</item>
         <item>125</item>
@@ -78,7 +83,7 @@
         <item>125</item>
         <item>145</item>
     </integer-array>
-    
+
     <string-array name="sizzlers">
         <item>Corn N Potato Sizzler</item>
         <item>Cottage Cheese Sizzler</item>
@@ -87,7 +92,7 @@
         <item>Grilled Fish Sizzler</item>
         <item>Prawns Sizzler</item>
     </string-array>
-    
+
     <integer-array name="sizzlers_prices">
         <item>245</item>
         <item>275</item>
@@ -103,14 +108,14 @@
         <item>Lamb Marango</item>
         <item>Lamb Stroganoff</item>
     </string-array>
-    
+
     <integer-array name="favourites_prices">
         <item>275</item>
         <item>275</item>
         <item>345</item>
         <item>345</item>
     </integer-array>
-        
+
     <!-- Content Description -->
     <string name="desc_list_item_icon">Item Icon</string>
     <!-- Tab action bar items -->

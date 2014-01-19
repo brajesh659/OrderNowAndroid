@@ -199,8 +199,7 @@ public class FoodMenuActivity extends FragmentActivity implements IndividualMenu
                                              // replacing fragments
         Fragment fragment = null;
         Category category = getCategories().get(position);
-        fragment = IndividualMenuTabFragment
-                .newInstance(category.getName(), getItemListForCategory(category.getDishes()));
+        fragment = IndividualMenuTabFragment.newInstance(category.getName(), getItemListForCategory(category.getDishes()));
 
         if (fragment != null) {
             FragmentManager fragmentManager = getSupportFragmentManager();
@@ -238,7 +237,7 @@ public class FoodMenuActivity extends FragmentActivity implements IndividualMenu
             for (FoodMenuItem key : foodItemQuantityMap.keySet()) {
                 orderItems.add(new MyOrderItem(key, foodItemQuantityMap.get(key)));
             }
-        myfragment.setMyOrders(orderItems);         
+            myfragment.setMyOrders(orderItems);
         }
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.frame_container, myfragment).addToBackStack(null).commit();
