@@ -10,6 +10,21 @@
         android:contentDescription="@string/scan_qr_codes"
         android:paddingRight="15dp"
         android:paddingTop="10dp" />
+    <TextView
+        android:id="@+id/dish_quantity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/dish_photo"
+        android:layout_alignTop="@+id/dish_photo"
+        android:layout_alignRight="@+id/dish_photo"
+        android:layout_alignBottom="@+id/dish_photo"
+        android:layout_margin="1dp"
+        android:gravity="center"
+        android:textColor="#FFFF00"
+        android:paddingRight="15dp"
+        android:paddingTop="10dp"
+        android:textSize="50sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/dish_name"
@@ -34,28 +49,26 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/dish_description"
         android:layout_toRightOf="@id/dish_photo"
+        
         android:textColor="#32cd32"
         android:textSize="19sp"
         android:textStyle="bold" />
 
     <ImageButton
-        android:id="@+id/subbutton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/dish_description"
-        android:layout_marginLeft="10sp"
-        android:layout_marginRight="8sp"
-        android:layout_toRightOf="@id/dish_price"
-        android:src="@drawable/sub" />
-
-    <Button
         android:id="@+id/addbutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_below="@id/dish_description"
-        android:layout_toRightOf="@id/subbutton"
-        android:drawableLeft="@drawable/add"
-        android:text="0" />
+        android:src="@drawable/add" />
+    
+    <ImageButton
+        android:id="@+id/subbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/dish_description"
+        android:layout_marginRight="1sp"
+        android:layout_toLeftOf="@id/addbutton"
+        android:src="@drawable/sub" />
 
 </RelativeLayout>

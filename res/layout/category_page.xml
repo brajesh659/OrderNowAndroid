@@ -7,28 +7,28 @@
         android:id="@+id/linearLayout1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true" >
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true" >
 
         <CheckedTextView
             android:id="@+id/checked_nonveg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginBottom="18dp"
-            android:layout_marginRight="36dp"
-            android:checkMark="?android:attr/textCheckMark"
-            android:text="@string/nonveg" />
+            android:gravity="center"
+            android:layout_marginRight="40dp"
+            android:background="@drawable/non_veg"
+            android:checkMark="?android:attr/textCheckMark"/>
 
         <CheckedTextView
             android:id="@+id/checked_veg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:paddingLeft="15sp"
+            android:layout_marginLeft="40dp"
+            android:background="@drawable/veg"
             android:checkMark="?android:attr/textCheckMark"
-            android:text="@string/veg" />
+            android:gravity="center"/>
 
     </RelativeLayout>
     
@@ -36,9 +36,11 @@
         android:id="@+id/dish_list"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
         android:layout_above="@id/linearLayout1"
-        android:layout_alignParentTop="true" >
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/linearLayout1" >
+
     </ListView>
 
     

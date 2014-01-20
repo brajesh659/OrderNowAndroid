@@ -69,10 +69,9 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
             holder.txt_itemName = (TextView) convertView.findViewById(R.id.dish_name);
             holder.txt_itemDescription = (TextView) convertView.findViewById(R.id.dish_description);
             holder.txt_itemPrice = (TextView) convertView.findViewById(R.id.dish_price);
+            holder.txt_itemQuantity = (TextView) convertView.findViewById(R.id.dish_quantity);
             holder.itemImage = (ImageView) convertView.findViewById(R.id.dish_photo);
-            holder.addItem = (Button) convertView.findViewById(R.id.addbutton);
-
-            
+            holder.addItem = (ImageButton) convertView.findViewById(R.id.addbutton);       
             holder.subItem = (ImageButton) convertView.findViewById(R.id.subbutton);
             convertView.setTag(holder);
         } else {
@@ -86,11 +85,13 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
         holder.itemImage.setImageResource(R.drawable.bb1);
 		if (numCallBack.getQuantity(foodItem) == 0) {
 			holder.subItem.setVisibility(View.INVISIBLE);
-			holder.addItem.setText("0");
+			holder.txt_itemQuantity.setText("");
+			holder.itemImage.setAlpha(1f);
 		}
 		else {
-			holder.addItem.setText(numCallBack.getQuantity(foodItem).toString());
+			holder.txt_itemQuantity.setText(numCallBack.getQuantity(foodItem).toString());
 			holder.subItem.setVisibility(View.VISIBLE);
+			holder.itemImage.setAlpha(0.3f);
 		}
 
         holder.addItem.setOnClickListener(new View.OnClickListener() {
@@ -99,8 +100,9 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
             public void onClick(View v) {
                 FoodMenuItem foodItem = (FoodMenuItem) v.getTag();
                 numCallBack.incrementQuantity(foodItem);
-                holder.addItem.setText(numCallBack.getQuantity(foodItem).toString());
                 holder.subItem.setVisibility(View.VISIBLE);
+                holder.txt_itemQuantity.setText(numCallBack.getQuantity(foodItem).toString());
+                holder.itemImage.setAlpha(0.3f);                
             }
         });
 
@@ -111,9 +113,11 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
                 FoodMenuItem foodItem = (FoodMenuItem) v.getTag();
                 numCallBack.decrementQuantity(foodItem);
                 Integer quantity = numCallBack.getQuantity(foodItem);
-                holder.addItem.setText(quantity.toString());
+                holder.txt_itemQuantity.setText(numCallBack.getQuantity(foodItem).toString());
                 if (quantity == 0) {
                     holder.subItem.setVisibility(View.INVISIBLE);
+                    holder.txt_itemQuantity.setText("");
+                    holder.itemImage.setAlpha(1f);
                 }
             }
 
@@ -129,8 +133,9 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
         TextView txt_itemName;
         TextView txt_itemDescription;
         TextView txt_itemPrice;
+        TextView txt_itemQuantity;
         ImageView itemImage;
-        Button addItem;
+        ImageButton addItem;
         ImageButton subItem;
     }
     
