@@ -2,6 +2,7 @@ package com.example.ordernowandroid;
 
 import net.sourceforge.zbar.Symbol;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -11,6 +12,10 @@ import android.widget.Toast;
 
 import com.dm.zbar.android.scanner.ZBarConstants;
 import com.dm.zbar.android.scanner.ZBarScannerActivity;
+import com.parse.Parse;
+import com.parse.ParseAnalytics;
+import com.parse.ParseInstallation;
+import com.parse.PushService;
 
 public class MainActivity extends Activity {
 
@@ -20,6 +25,24 @@ public class MainActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		  Parse.initialize(this, "vMFTELLhOo9RDRql9HpV9lKRot5xQTCCD63wkYdQ", "mdz7n8XUjy3u0MSQRnuwmogqXZrw3qJnRwmRxx0g"); 
+          PushService.setDefaultPushCallback(this, MainActivity.class);
+          ParseInstallation.getCurrentInstallation().saveInBackground();
+          
+          Context context = getApplicationContext();
+          CharSequence text = ParseInstallation.getCurrentInstallation().getObjectId();
+          int duration = Toast.LENGTH_LONG;
+
+          Toast toast = Toast.makeText(context, text, duration);
+          toast.show();
+          
+          
+          toast = Toast.makeText(context, "Aplication opened", duration);
+          toast.show();
+          
+          ParseAnalytics.trackAppOpened(getIntent());
+          
+		
 		setContentView(R.layout.activity_main);
 	}
 
