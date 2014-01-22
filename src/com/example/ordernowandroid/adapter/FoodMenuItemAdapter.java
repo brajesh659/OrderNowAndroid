@@ -106,6 +106,7 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
             e.printStackTrace();
             Log.e(FoodMenuActivity.class.getName(),e.getLocalizedMessage()+" error ");
         }
+        /*
         Bitmap bitmap = null;
         try {
             bitmap = new DownloadImageTask().execute(abc).get();
@@ -117,8 +118,9 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
             e.printStackTrace();
         }
             holder.itemImage.setImageBitmap(bitmap);
+            */
 
-        //holder.itemImage.setImageResource(R.drawable.bb1);
+        holder.itemImage.setImageResource(R.drawable.bb1);
 		if (numCallBack.getQuantity(foodItem) == 0) {
 			holder.subItem.setVisibility(View.INVISIBLE);
 			holder.txt_itemQuantity.setText("");
