@@ -345,6 +345,7 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
             } else {
                 dish.setType(FoodType.NonVeg);
             }
+            dish.setDescription("item description comes here");
             soupDishes.add(dish);
         }
     }

@@ -30,6 +30,10 @@ public class FoodMenuItem implements Serializable {
     public FoodType getFoodType() {
         return dish.getType();
     }
+    
+    public String getDescription() {
+    	return dish.getDescription();
+    }
 
     @Override
     public String toString() {
