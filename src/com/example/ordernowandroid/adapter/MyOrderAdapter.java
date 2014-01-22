@@ -26,13 +26,13 @@ import com.example.ordernowandroid.model.MyOrderItem;
 public class MyOrderAdapter extends ArrayAdapter<MyOrderItem> {
 
 	private List<MyOrderItem> orders;
-
+    
 	public MyOrderAdapter(Context context, List<MyOrderItem> orders) {
-		super(context, R.layout.my_order, orders);
-		this.orders = orders;
+	    super(context, R.layout.my_order, orders);
+        this.orders = orders;
 	}
 
-	@Override
+    @Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
 		if (convertView == null) {
 			LayoutInflater vi = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
