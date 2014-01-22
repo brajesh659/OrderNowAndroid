@@ -79,6 +79,8 @@ public class MainActivity extends Activity {
 				Toast.makeText(this, "Scan Result = " + data.getStringExtra(ZBarConstants.SCAN_RESULT), Toast.LENGTH_SHORT).show();
 				Intent intent = new Intent(this, FoodMenuActivity.class);
 				startActivity(intent);
+				//finish this to disable back to this activity once scanned
+				this.finish();				
 			} else if(resultCode == RESULT_CANCELED && data != null) {
 				String error = data.getStringExtra(ZBarConstants.ERROR_INFO);
 				if(!TextUtils.isEmpty(error)) {
@@ -86,6 +88,8 @@ public class MainActivity extends Activity {
 				}
 				Intent intent = new Intent(this, FoodMenuActivity.class);
 				startActivity(intent);
+				//finish this to disable back to this activity once scanned
+				this.finish();
 			}
 			break;
 		}
