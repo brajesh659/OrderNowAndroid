@@ -164,7 +164,7 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
                         foodMenuItemQuantityMap.put(myOrderItem.getFoodMenuItem().getItemName(), myOrderItem);
                     }
                 }
-                displayView(2);
+                displayView(2); //FIXME
             } else if(resultCode == RESULT_CANCELED && data != null) {
                 String error = data.getStringExtra(ZBarConstants.ERROR_INFO);
                 if(!TextUtils.isEmpty(error)) {

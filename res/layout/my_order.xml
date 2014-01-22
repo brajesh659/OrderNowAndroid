@@ -1,57 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"  	android:padding="5dip" >
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:weightSum="11" >
 
     <TextView
         android:id="@+id/itemName"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignBottom="@+id/decrementQtyButton"
-        android:textColor="#FFFF00"
-        android:textStyle="bold"
-        android:typeface="sans" />
+        android:layout_weight="5"
+        android:textColor="@color/red"
+        android:textStyle="bold" />
 
     <ImageButton
         android:id="@+id/decrementQtyButton"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10sp"
-        android:layout_marginRight="5sp"
-        android:layout_toRightOf="@id/itemName"        
+        android:layout_weight="1.5"
         android:src="@drawable/sub" />
 
     <TextView
         android:id="@+id/quantity"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5sp"
-        android:layout_marginRight="5sp"
-        android:layout_toRightOf="@id/decrementQtyButton"
-        android:layout_alignBottom="@+id/decrementQtyButton"
-        android:textStyle="bold"
-        android:typeface="sans" />
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textColor="@color/green"
+        android:textStyle="bold" />
 
     <ImageButton
         android:id="@+id/incrementQtyButton"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5sp"
-        android:layout_marginRight="10sp"
-        android:layout_toRightOf="@id/quantity"        
+        android:layout_weight="1.5"
         android:src="@drawable/add" />
 
     <TextView
         android:id="@+id/itemTotalPrice"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_toRightOf="@id/incrementQtyButton"
-        android:layout_alignBottom="@+id/decrementQtyButton"
+        android:layout_weight="2"
+        android:gravity="center"
         android:textColor="@color/green"
-        android:textStyle="bold"
-        android:typeface="sans" />
+        android:textStyle="bold" />
 
-</RelativeLayout>
+</LinearLayout>

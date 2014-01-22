@@ -96,7 +96,7 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
         holder.subItem.setTag(foodItem);
         holder.txt_itemName.setText(foodItem.getItemName());
         holder.txt_itemDescription.setText(foodItem.getDescription());
-        holder.txt_itemPrice.setText(foodItem.getItemPrice().toString());
+        holder.txt_itemPrice.setText("\u20B9" + " " + foodItem.getItemPrice().toString());
     
         URL abc = null;
         try {

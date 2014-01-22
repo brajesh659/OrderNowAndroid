@@ -15,10 +15,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:gravity="center"
             android:layout_marginRight="40dp"
             android:background="@drawable/non_veg"
-            android:checkMark="?android:attr/textCheckMark"/>
+            android:checkMark="?android:attr/textCheckMark"
+            android:gravity="center" />
 
         <CheckedTextView
             android:id="@+id/checked_veg"
@@ -28,21 +28,16 @@
             android:layout_marginLeft="40dp"
             android:background="@drawable/veg"
             android:checkMark="?android:attr/textCheckMark"
-            android:gravity="center"/>
-
+            android:gravity="center" />
     </RelativeLayout>
-    
+
     <ListView
         android:id="@+id/dish_list"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_above="@id/linearLayout1"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/linearLayout1" >
-
     </ListView>
-
-    
 
 </RelativeLayout>
