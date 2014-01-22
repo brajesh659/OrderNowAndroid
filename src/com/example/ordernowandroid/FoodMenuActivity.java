@@ -17,6 +17,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -111,6 +112,7 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
             displayView(2);
         }
         mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
+        mDrawerLayout.openDrawer(Gravity.LEFT);
     }
 
     private List<Category> getCategories() {
