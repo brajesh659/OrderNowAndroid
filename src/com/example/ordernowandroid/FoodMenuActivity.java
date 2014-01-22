@@ -31,12 +31,12 @@ import com.data.menu.Restaurant;
 import com.example.ordernowandroid.adapter.NavDrawerListAdapter;
 import com.example.ordernowandroid.fragments.IndividualMenuTabFragment;
 import com.example.ordernowandroid.fragments.MyOrderFragment;
+import com.example.ordernowandroid.fragments.IndividualMenuTabFragment.numListener;
 import com.example.ordernowandroid.model.CategoryNavDrawerItem;
 import com.example.ordernowandroid.model.FoodMenuItem;
 import com.example.ordernowandroid.model.MyOrderItem;
 
-public class FoodMenuActivity extends FragmentActivity implements IndividualMenuTabFragment.numListener,
-        ActionBar.TabListener {
+public class FoodMenuActivity extends FragmentActivity implements numListener, ActionBar.TabListener {
 
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
@@ -52,7 +52,7 @@ public class FoodMenuActivity extends FragmentActivity implements IndividualMenu
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.food_menu);
         displayActionTabBar();
@@ -65,16 +65,15 @@ public class FoodMenuActivity extends FragmentActivity implements IndividualMenu
         mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
 
         navDrawerItems = new ArrayList<CategoryNavDrawerItem>();
-       
+
         for (Category category : getCategories()) {
             CategoryNavDrawerItem categoryNavDrawerItem = new CategoryNavDrawerItem(category);
             navDrawerItems.add(categoryNavDrawerItem);
         }
-      
+
         // how to add a counter example
         // navDrawerItems.add(new NavDrawerItem(navMenuTitles[3],
         // navMenuIcons.getResourceId(3, -1), true, "22"));
-
 
         // setting the nav drawer list adapter
         adapter = new NavDrawerListAdapter(getApplicationContext(), navDrawerItems);
@@ -85,9 +84,9 @@ public class FoodMenuActivity extends FragmentActivity implements IndividualMenu
         getActionBar().setHomeButtonEnabled(true);
 
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer, // nav
-                                                                                               // menu
-                                                                                               // toggle
-                                                                                               // icon
+                                                                                             // menu
+                                                                                             // toggle
+                                                                                             // icon
                 R.string.app_name, // nav drawer open - description for
                                    // accessibility
                 R.string.app_name // nav drawer close - description for
@@ -199,7 +198,7 @@ public class FoodMenuActivity extends FragmentActivity implements IndividualMenu
                                              // replacing fragments
         Fragment fragment = null;
         Category category = getCategories().get(position);
-        fragment = IndividualMenuTabFragment.newInstance(category.getName(), getItemListForCategory(category.getDishes()));
+        fragment = IndividualMenuTabFragment.newInstance(category.getName(), getFoodMenuItems(category.getDishes()));
 
         if (fragment != null) {
             FragmentManager fragmentManager = getSupportFragmentManager();
@@ -215,11 +214,11 @@ public class FoodMenuActivity extends FragmentActivity implements IndividualMenu
         mDrawerLayout.closeDrawer(mDrawerList);
     }
 
-    private ArrayList<FoodMenuItem> getItemListForCategory(List<Dish> dishes) {
+    private ArrayList<FoodMenuItem> getFoodMenuItems(List<Dish> dishes) {
         ArrayList<FoodMenuItem> foodMenuItem = new ArrayList<FoodMenuItem>();
         for (Dish dish : dishes) {
             foodMenuItem.add(new FoodMenuItem(dish));
-        }  
+        }
         return foodMenuItem;
     }
 
@@ -233,7 +232,7 @@ public class FoodMenuActivity extends FragmentActivity implements IndividualMenu
     private void displayMyOrders() {
         List<MyOrderItem> orderItems = new LinkedList<MyOrderItem>();
         MyOrderFragment myfragment = new MyOrderFragment();
-        if(foodItemQuantityMap != null) {
+        if (foodItemQuantityMap != null) {
             for (FoodMenuItem key : foodItemQuantityMap.keySet()) {
                 orderItems.add(new MyOrderItem(key, foodItemQuantityMap.get(key)));
             }
@@ -255,12 +254,12 @@ public class FoodMenuActivity extends FragmentActivity implements IndividualMenu
 
     }
 
-	@Override
-	public Integer getQuantity(FoodMenuItem foodMenuItem) {
-		if(foodItemQuantityMap.get(foodMenuItem) != null) {
-			return foodItemQuantityMap.get(foodMenuItem);
-		}
-		return 0;
+    @Override
+    public Integer getQuantity(FoodMenuItem foodMenuItem) {
+        if (foodItemQuantityMap.get(foodMenuItem) != null) {
+            return foodItemQuantityMap.get(foodMenuItem);
+        }
+        return 0;
     }
 
     @Override
@@ -294,7 +293,6 @@ public class FoodMenuActivity extends FragmentActivity implements IndividualMenu
         }
     }
 
-    
     public Restaurant getResturant() {
         List<Integer> categoryItemName = new LinkedList<Integer>();
         categoryItemName.add(R.array.soups);
@@ -302,7 +300,7 @@ public class FoodMenuActivity extends FragmentActivity implements IndividualMenu
         categoryItemName.add(R.array.salads);
         categoryItemName.add(R.array.sizzlers);
         categoryItemName.add(R.array.favourites);
-        
+
         List<Integer> categoryItemPrice = new LinkedList<Integer>();
         categoryItemPrice.add(R.array.soups_prices);
         categoryItemPrice.add(R.array.starters_prices);
@@ -317,7 +315,7 @@ public class FoodMenuActivity extends FragmentActivity implements IndividualMenu
             categories.add(category);
         }
 
-        com.data.menu.Menu menu= new com.data.menu.Menu();
+        com.data.menu.Menu menu = new com.data.menu.Menu();
         menu.setCategories(categories);
         Restaurant restaurant = new Restaurant();
         restaurant.setName("Eat 3");

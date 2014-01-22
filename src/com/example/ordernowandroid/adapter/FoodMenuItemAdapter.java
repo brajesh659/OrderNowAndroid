@@ -1,9 +1,24 @@
 package com.example.ordernowandroid.adapter;
 
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.entity.BufferedHttpEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +31,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.data.menu.FoodType;
+import com.example.ordernowandroid.FoodMenuActivity;
 import com.example.ordernowandroid.R;
 import com.example.ordernowandroid.fragments.IndividualMenuTabFragment.numListener;
 import com.example.ordernowandroid.model.FoodMenuItem;
@@ -82,7 +98,27 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
         holder.txt_itemName.setText(foodItem.getItemName());
         holder.txt_itemDescription.setText("item description comes here");
         holder.txt_itemPrice.setText(foodItem.getItemPrice().toString());
-        holder.itemImage.setImageResource(R.drawable.bb1);
+    
+        URL abc = null;
+        try {
+            abc = new URL("http://www.creativefreedom.co.uk/icon-designers-blog/wp-content/uploads/2013/03/00-android-4-0_icons.png");
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            Log.e(FoodMenuActivity.class.getName(),e.getLocalizedMessage()+" error ");
+        }
+        Bitmap bitmap = null;
+        try {
+            bitmap = new DownloadImageTask().execute(abc).get();
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+            holder.itemImage.setImageBitmap(bitmap);
+
+        //holder.itemImage.setImageResource(R.drawable.bb1);
 		if (numCallBack.getQuantity(foodItem) == 0) {
 			holder.subItem.setVisibility(View.INVISIBLE);
 			holder.txt_itemQuantity.setText("");
@@ -146,6 +182,37 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
     		filter = new ModelFilter();
     	}
     	return filter;
+    }
+    
+    private class DownloadImageTask extends AsyncTask<URL, Integer, Bitmap> {
+
+        @Override
+        protected Bitmap doInBackground(URL... params) {
+            Bitmap bitmap= null;
+            try {
+                URL url = new URL("http://www.creativefreedom.co.uk/icon-designers-blog/wp-content/uploads/2013/03/00-android-4-0_icons.png");
+                //try this url = "http://0.tqn.com/d/webclipart/1/0/5/l/4/floral-icon-5.jpg"
+                HttpGet httpRequest = null;
+
+                httpRequest = new HttpGet(url.toURI());
+
+                HttpClient httpclient = new DefaultHttpClient();
+                HttpResponse response = (HttpResponse) httpclient
+                        .execute(httpRequest);
+
+                HttpEntity entity = response.getEntity();
+                BufferedHttpEntity b_entity = new BufferedHttpEntity(entity);
+                InputStream input = b_entity.getContent();
+
+                bitmap = BitmapFactory.decodeStream(input);
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                Log.e("FoodMenuItemAdapter", ex.getMessage()+"got exception");
+            }
+            return bitmap;
+        }
+        
     }
     
     private class ModelFilter extends Filter {
