@@ -16,6 +16,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_marginRight="40dp"
+            android:paddingRight="30dp"
+            android:paddingLeft="30dp"
             android:background="@drawable/non_veg"
             android:checkMark="?android:attr/textCheckMark"
             android:gravity="center" />
@@ -26,6 +28,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_marginLeft="40dp"
+            android:paddingRight="30dp"
+            android:paddingLeft="30dp"
             android:background="@drawable/veg"
             android:checkMark="?android:attr/textCheckMark"
             android:gravity="center" />
