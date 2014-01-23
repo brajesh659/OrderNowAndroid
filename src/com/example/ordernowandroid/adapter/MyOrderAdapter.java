@@ -11,6 +11,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,11 +42,14 @@ public class MyOrderAdapter extends ArrayAdapter<MyOrderItem> {
 
 		TextView itemName = (TextView) convertView.findViewById(R.id.itemName);		
 		final TextView quantity = (TextView) convertView.findViewById(R.id.quantity);
-		final TextView itemTotalPrice = (TextView) convertView.findViewById(R.id.itemTotalPrice);		
+		final TextView itemTotalPrice = (TextView) convertView.findViewById(R.id.itemTotalPrice);
 
+		RelativeLayout r = (RelativeLayout) ((ViewGroup) parent).getParent(); // This is to get the Parent View of the List View
+		final TextView orderTotalPriceView = (TextView) r.findViewById(R.id.relativeBtnLayout).findViewById(R.id.totalAmount);
+		
 		String orderItemName = myOrderItemList.get(position).getFoodMenuItem().getItemName();
 		Float orderItemQuantity = myOrderItemList.get(position).getQuantity();
-		Float orderItemPrice = myOrderItemList.get(position).getFoodMenuItem().getItemPrice();
+		Float orderItemPrice = myOrderItemList.get(position).getFoodMenuItem().getItemPrice();		
 
 		itemName.setText(orderItemName);	
 		quantity.setText(Float.toString(orderItemQuantity));
@@ -64,12 +68,19 @@ public class MyOrderAdapter extends ArrayAdapter<MyOrderItem> {
 					orderItemPriceStr = orderItemPriceStr.substring(orderItemPriceStr.indexOf("\u20B9 ") + 1).trim();
 				}
 
-				Float orderItemPrice = Float.parseFloat(orderItemPriceStr);
+				final Float orderItemPrice = Float.parseFloat(orderItemPriceStr);
 				if (qty > 1) {
 					itemTotalPrice.setText("\u20B9" + " " + Float.toString((orderItemPrice/qty) * (qty - 1)));
-					quantity.setText(Float.toString(qty - 1));
-					myOrderItemList.get(position).setQuantity(qty - 1);					
-				} else if (qty == 1){ 
+					quantity.setText(Float.toString(qty - 1));					
+					
+					String orderTotalPriceStr = (String) orderTotalPriceView.getText();
+					if (orderTotalPriceStr.indexOf("\u20B9 ") != -1){ //Strip Rupee Symbol from Total Price
+						orderTotalPriceStr = orderTotalPriceStr.substring(orderTotalPriceStr.indexOf("\u20B9 ") + 1).trim();
+					}
+					Float newOrderTotalPrice = Float.parseFloat(orderTotalPriceStr) - (orderItemPrice/qty);					
+					orderTotalPriceView.setText("\u20B9" + " " + Float.toString(newOrderTotalPrice));					
+					myOrderItemList.get(position).setQuantity(qty - 1);				
+				} else if (qty == 1){
 					//Show Dialog and Remove Item from ListView on Positive Button Action
 					AlertDialog.Builder builder = new AlertDialog.Builder(getContext());            
 					builder.setTitle("Remove Item");
@@ -77,10 +88,14 @@ public class MyOrderAdapter extends ArrayAdapter<MyOrderItem> {
 					builder.setPositiveButton(R.string.ok, new AlertDialog.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
-							//Toast.makeText(getContext(), myOrderItemList.toString(), Toast.LENGTH_SHORT).show();							
 							remove(getItem(position));
 							notifyDataSetChanged();
-							//Toast.makeText(getContext(), myOrderItemList.toString(), Toast.LENGTH_SHORT).show();
+							String orderTotalPriceStr = (String) orderTotalPriceView.getText();
+							if (orderTotalPriceStr.indexOf("\u20B9 ") != -1){ //Strip Rupee Symbol from Total Price
+								orderTotalPriceStr = orderTotalPriceStr.substring(orderTotalPriceStr.indexOf("\u20B9 ") + 1).trim();
+							}
+							Float newOrderTotalPrice = Float.parseFloat(orderTotalPriceStr) - (orderItemPrice);					
+							orderTotalPriceView.setText("\u20B9" + " " + Float.toString(newOrderTotalPrice));
 						}
 					});
 
@@ -108,7 +123,14 @@ public class MyOrderAdapter extends ArrayAdapter<MyOrderItem> {
 					Toast.makeText(getContext(), "Cannot determine Unit Price if the Quantity is zero", Toast.LENGTH_SHORT).show();					
 				} else {
 					itemTotalPrice.setText("\u20B9" + " " + Float.toString((orderItemPrice/qty) * (qty + 1)));
-					quantity.setText(Float.toString(qty + 1));
+					quantity.setText(Float.toString(qty + 1));					
+					
+					String orderTotalPriceStr = (String) orderTotalPriceView.getText();
+					if (orderTotalPriceStr.indexOf("\u20B9 ") != -1){ //Strip Rupee Symbol from Total Price
+						orderTotalPriceStr = orderTotalPriceStr.substring(orderTotalPriceStr.indexOf("\u20B9 ") + 1).trim();
+					}
+					Float newOrderTotalPrice = Float.parseFloat(orderTotalPriceStr) + (orderItemPrice/qty);					
+					orderTotalPriceView.setText("\u20B9" + " " + Float.toString(newOrderTotalPrice));
 					myOrderItemList.get(position).setQuantity(qty + 1);
 				}
 			}

@@ -114,13 +114,14 @@ public class MyOrderActivity extends Activity {
 						} catch (ExecutionException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
-						}
-                    	
+						}                   	
 
 						Toast.makeText(getApplicationContext(),"RESPONSE :" + response, Toast.LENGTH_LONG).show();
-                        //TODO: Back End Integration, Make an API Call to let the Server know about Order Confirmation
                         Toast.makeText(getApplicationContext(), "Order has been confirmed.", Toast.LENGTH_LONG).show();
-                        //TODO: Check how should the flow be
+                        
+                        //Clear the Selected Quantities and Start the Food Menu Activity again
+                        Intent intent = new Intent(getApplicationContext(), FoodMenuActivity.class);
+                        startActivity(intent);
 					}
 				});
 				builder.setNegativeButton(R.string.cancel, null);                               
@@ -159,9 +160,7 @@ public class MyOrderActivity extends Activity {
 		Intent data = new Intent();
 		data.putExtra(RETURN_FROM_MY_ORDER, myOrders);
 		data.putExtra(FOOD_MENU_CATEGORY_ID, categoryId);
-		Toast.makeText(this, "Finish " + myOrders.toString(), Toast.LENGTH_SHORT).show();
-		// Activity finished ok, return the data
-		setResult(RESULT_OK, data);
+		setResult(RESULT_OK, data); // Activity finished ok, return the data
 		super.finish();
 	}
 }
