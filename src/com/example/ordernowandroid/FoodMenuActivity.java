@@ -5,9 +5,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-import android.app.ActionBar;
-import android.app.ActionBar.Tab;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -42,7 +39,7 @@ import com.example.ordernowandroid.model.CategoryNavDrawerItem;
 import com.example.ordernowandroid.model.FoodMenuItem;
 import com.example.ordernowandroid.model.MyOrderItem;
 
-public class FoodMenuActivity extends FragmentActivity implements numListener, ActionBar.TabListener {
+public class FoodMenuActivity extends FragmentActivity implements numListener{
 
     private static final int MY_ORDER_REQUEST_CODE = 1;
     static final String MY_ORDER = "MyOrder";
@@ -175,14 +172,15 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
     
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);                
         switch (requestCode) {
         case MY_ORDER_REQUEST_CODE:
-            if (resultCode == RESULT_OK) {
+            if (resultCode == RESULT_OK) {            	    	
                 Bundle bundleExtra = data.getExtras();
                 @SuppressWarnings("unchecked")
                 ArrayList<MyOrderItem> myOrders = (ArrayList<MyOrderItem>) bundleExtra.getSerializable(MyOrderActivity.RETURN_FROM_MY_ORDER);
                 if(myOrders!=null){
+                	foodMenuItemQuantityMap = new HashMap<String, MyOrderItem>();
                     for (MyOrderItem myOrderItem : myOrders) {
                         foodMenuItemQuantityMap.put(myOrderItem.getFoodMenuItem().getItemName(), myOrderItem);
                     }
@@ -198,6 +196,7 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
             }
             break;
         }
+        invalidateOptionsMenu();
     }
 
     /***
@@ -277,39 +276,7 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
         }
         return foodMenuItem;
     }
-
-    @Override
-    public void onTabReselected(Tab arg0, FragmentTransaction arg1) {
-        Toast.makeText(this, "Tab reselected", Toast.LENGTH_SHORT).show();
-//        displayMyOrders();
-        mDrawerLayout.closeDrawer(mDrawerList);
-    }
-
-//    private void displayMyOrders() {
-//        List<MyOrderItem> orderItems = new LinkedList<MyOrderItem>();
-//        MyOrderFragment myfragment = new MyOrderFragment();
-////        if (foodItemQuantityMap != null) {
-////            for (FoodMenuItem key : foodItemQuantityMap.keySet()) {
-////                orderItems.add(new MyOrderItem(key, foodItemQuantityMap.get(key)));
-////            }
-////            myfragment.setMyOrders(orderItems);
-////        }
-//        FragmentManager fragmentManager = getSupportFragmentManager();
-//        fragmentManager.beginTransaction().replace(R.id.frame_container, myfragment).addToBackStack(null).commit();
-//    }
-
-    @Override
-    public void onTabSelected(Tab arg0, FragmentTransaction arg1) {
-        Toast.makeText(this, "Tab selected", Toast.LENGTH_SHORT).show();
-
-    }
-
-    @Override
-    public void onTabUnselected(Tab arg0, FragmentTransaction arg1) {
-        Toast.makeText(this, "Tab unselected", Toast.LENGTH_SHORT).show();
-
-    }
-
+    
     @Override
 	public float getQuantity(FoodMenuItem foodMenuItem) {
         final String itemName = foodMenuItem.getItemName();
