@@ -89,15 +89,20 @@ public class MyOrderActivity extends Activity {
 						}
 						CharSequence text = ParseInstallation
 								.getCurrentInstallation().getObjectId();
-						CustomerOrder c = new CustomerOrder(dishes, "r1", "o1",
+						CustomerOrder c = new CustomerOrder(dishes, "R1",
+								"Temp",
 								text.toString());
 						Gson gs = new Gson();
 						String json = gs.toJson(c);
 
 						String response = "";
+						String url = "http://ordernow.herokuapp.com/order?order="
+								+ json + "&debug=1";
 						try {
-							response = new asyncNetwork().execute(
-									"http://ordernow.herokuapp.com/order?order="+ json).get();
+							System.out.println(json);
+							System.out.println(url);
+							response = new asyncNetwork().execute(url).get();
+							System.out.println(response);
 						} catch (InterruptedException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -106,6 +111,7 @@ public class MyOrderActivity extends Activity {
 							e.printStackTrace();
 						}
                     	
+
 						Toast.makeText(getApplicationContext(),"RESPONSE :" + response, Toast.LENGTH_LONG).show();
                         //TODO: Back End Integration, Make an API Call to let the Server know about Order Confirmation
                         Toast.makeText(getApplicationContext(), "Order has been confirmed.", Toast.LENGTH_LONG).show();
@@ -165,14 +171,14 @@ class asyncNetwork extends AsyncTask<String, Void, String> {
 		String response = "";
 
 		try {
-			URL url = new URL("http://www.google.com");
+			URL url = new URL(params[0]);
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 			conn.setRequestMethod("GET");
 			BufferedReader br = new BufferedReader(new InputStreamReader(
 					(conn.getInputStream())));
 			String line = null;
 			while ((line = br.readLine()) != null) {
-				response = line;
+				response += line;
 			}
 		} catch (ProtocolException e) {
 			// TODO Auto-generated catch block
