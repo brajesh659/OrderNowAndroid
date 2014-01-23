@@ -24,7 +24,7 @@ public class IndividualMenuTabFragment extends Fragment {
 
 	public interface numListener {
 		
-		public Integer getQuantity(FoodMenuItem foodMenuItem);
+		public float getQuantity(FoodMenuItem foodMenuItem);
 		
 		public void incrementQuantity(FoodMenuItem foodMenuItem);
 		

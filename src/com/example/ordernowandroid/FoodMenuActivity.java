@@ -311,7 +311,7 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
     }
 
     @Override
-    public Integer getQuantity(FoodMenuItem foodMenuItem) {
+	public float getQuantity(FoodMenuItem foodMenuItem) {
         final String itemName = foodMenuItem.getItemName();
         if (foodMenuItemQuantityMap.get(itemName) != null) {
             return foodMenuItemQuantityMap.get(itemName).getQuantity();
@@ -321,7 +321,7 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 
     @Override
     public void incrementQuantity(FoodMenuItem foodMenuItem) {
-        int quantity = 0;
+		float quantity = 0;
         final String itemName = foodMenuItem.getItemName();
         
         if (foodMenuItemQuantityMap.get(itemName) != null) {
@@ -337,7 +337,7 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 
     @Override
     public void decrementQuantity(FoodMenuItem foodMenuItem) {
-        int quantity = 0;
+		float quantity = 0;
         final String itemName = foodMenuItem.getItemName();
         if (foodMenuItemQuantityMap.get(itemName) != null) {
             quantity = foodMenuItemQuantityMap.get(itemName).getQuantity();
@@ -373,32 +373,44 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
         categoryItemPrice.add(R.array.salads_prices);
         categoryItemPrice.add(R.array.sizzlers_prices);
         categoryItemPrice.add(R.array.favourites_prices);
+
+		List<Integer> categoryItemID = new LinkedList<Integer>();
+		categoryItemID.add(R.array.soups_ids);
+		categoryItemID.add(R.array.starters_ids);
+		categoryItemID.add(R.array.salads_ids);
+		categoryItemID.add(R.array.sizzlers_ids);
+		categoryItemID.add(R.array.favourites_ids);
+
         String[] categoryNames = getResources().getStringArray(R.array.nav_drawer_items);
         List<Category> categories = new LinkedList<Category>();
         for (int i = 0; i < categoryNames.length; i++) {
             Category category = new Category();
-            getCategory(categoryNames[i], categoryItemName.get(i), categoryItemPrice.get(i), category);
+			getCategory(categoryNames[i], categoryItemName.get(i),
+					categoryItemPrice.get(i), categoryItemID.get(i), category);
             categories.add(category);
         }
 
         com.data.menu.Menu menu = new com.data.menu.Menu();
-        menu.setCategories(categories);
+		menu.setCategories(categories);
         Restaurant restaurant = new Restaurant();
         restaurant.setName("Eat 3");
         restaurant.setMenu(menu);
         return restaurant;
     }
 
-    private void getCategory(String categoryName, int itemNameResource, int itemPriceResource, Category soupCategory) {
+	private void getCategory(String categoryName, int itemNameResource,
+			int itemPriceResource, int itemDishIds, Category soupCategory) {
         soupCategory.setName(categoryName);
         List<Dish> dishes = new LinkedList<Dish>();
-        getDishes(dishes, itemNameResource, itemPriceResource);
+		getDishes(dishes, itemNameResource, itemPriceResource, itemDishIds);
         soupCategory.setDishes(dishes);
     }
 
-    private void getDishes(List<Dish> soupDishes, int soups, int soupsPrices) {
+	private void getDishes(List<Dish> soupDishes, int soups, int soupsPrices,
+			int dishids) {
         String[] itemNames = getResources().getStringArray(soups);
         int[] itemPrices = getResources().getIntArray(soupsPrices);
+		String[] itemids = getResources().getStringArray(dishids);
 
         for (int i = 0; itemNames != null && i < itemNames.length; i++) {
             Dish dish = new Dish();
@@ -410,6 +422,7 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
                 dish.setType(FoodType.NonVeg);
             }
             dish.setDescription("item description comes here");
+			dish.setDishId(itemids[i]);
             soupDishes.add(dish);
         }
     }

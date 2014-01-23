@@ -44,11 +44,11 @@ public class MyOrderAdapter extends ArrayAdapter<MyOrderItem> {
 		final TextView itemTotalPrice = (TextView) convertView.findViewById(R.id.itemTotalPrice);		
 
 		String orderItemName = orders.get(position).getFoodMenuItem().getItemName();
-		Integer orderItemQuantity = orders.get(position).getQuantity();
+		float orderItemQuantity = orders.get(position).getQuantity();
 		Float orderItemPrice = orders.get(position).getFoodMenuItem().getItemPrice();
 
 		itemName.setText(orderItemName);	
-		quantity.setText(Integer.toString(orderItemQuantity));
+		quantity.setText(Float.toString(orderItemQuantity));
 		itemTotalPrice.setText("\u20B9" + " " + Float.toString(orderItemPrice * orderItemQuantity));
 
 		final ImageButton decrementQtyBtn = (ImageButton) convertView.findViewById(R.id.decrementQtyButton);

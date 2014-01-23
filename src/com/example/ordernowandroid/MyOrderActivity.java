@@ -1,12 +1,22 @@
 package com.example.ordernowandroid;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.ProtocolException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,8 +25,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.data.menu.CustomerOrder;
 import com.example.ordernowandroid.adapter.MyOrderAdapter;
 import com.example.ordernowandroid.model.MyOrderItem;
+import com.google.gson.Gson;
+import com.parse.ParseInstallation;
 
 public class MyOrderActivity extends Activity {
     public static final String RETURN_FROM_MY_ORDER = "ReturnFromMyOrder";
@@ -68,6 +81,32 @@ public class MyOrderActivity extends Activity {
                 builder.setPositiveButton(R.string.ok, new OnClickListener() {                  
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+
+                    	Map<String, Float> dishes = new HashMap<String, Float>();
+						for (MyOrderItem myOrderItem : myOrders) {
+							dishes.put(myOrderItem.getFoodMenuItem()
+									.getDishId(), myOrderItem.getQuantity());
+						}
+						CharSequence text = ParseInstallation
+								.getCurrentInstallation().getObjectId();
+						CustomerOrder c = new CustomerOrder(dishes, "r1", "o1",
+								text.toString());
+						Gson gs = new Gson();
+						String json = gs.toJson(c);
+
+						String response = "";
+						try {
+							response = new asyncNetwork().execute(
+									"http://ordernow.herokuapp.com/order?order="+ json).get();
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (ExecutionException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+                    	
+						Toast.makeText(getApplicationContext(),"RESPONSE :" + response, Toast.LENGTH_LONG).show();
                         //TODO: Back End Integration, Make an API Call to let the Server know about Order Confirmation
                         Toast.makeText(getApplicationContext(), "Order has been confirmed.", Toast.LENGTH_LONG).show();
                         //TODO: Check how should the flow be
@@ -116,4 +155,34 @@ public class MyOrderActivity extends Activity {
         setResult(RESULT_OK, data);
         super.finish();
     }
+}
+
+
+class asyncNetwork extends AsyncTask<String, Void, String> {
+
+	@Override
+	protected String doInBackground(String... params) {
+		String response = "";
+
+		try {
+			URL url = new URL("http://www.google.com");
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			conn.setRequestMethod("GET");
+			BufferedReader br = new BufferedReader(new InputStreamReader(
+					(conn.getInputStream())));
+			String line = null;
+			while ((line = br.readLine()) != null) {
+				response = line;
+			}
+		} catch (ProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return response;
+	}
+
 }

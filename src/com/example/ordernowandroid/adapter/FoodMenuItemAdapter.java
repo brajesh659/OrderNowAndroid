@@ -5,7 +5,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -126,7 +125,8 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
 			holder.itemImage.setAlpha(1f);
 		}
 		else {
-			holder.txt_itemQuantity.setText(numCallBack.getQuantity(foodItem).toString());
+			holder.txt_itemQuantity.setText(numCallBack.getQuantity(foodItem)
+					+ "");
 			holder.subItem.setVisibility(View.VISIBLE);
 			holder.itemImage.setAlpha(0.3f);
 		}
@@ -138,7 +138,8 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
                 FoodMenuItem foodItem = (FoodMenuItem) v.getTag();
                 numCallBack.incrementQuantity(foodItem);
                 holder.subItem.setVisibility(View.VISIBLE);
-                holder.txt_itemQuantity.setText(numCallBack.getQuantity(foodItem).toString());
+				holder.txt_itemQuantity.setText(numCallBack
+						.getQuantity(foodItem) + "");
                 holder.itemImage.setAlpha(0.3f);                
             }
         });
@@ -149,8 +150,9 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
             public void onClick(View v) {
                 FoodMenuItem foodItem = (FoodMenuItem) v.getTag();
                 numCallBack.decrementQuantity(foodItem);
-                Integer quantity = numCallBack.getQuantity(foodItem);
-                holder.txt_itemQuantity.setText(numCallBack.getQuantity(foodItem).toString());
+				float quantity = numCallBack.getQuantity(foodItem);
+				holder.txt_itemQuantity.setText(numCallBack
+						.getQuantity(foodItem) + "");
                 if (quantity == 0) {
                     holder.subItem.setVisibility(View.INVISIBLE);
                     holder.txt_itemQuantity.setText("");

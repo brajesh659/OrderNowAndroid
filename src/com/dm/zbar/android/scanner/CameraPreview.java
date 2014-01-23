@@ -1,5 +1,8 @@
 package com.dm.zbar.android.scanner;
 
+import java.io.IOException;
+import java.util.List;
+
 import android.content.Context;
 import android.hardware.Camera;
 import android.hardware.Camera.AutoFocusCallback;
@@ -10,8 +13,6 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
-import java.io.IOException;
-import java.util.List;
 
 class CameraPreview extends ViewGroup implements SurfaceHolder.Callback {
     private final String TAG = "CameraPreview";
