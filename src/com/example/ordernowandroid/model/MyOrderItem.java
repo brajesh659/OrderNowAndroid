@@ -24,7 +24,7 @@ public class MyOrderItem implements Serializable {
 		this.foodMenuItem = foodMenuItem;
 	}
 
-	public void setQuantity(Integer quantity) {
+	public void setQuantity(float quantity) {
 		this.quantity = quantity;
 	}
 

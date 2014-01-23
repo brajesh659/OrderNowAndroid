@@ -57,7 +57,7 @@ public class MyOrderAdapter extends ArrayAdapter<MyOrderItem> {
 		decrementQtyBtn.setOnClickListener(new OnClickListener() { 
 			@Override
 			public void onClick(View v) {				
-				Integer qty = Integer.parseInt((String) quantity.getText());
+				Float qty = Float.parseFloat((String) quantity.getText());
 				String orderItemPriceStr = (String) itemTotalPrice.getText();				
 
 				if (orderItemPriceStr.indexOf("\u20B9 ") != -1){ //Strip Rupee Symbol from Total Price
@@ -67,7 +67,7 @@ public class MyOrderAdapter extends ArrayAdapter<MyOrderItem> {
 				Float orderItemPrice = Float.parseFloat(orderItemPriceStr);
 				if (qty > 1){
 					itemTotalPrice.setText("\u20B9" + " " + Float.toString((orderItemPrice/qty) * (qty - 1)));
-					quantity.setText(Integer.toString(qty - 1));
+					quantity.setText(Float.toString(qty - 1));
 					orders.get(position).setQuantity(--qty);					
 				} else if (qty == 1){ 
 					//Show Dialog and Remove Item from ListView on Positive Button Action
@@ -94,7 +94,7 @@ public class MyOrderAdapter extends ArrayAdapter<MyOrderItem> {
 		incrementQtyBtn.setOnClickListener(new OnClickListener() { 
 			@Override
 			public void onClick(View v) {				
-				Integer qty = Integer.parseInt((String) quantity.getText());
+				Float qty = Float.parseFloat((String) quantity.getText());
 				String orderItemPriceStr = (String) itemTotalPrice.getText();				
 
 				if (orderItemPriceStr.indexOf("\u20B9 ") != -1){ //Strip Rupee Symbol from Total Price
@@ -106,7 +106,7 @@ public class MyOrderAdapter extends ArrayAdapter<MyOrderItem> {
 					Toast.makeText(getContext(), "Cannot determine Unit Price if the Quantity is zero", Toast.LENGTH_SHORT).show();					
 				} else {
 					itemTotalPrice.setText("\u20B9" + " " + Float.toString((orderItemPrice/qty) * (qty + 1)));
-					quantity.setText(Integer.toString(qty + 1));
+					quantity.setText(Float.toString(qty + 1));
 					orders.get(position).setQuantity(++qty);					
 				}
 			}
