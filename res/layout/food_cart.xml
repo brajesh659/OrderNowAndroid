@@ -8,8 +8,9 @@
         android:id="@+id/action_cart_image"
         android:layout_width="40dp"
         android:layout_height="fill_parent"
-        android:clickable="true"
         android:layout_alignParentRight="true"
+        android:clickable="true"
+        android:paddingRight="5dp"
         android:src="@drawable/ic_cart_icon" />
     
     <TextView

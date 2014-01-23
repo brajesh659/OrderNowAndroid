@@ -46,8 +46,7 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
     private ArrayList<FoodMenuItem> allfoodMenuItems;
 
     private numListener numCallBack;
-	private ModelFilter filter;
-
+    private ModelFilter filter;
 
     public FoodMenuItemAdapter(Context context, ArrayList<FoodMenuItem> foodMenuItems, numListener numCallBack) {
         super(context, R.layout.food_menu_item, foodMenuItems);
@@ -85,7 +84,7 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
             holder.txt_itemPrice = (TextView) convertView.findViewById(R.id.dish_price);
             holder.txt_itemQuantity = (TextView) convertView.findViewById(R.id.dish_quantity);
             holder.itemImage = (ImageView) convertView.findViewById(R.id.dish_photo);
-            holder.addItem = (ImageButton) convertView.findViewById(R.id.addbutton);       
+            holder.addItem = (ImageButton) convertView.findViewById(R.id.addbutton);
             holder.subItem = (ImageButton) convertView.findViewById(R.id.subbutton);
             convertView.setTag(holder);
         } else {
@@ -96,40 +95,38 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
         holder.txt_itemName.setText(foodItem.getItemName());
         holder.txt_itemDescription.setText(foodItem.getDescription());
         holder.txt_itemPrice.setText("\u20B9" + " " + foodItem.getItemPrice().toString());
-    
+
         URL abc = null;
         try {
-            abc = new URL("http://www.creativefreedom.co.uk/icon-designers-blog/wp-content/uploads/2013/03/00-android-4-0_icons.png");
+            abc = new URL(
+                    "http://www.creativefreedom.co.uk/icon-designers-blog/wp-content/uploads/2013/03/00-android-4-0_icons.png");
         } catch (MalformedURLException e) {
             e.printStackTrace();
-            Log.e(FoodMenuActivity.class.getName(),e.getLocalizedMessage()+" error ");
+            Log.e(FoodMenuActivity.class.getName(), e.getLocalizedMessage() + " error ");
         }
         /*
-        Bitmap bitmap = null;
-        try {
-            bitmap = new DownloadImageTask().execute(abc).get();
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-            holder.itemImage.setImageBitmap(bitmap);
-            */
+         * Bitmap bitmap = null; try { bitmap = new
+         * DownloadImageTask().execute(abc).get(); } catch (InterruptedException
+         * e) { // TODO Auto-generated catch block e.printStackTrace(); } catch
+         * (ExecutionException e) { // TODO Auto-generated catch block
+         * e.printStackTrace(); } holder.itemImage.setImageBitmap(bitmap);
+         */
 
         holder.itemImage.setImageResource(R.drawable.bb1);
-		if (numCallBack.getQuantity(foodItem) == 0) {
-			holder.subItem.setVisibility(View.INVISIBLE);
-			holder.txt_itemQuantity.setText("");
-			holder.itemImage.setAlpha(1f);
-		}
-		else {
-			holder.txt_itemQuantity.setText(numCallBack.getQuantity(foodItem)
-					+ "");
-			holder.subItem.setVisibility(View.VISIBLE);
-			holder.itemImage.setAlpha(0.3f);
-		}
+        if (numCallBack.getQuantity(foodItem) == 0) {
+            holder.subItem.setVisibility(View.INVISIBLE);
+            holder.txt_itemQuantity.setText("");
+            holder.itemImage.setAlpha(1f);
+        } else {
+            final Float quantity = numCallBack.getQuantity(foodItem);
+            if (quantity - quantity.intValue() == 0)
+                holder.txt_itemQuantity.setText(quantity.intValue() + "");
+            else
+                holder.txt_itemQuantity.setText(quantity + "");
+            
+                holder.subItem.setVisibility(View.VISIBLE);
+            holder.itemImage.setAlpha(0.3f);
+        }
 
         holder.addItem.setOnClickListener(new View.OnClickListener() {
 
@@ -138,9 +135,12 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
                 FoodMenuItem foodItem = (FoodMenuItem) v.getTag();
                 numCallBack.incrementQuantity(foodItem);
                 holder.subItem.setVisibility(View.VISIBLE);
-				holder.txt_itemQuantity.setText(numCallBack
-						.getQuantity(foodItem) + "");
-                holder.itemImage.setAlpha(0.3f);                
+                final Float quantity = numCallBack.getQuantity(foodItem);
+                if ((quantity - quantity.intValue()) == 0)
+                    holder.txt_itemQuantity.setText(quantity.intValue() + "");
+                else
+                    holder.txt_itemQuantity.setText(quantity + "");
+                holder.itemImage.setAlpha(0.3f);
             }
         });
 
@@ -150,9 +150,11 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
             public void onClick(View v) {
                 FoodMenuItem foodItem = (FoodMenuItem) v.getTag();
                 numCallBack.decrementQuantity(foodItem);
-				float quantity = numCallBack.getQuantity(foodItem);
-				holder.txt_itemQuantity.setText(numCallBack
-						.getQuantity(foodItem) + "");
+                Float quantity = numCallBack.getQuantity(foodItem);
+                if (quantity - quantity.intValue() == 0)
+                    holder.txt_itemQuantity.setText(quantity.intValue() + "");
+                else
+                    holder.txt_itemQuantity.setText(quantity + "");
                 if (quantity == 0) {
                     holder.subItem.setVisibility(View.INVISIBLE);
                     holder.txt_itemQuantity.setText("");
@@ -177,31 +179,31 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
         ImageButton addItem;
         ImageButton subItem;
     }
-    
-    
+
     @Override
     public Filter getFilter() {
-    	if(filter == null) {
-    		filter = new ModelFilter();
-    	}
-    	return filter;
+        if (filter == null) {
+            filter = new ModelFilter();
+        }
+        return filter;
     }
-    
+
     private class DownloadImageTask extends AsyncTask<URL, Integer, Bitmap> {
 
         @Override
         protected Bitmap doInBackground(URL... params) {
-            Bitmap bitmap= null;
+            Bitmap bitmap = null;
             try {
-                URL url = new URL("http://www.creativefreedom.co.uk/icon-designers-blog/wp-content/uploads/2013/03/00-android-4-0_icons.png");
-                //try this url = "http://0.tqn.com/d/webclipart/1/0/5/l/4/floral-icon-5.jpg"
+                URL url = new URL(
+                        "http://www.creativefreedom.co.uk/icon-designers-blog/wp-content/uploads/2013/03/00-android-4-0_icons.png");
+                // try this url =
+                // "http://0.tqn.com/d/webclipart/1/0/5/l/4/floral-icon-5.jpg"
                 HttpGet httpRequest = null;
 
                 httpRequest = new HttpGet(url.toURI());
 
                 HttpClient httpclient = new DefaultHttpClient();
-                HttpResponse response = (HttpResponse) httpclient
-                        .execute(httpRequest);
+                HttpResponse response = (HttpResponse) httpclient.execute(httpRequest);
 
                 HttpEntity entity = response.getEntity();
                 BufferedHttpEntity b_entity = new BufferedHttpEntity(entity);
@@ -211,49 +213,48 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
 
             } catch (Exception ex) {
                 ex.printStackTrace();
-                Log.e("FoodMenuItemAdapter", ex.getMessage()+"got exception");
+                Log.e("FoodMenuItemAdapter", ex.getMessage() + "got exception");
             }
             return bitmap;
         }
-        
+
     }
-    
+
     private class ModelFilter extends Filter {
 
-		@Override
-		protected FilterResults performFiltering(CharSequence constraint) {
-			FilterResults filterResults = new FilterResults();
-			List<FoodMenuItem> filteredItemList = new ArrayList<FoodMenuItem>();
-			if(constraint.equals(FoodType.Veg.toString())) {
-				for(FoodMenuItem foodItem : allfoodMenuItems) {
-					if(foodItem.getFoodType().equals(FoodType.Veg)) {
-						filteredItemList.add(foodItem);
-					}
-				}
-			} else if(constraint.equals(FoodType.NonVeg.toString())) {
-				for(FoodMenuItem foodItem : allfoodMenuItems) {
-					if(foodItem.getFoodType().equals(FoodType.NonVeg)) {
-						filteredItemList.add(foodItem);
-					}
-				}
-			} else {
-			filteredItemList.addAll(allfoodMenuItems);
-			}
-			filterResults.count = filteredItemList.size();
-			filterResults.values = filteredItemList;
-			return filterResults;
-		}
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            FilterResults filterResults = new FilterResults();
+            List<FoodMenuItem> filteredItemList = new ArrayList<FoodMenuItem>();
+            if (constraint.equals(FoodType.Veg.toString())) {
+                for (FoodMenuItem foodItem : allfoodMenuItems) {
+                    if (foodItem.getFoodType().equals(FoodType.Veg)) {
+                        filteredItemList.add(foodItem);
+                    }
+                }
+            } else if (constraint.equals(FoodType.NonVeg.toString())) {
+                for (FoodMenuItem foodItem : allfoodMenuItems) {
+                    if (foodItem.getFoodType().equals(FoodType.NonVeg)) {
+                        filteredItemList.add(foodItem);
+                    }
+                }
+            } else {
+                filteredItemList.addAll(allfoodMenuItems);
+            }
+            filterResults.count = filteredItemList.size();
+            filterResults.values = filteredItemList;
+            return filterResults;
+        }
 
-		@Override
-		protected void publishResults(CharSequence constraint,
-				FilterResults results) {
-			List<FoodMenuItem> filteredItemList = (List<FoodMenuItem>) results.values;
-			foodMenuItems.clear();
-			foodMenuItems.addAll(filteredItemList);
-			notifyDataSetChanged();
-			
-		}
-    	
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            List<FoodMenuItem> filteredItemList = (List<FoodMenuItem>) results.values;
+            foodMenuItems.clear();
+            foodMenuItems.addAll(filteredItemList);
+            notifyDataSetChanged();
+
+        }
+
     }
 
 }

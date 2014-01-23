@@ -163,8 +163,6 @@ public class FoodMenuActivity extends FragmentActivity implements numListener{
             intent.putExtra(MY_ORDER, orderItems);
             startActivityForResult(intent, MY_ORDER_REQUEST_CODE);
             return true;
-        case R.id.action_settings:
-            return true;
         default:
             return super.onOptionsItemSelected(item);
         }
@@ -204,9 +202,6 @@ public class FoodMenuActivity extends FragmentActivity implements numListener{
      */
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        // if nav drawer is opened, hide the action items
-        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
-        menu.findItem(R.id.action_settings).setVisible(!drawerOpen);
         return super.onPrepareOptionsMenu(menu);
     }
 
