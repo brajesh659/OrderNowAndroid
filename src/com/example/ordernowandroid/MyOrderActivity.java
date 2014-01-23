@@ -34,6 +34,10 @@ import com.parse.ParseInstallation;
 public class MyOrderActivity extends Activity {
     public static final String RETURN_FROM_MY_ORDER = "ReturnFromMyOrder";
     private ArrayList<MyOrderItem> myOrders;
+    
+    public static final String FOOD_MENU_CATEGORY_ID = "foodMenuCategoryId";
+    private int categoryId;
+    
     @SuppressWarnings("unchecked")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +45,7 @@ public class MyOrderActivity extends Activity {
         setTitle("My Order");
         Bundle b = getIntent().getExtras();
         myOrders = (ArrayList<MyOrderItem>) b.getSerializable(FoodMenuActivity.MY_ORDER);
+        categoryId = b.getInt(FoodMenuActivity.CATEGORY_ID);
         setContentView(R.layout.my_order_summary);
         Button addMoreItemsBtn = (Button) findViewById(R.id.addMoreItemsButton);
         Button cancelOrderBtn = (Button) findViewById(R.id.cancelOrderButton);
@@ -153,6 +158,7 @@ public class MyOrderActivity extends Activity {
 	public void finish() {
 		Intent data = new Intent();
 		data.putExtra(RETURN_FROM_MY_ORDER, myOrders);
+		data.putExtra(FOOD_MENU_CATEGORY_ID, categoryId);
 		Toast.makeText(this, "Finish " + myOrders.toString(), Toast.LENGTH_SHORT).show();
 		// Activity finished ok, return the data
 		setResult(RESULT_OK, data);

@@ -42,7 +42,8 @@ import com.example.ordernowandroid.model.MyOrderItem;
 public class FoodMenuActivity extends FragmentActivity implements numListener{
 
     private static final int MY_ORDER_REQUEST_CODE = 1;
-    static final String MY_ORDER = "MyOrder";
+    protected static final String MY_ORDER = "MyOrder";
+	protected static final String CATEGORY_ID = null;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -61,7 +62,6 @@ public class FoodMenuActivity extends FragmentActivity implements numListener{
         restaurant = getResturant();
         mTitle = getTitle();
         mDrawerTitle = restaurant.getName();
-        Toast.makeText(this, "onCreate FoodMenuActivytCalled", Toast.LENGTH_SHORT).show();
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
@@ -139,6 +139,7 @@ public class FoodMenuActivity extends FragmentActivity implements numListener{
 	            }
 	            Intent intent = new Intent(context, MyOrderActivity.class);
 	            intent.putExtra(MY_ORDER, orderItems);
+	            intent.putExtra(CATEGORY_ID, mDrawerList.getCheckedItemPosition());
 	            startActivityForResult(intent, MY_ORDER_REQUEST_CODE);		
 			}
 		});
@@ -161,6 +162,7 @@ public class FoodMenuActivity extends FragmentActivity implements numListener{
             }
             Intent intent = new Intent(this, MyOrderActivity.class);
             intent.putExtra(MY_ORDER, orderItems);
+            intent.putExtra(CATEGORY_ID, mDrawerList.getCheckedItemPosition());
             startActivityForResult(intent, MY_ORDER_REQUEST_CODE);
             return true;
         default:
@@ -183,7 +185,7 @@ public class FoodMenuActivity extends FragmentActivity implements numListener{
                         foodMenuItemQuantityMap.put(myOrderItem.getFoodMenuItem().getItemName(), myOrderItem);
                     }
                 }
-                displayView(2); //FIXME
+                displayView(bundleExtra.getInt(MyOrderActivity.FOOD_MENU_CATEGORY_ID));
             } else if(resultCode == RESULT_CANCELED && data != null) {
                 String error = data.getStringExtra(ZBarConstants.ERROR_INFO);
                 if(!TextUtils.isEmpty(error)) {
@@ -292,7 +294,6 @@ public class FoodMenuActivity extends FragmentActivity implements numListener{
         quantity++;
         MyOrderItem myOrderItem = new MyOrderItem(foodMenuItem, quantity);
         foodMenuItemQuantityMap.put(itemName, myOrderItem);
-        Toast.makeText(this, foodMenuItem.toString() + "  " + quantity, Toast.LENGTH_SHORT).show();
         //updateFoodCartNotificationText();
         invalidateOptionsMenu();
     }
@@ -315,7 +316,6 @@ public class FoodMenuActivity extends FragmentActivity implements numListener{
                 MyOrderItem myOrderItem = new MyOrderItem(foodMenuItem, quantity);
                 foodMenuItemQuantityMap.put(itemName, myOrderItem );
             }
-            Toast.makeText(this, foodMenuItem.toString() + "  " + quantity, Toast.LENGTH_SHORT).show();
         }
         //updateFoodCartNotificationText();
         invalidateOptionsMenu();
