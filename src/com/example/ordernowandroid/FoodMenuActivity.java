@@ -8,6 +8,7 @@ import java.util.List;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -23,7 +24,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.data.menu.Category;
@@ -123,7 +127,26 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
-        return true;
+        RelativeLayout food_cart_layout = (RelativeLayout)menu.findItem(R.id.action_cart).getActionView();
+        TextView food_item_notification = (TextView)food_cart_layout.findViewById(R.id.food_cart_notifcation_textview);
+        food_item_notification.setText(Integer.toString(foodMenuItemQuantityMap.keySet().size()));
+        ImageView cart_image = (ImageView)food_cart_layout.findViewById(R.id.action_cart_image);
+        final Context context = this;
+        cart_image.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				ArrayList<MyOrderItem> orderItems = new ArrayList<MyOrderItem>();
+	            if (foodMenuItemQuantityMap != null) {
+	                orderItems.addAll(foodMenuItemQuantityMap.values());
+	            }
+	            Intent intent = new Intent(context, MyOrderActivity.class);
+	            intent.putExtra(MY_ORDER, orderItems);
+	            startActivityForResult(intent, MY_ORDER_REQUEST_CODE);		
+			}
+		});
+        
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -308,6 +331,8 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
         MyOrderItem myOrderItem = new MyOrderItem(foodMenuItem, quantity);
         foodMenuItemQuantityMap.put(itemName, myOrderItem);
         Toast.makeText(this, foodMenuItem.toString() + "  " + quantity, Toast.LENGTH_SHORT).show();
+        //updateFoodCartNotificationText();
+        invalidateOptionsMenu();
     }
 
     @Override
@@ -330,6 +355,8 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
             }
             Toast.makeText(this, foodMenuItem.toString() + "  " + quantity, Toast.LENGTH_SHORT).show();
         }
+        //updateFoodCartNotificationText();
+        invalidateOptionsMenu();
     }
 
     public Restaurant getResturant() {

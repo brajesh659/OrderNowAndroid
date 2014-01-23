@@ -9,7 +9,7 @@
         android:id="@+id/action_cart"
         android:orderInCategory="100"
         android:showAsAction="always"
-        android:icon="@drawable/ic_cart_icon"
+        android:actionLayout="@layout/food_cart"
         android:title="MyOrder"/>
 
 </menu>
