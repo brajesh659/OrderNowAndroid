@@ -6,7 +6,7 @@ public class MyOrderItem implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public MyOrderItem(FoodMenuItem foodMenuItem, Integer quantity) {
+	public MyOrderItem(FoodMenuItem foodMenuItem, float quantity) {
 		super();
 		this.foodMenuItem = foodMenuItem;
 		this.quantity = quantity;
@@ -18,7 +18,7 @@ public class MyOrderItem implements Serializable {
 	}
 
 	private FoodMenuItem foodMenuItem;
-	private Integer quantity;
+	private float quantity;
 
 	public void setFoodMenuItem(FoodMenuItem foodMenuItem) {
 		this.foodMenuItem = foodMenuItem;
@@ -32,7 +32,7 @@ public class MyOrderItem implements Serializable {
 		return foodMenuItem;
 	}
 
-	public Integer getQuantity() {
+	public float getQuantity() {
 		return quantity;
 	}
 

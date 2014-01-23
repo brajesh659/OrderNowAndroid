@@ -43,6 +43,14 @@
         <item>Consomme Soup</item>
         <item>Spicy Sea Food Soup</item>
     </string-array>
+    
+    <string-array name="soups_ids">
+        <item>d0</item>
+        <item>d1</item>
+        <item>d2</item>
+        <item>d3</item>
+        <item>d4</item>
+    </string-array>
 
     <integer-array name="soups_prices">
         <item>95</item>
@@ -59,6 +67,13 @@
         <item>Roasted Lamb</item>
         <item>Lamb Chops</item>
     </string-array>
+    <string-array name="starters_ids">
+        <item>d5</item>
+        <item>d6</item>
+        <item>d7</item>
+        <item>d8</item>
+        <item>d9</item>
+    </string-array>
 
     <integer-array name="starters_prices">
         <item>165</item>
@@ -74,6 +89,14 @@
         <item>Greek Salad</item>
         <item>Cesar Salad</item>
         <item>Chicken Hawaian Salad</item>
+    </string-array>
+    
+    <string-array name="salads_ids">
+        <item>d10</item>
+        <item>d11</item>
+        <item>d12</item>
+        <item>d14</item>
+        <item>d15</item>
     </string-array>
 
     <integer-array name="salads_prices">
@@ -92,6 +115,15 @@
         <item>Grilled Fish Sizzler</item>
         <item>Prawns Sizzler</item>
     </string-array>
+    
+    <string-array name="sizzlers_ids">
+        <item>d16</item>
+        <item>d17</item>
+        <item>d18</item>
+        <item>d19</item>
+        <item>d20</item>
+        <item>d21</item>
+    </string-array>
 
     <integer-array name="sizzlers_prices">
         <item>245</item>
@@ -109,6 +141,13 @@
         <item>Lamb Stroganoff</item>
     </string-array>
 
+    <string-array name="favourites_ids">
+        <item>d22</item>
+        <item>d23</item>
+        <item>d24</item>
+        <item>d25</item>
+    </string-array>
+    
     <integer-array name="favourites_prices">
         <item>275</item>
         <item>275</item>

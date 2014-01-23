@@ -1,8 +1,9 @@
 package com.example.ordernowandroid.model;
 
 import java.io.Serializable;
-import com.data.menu.FoodType;
+
 import com.data.menu.Dish;
+import com.data.menu.FoodType;
 
 /**
  * 
@@ -57,5 +58,9 @@ public class FoodMenuItem implements Serializable {
     public int hashCode() {
         return this.toString().hashCode();
     }
+
+	public String getDishId() {
+		return dish.getDishId();
+	}
 
 }
