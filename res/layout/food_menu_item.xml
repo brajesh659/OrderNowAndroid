@@ -5,8 +5,9 @@
 
     <ImageView
         android:id="@+id/dish_photo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:scaleType="fitXY"
         android:contentDescription="@string/scan_qr_codes"
         android:adjustViewBounds="true"
         android:paddingRight="15dp"
