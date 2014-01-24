@@ -27,6 +27,7 @@ public class Dish implements Serializable {
     private String img;
     private Float price;
     private FoodType type; // Veg or non-veg
+	private boolean isAvailable = true;
 
     public String getDishId() {
         return dishId;
