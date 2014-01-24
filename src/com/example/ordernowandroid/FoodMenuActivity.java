@@ -342,13 +342,20 @@ public class FoodMenuActivity extends FragmentActivity implements numListener{
 		categoryItemID.add(R.array.salads_ids);
 		categoryItemID.add(R.array.sizzlers_ids);
 		categoryItemID.add(R.array.favourites_ids);
+		
+		List<Integer> imageId = new LinkedList<Integer>();
+		imageId.add(R.array.soups_icons);
+		imageId.add(R.array.starters_icons);
+		imageId.add(R.array.salads_icons);
+		imageId.add(R.array.sizzlers_icons);
+		imageId.add(R.array.favourites_icons);
 
         String[] categoryNames = getResources().getStringArray(R.array.nav_drawer_items);
         List<Category> categories = new LinkedList<Category>();
         for (int i = 0; i < categoryNames.length; i++) {
             Category category = new Category();
 			getCategory(categoryNames[i], categoryItemName.get(i),
-					categoryItemPrice.get(i), categoryItemID.get(i), category);
+					categoryItemPrice.get(i), categoryItemID.get(i), imageId.get(i), category);
             categories.add(category);
         }
 
@@ -361,23 +368,25 @@ public class FoodMenuActivity extends FragmentActivity implements numListener{
     }
 
 	private void getCategory(String categoryName, int itemNameResource,
-			int itemPriceResource, int itemDishIds, Category soupCategory) {
+			int itemPriceResource, int itemDishIds, int itemImage , Category soupCategory) {
         soupCategory.setName(categoryName);
         List<Dish> dishes = new LinkedList<Dish>();
-		getDishes(dishes, itemNameResource, itemPriceResource, itemDishIds);
+		getDishes(dishes, itemNameResource, itemPriceResource, itemDishIds, itemImage);
         soupCategory.setDishes(dishes);
     }
 
-	private void getDishes(List<Dish> soupDishes, int soups, int soupsPrices,
-			int dishids) {
-        String[] itemNames = getResources().getStringArray(soups);
-        int[] itemPrices = getResources().getIntArray(soupsPrices);
-		String[] itemids = getResources().getStringArray(dishids);
+	private void getDishes(List<Dish> dishes, int itemNameResource, int itemPriceResource,
+			int itemDishIds, int itemImage) {
+        String[] itemNames = getResources().getStringArray(itemNameResource);
+        int[] itemPrices = getResources().getIntArray(itemPriceResource);
+		String[] itemids = getResources().getStringArray(itemDishIds);
+		String[] itemImages = getResources().getStringArray(itemImage);
 
         for (int i = 0; itemNames != null && i < itemNames.length; i++) {
             Dish dish = new Dish();
             dish.setName(itemNames[i]);
             dish.setPrice(itemPrices[i]);
+            dish.setImg(itemImages[i]);
             if (i % 2 == 0) {
                 dish.setType(FoodType.Veg);
             } else {
@@ -385,7 +394,8 @@ public class FoodMenuActivity extends FragmentActivity implements numListener{
             }
             dish.setDescription("item description comes here");
 			dish.setDishId(itemids[i]);
-            soupDishes.add(dish);
+            dishes.add(dish);
+            
         }
     }
 }

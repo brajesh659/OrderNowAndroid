@@ -5,6 +5,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -96,23 +97,20 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
         holder.txt_itemDescription.setText(foodItem.getDescription());
         holder.txt_itemPrice.setText("\u20B9" + " " + foodItem.getItemPrice().toString());
 
-        URL abc = null;
-        try {
-            abc = new URL(
-                    "http://www.creativefreedom.co.uk/icon-designers-blog/wp-content/uploads/2013/03/00-android-4-0_icons.png");
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-            Log.e(FoodMenuActivity.class.getName(), e.getLocalizedMessage() + " error ");
-        }
-        /*
-         * Bitmap bitmap = null; try { bitmap = new
-         * DownloadImageTask().execute(abc).get(); } catch (InterruptedException
-         * e) { // TODO Auto-generated catch block e.printStackTrace(); } catch
-         * (ExecutionException e) { // TODO Auto-generated catch block
-         * e.printStackTrace(); } holder.itemImage.setImageBitmap(bitmap);
-         */
+        String image = foodItem.getImage();
 
-        holder.itemImage.setImageResource(R.drawable.bb1);
+        Bitmap bitmap = null;
+        try {
+            bitmap = new DownloadImageTask().execute(image).get();
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (ExecutionException e) { // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        holder.itemImage.setImageBitmap(bitmap);
+
+//        holder.itemImage.setImageResource(R.drawable.bb1);
         if (numCallBack.getQuantity(foodItem) == 0) {
             holder.subItem.setVisibility(View.INVISIBLE);
             holder.txt_itemQuantity.setText("");
@@ -188,36 +186,13 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
         return filter;
     }
 
-    private class DownloadImageTask extends AsyncTask<URL, Integer, Bitmap> {
-
+    private class DownloadImageTask extends AsyncTask<String, Integer, Bitmap> {
         @Override
-        protected Bitmap doInBackground(URL... params) {
-            Bitmap bitmap = null;
-            try {
-                URL url = new URL(
-                        "http://www.creativefreedom.co.uk/icon-designers-blog/wp-content/uploads/2013/03/00-android-4-0_icons.png");
-                // try this url =
-                // "http://0.tqn.com/d/webclipart/1/0/5/l/4/floral-icon-5.jpg"
-                HttpGet httpRequest = null;
-
-                httpRequest = new HttpGet(url.toURI());
-
-                HttpClient httpclient = new DefaultHttpClient();
-                HttpResponse response = (HttpResponse) httpclient.execute(httpRequest);
-
-                HttpEntity entity = response.getEntity();
-                BufferedHttpEntity b_entity = new BufferedHttpEntity(entity);
-                InputStream input = b_entity.getContent();
-
-                bitmap = BitmapFactory.decodeStream(input);
-
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                Log.e("FoodMenuItemAdapter", ex.getMessage() + "got exception");
-            }
-            return bitmap;
+        protected Bitmap doInBackground(String... params) {
+            //"http://www.creativefreedom.co.uk/icon-designers-blog/wp-content/uploads/2013/03/00-android-4-0_icons.png"
+            return new ImageService().getImageWithCache(params[0]);
         }
-
+        
     }
 
     private class ModelFilter extends Filter {

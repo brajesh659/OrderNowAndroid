@@ -62,5 +62,9 @@ public class FoodMenuItem implements Serializable {
 	public String getDishId() {
 		return dish.getDishId();
 	}
+	
+	public String getImage() {
+        return dish.getImg();
+    }
 
 }
