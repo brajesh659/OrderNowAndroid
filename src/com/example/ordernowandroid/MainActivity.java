@@ -10,6 +10,8 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
 
+import com.data.database.CurrentOrdersHelpers;
+import com.data.database.CustomDbAdapter;
 import com.dm.zbar.android.scanner.ZBarConstants;
 import com.dm.zbar.android.scanner.ZBarScannerActivity;
 import com.parse.Parse;
@@ -25,6 +27,10 @@ public class MainActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		CustomDbAdapter dbManager = CustomDbAdapter
+				.getInstance(getBaseContext());
+		CurrentOrdersHelpers coh = new CurrentOrdersHelpers(dbManager);
+		coh.getCurrentOrders();
 		  Parse.initialize(this, "vMFTELLhOo9RDRql9HpV9lKRot5xQTCCD63wkYdQ", "mdz7n8XUjy3u0MSQRnuwmogqXZrw3qJnRwmRxx0g"); 
           PushService.setDefaultPushCallback(this, MainActivity.class);
           ParseInstallation.getCurrentInstallation().saveInBackground();
