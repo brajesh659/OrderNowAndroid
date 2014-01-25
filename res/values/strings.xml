@@ -60,6 +60,14 @@
         <item>125</item>
         <item>125</item>
     </integer-array>
+    
+    <string-array name="soups_icons">
+        <item>http://files.softicons.com/download/food-drinks-icons/free-food-icons-by-daily-overview/png/48x48/chicken.png</item>
+        <item>http://files.softicons.com/download/food-drinks-icons/free-food-icons-by-daily-overview/png/48x48/chicken.png</item>
+        <item>http://files.softicons.com/download/food-drinks-icons/free-food-icons-by-daily-overview/png/48x48/chicken.png</item>
+        <item>http://files.softicons.com/download/food-drinks-icons/free-food-icons-by-daily-overview/png/48x48/chicken.png</item>
+        <item>http://files.softicons.com/download/food-drinks-icons/free-food-icons-by-daily-overview/png/48x48/chicken.png</item>
+    </string-array>
 
     <string-array name="starters">
         <item>Nachos with Cheese Sauce</item>
@@ -74,6 +82,14 @@
         <item>d7</item>
         <item>d8</item>
         <item>d9</item>
+    </string-array>
+    
+    <string-array name="starters_icons">
+        <item>http://files.softicons.com/download/food-drinks-icons/free-food-icons-by-daily-overview/png/48x48/chicken.png</item>
+        <item>http://files.softicons.com/download/food-drinks-icons/free-food-icons-by-daily-overview/png/48x48/chicken.png</item>
+        <item>http://files.softicons.com/download/food-drinks-icons/free-food-icons-by-daily-overview/png/48x48/chicken.png</item>
+        <item>http://files.softicons.com/download/food-drinks-icons/free-food-icons-by-daily-overview/png/48x48/chicken.png</item>
+        <item>http://files.softicons.com/download/food-drinks-icons/free-food-icons-by-daily-overview/png/48x48/chicken.png</item>
     </string-array>
 
     <integer-array name="starters_prices">
@@ -98,6 +114,14 @@
         <item>d12</item>
         <item>d14</item>
         <item>d15</item>
+    </string-array>
+    
+	<string-array name="salads_icons">
+        <item>http://files.softicons.com/download/food-drinks-icons/free-food-icons-by-daily-overview/png/48x48/chicken.png</item>
+        <item>http://files.softicons.com/download/food-drinks-icons/free-food-icons-by-daily-overview/png/48x48/chicken.png</item>
+        <item>http://files.softicons.com/download/food-drinks-icons/free-food-icons-by-daily-overview/png/48x48/chicken.png</item>
+        <item>http://files.softicons.com/download/food-drinks-icons/free-food-icons-by-daily-overview/png/48x48/chicken.png</item>
+        <item>http://files.softicons.com/download/food-drinks-icons/free-food-icons-by-daily-overview/png/48x48/chicken.png</item>
     </string-array>
 
     <integer-array name="salads_prices">
@@ -125,6 +149,15 @@
         <item>d20</item>
         <item>d21</item>
     </string-array>
+    
+    <string-array name="sizzlers_icons">
+        <item>http://files.softicons.com/download/food-drinks-icons/free-food-icons-by-daily-overview/png/48x48/cake.png</item>
+        <item>http://files.softicons.com/download/food-drinks-icons/free-food-icons-by-daily-overview/png/48x48/chicken.png</item>
+        <item>http://files.softicons.com/download/food-drinks-icons/free-food-icons-by-daily-overview/png/48x48/chicken.png</item>
+        <item>http://files.softicons.com/download/food-drinks-icons/free-food-icons-by-daily-overview/png/48x48/chicken.png</item>
+        <item>http://files.softicons.com/download/food-drinks-icons/free-food-icons-by-daily-overview/png/48x48/sandwich.png</item>
+        <item>http://files.softicons.com/download/food-drinks-icons/free-food-icons-by-daily-overview/png/48x48/sandwich.png</item>
+    </string-array>
 
     <integer-array name="sizzlers_prices">
         <item>245</item>
@@ -134,6 +167,8 @@
         <item>325</item>
         <item>325</item>
     </integer-array>
+    
+    
 
     <string-array name="favourites">
         <item>Chicken Stroganoff</item>
@@ -148,6 +183,14 @@
         <item>d24</item>
         <item>d25</item>
     </string-array>
+    
+    <string-array name="favourites_icons">
+        <item>http://files.softicons.com/download/food-drinks-icons/free-food-icons-by-daily-overview/png/48x48/chicken.png</item>
+        <item>http://files.softicons.com/download/food-drinks-icons/free-food-icons-by-daily-overview/png/48x48/chicken.png</item>
+        <item>http://files.softicons.com/download/food-drinks-icons/free-food-icons-by-daily-overview/png/48x48/chicken.png</item>
+        <item>http://files.softicons.com/download/food-drinks-icons/free-food-icons-by-daily-overview/png/48x48/chicken.png</item>
+    </string-array>
+    
     
     <integer-array name="favourites_prices">
         <item>275</item>

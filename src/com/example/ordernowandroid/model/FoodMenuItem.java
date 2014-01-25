@@ -1,9 +1,14 @@
 package com.example.ordernowandroid.model;
 
 import java.io.Serializable;
+import java.util.concurrent.ExecutionException;
+
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
 
 import com.data.menu.Dish;
 import com.data.menu.FoodType;
+import com.example.ordernowandroid.adapter.ImageService;
 
 /**
  * 
@@ -62,5 +67,32 @@ public class FoodMenuItem implements Serializable {
 	public String getDishId() {
 		return dish.getDishId();
 	}
+	
+	public Bitmap getImage() {
+        String image = dish.getImg();
+        Bitmap bitmap = null;
+        try {
+            bitmap = new DownloadImageTask().execute(image).get();
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (ExecutionException e) { // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        return bitmap;
+    }
+
+	
+	private class DownloadImageTask extends AsyncTask<String, Integer, Bitmap> {
+	    @Override
+	    protected Bitmap doInBackground(String... params) {
+	        //"http://www.creativefreedom.co.uk/icon-designers-blog/wp-content/uploads/2013/03/00-android-4-0_icons.png"
+	        return ImageService.getInstance().getImageWithCache(params[0]);
+	    }
+	    
+	}
 
 }
+
+
