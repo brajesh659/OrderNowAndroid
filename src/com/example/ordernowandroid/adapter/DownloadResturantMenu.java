@@ -17,9 +17,8 @@ public class DownloadResturantMenu {
         Restaurant resturant = null;
         try {
             URL url = new URL(endpoint + "?tableId=" + qrCode);
-            Log.e("DownloadResturantMenu", endpoint + qrCode);
+            Log.i("DownloadResturantMenu", endpoint+"?tableId="+qrCode);
             URLConnection connection = url.openConnection();
-
             connection.setDoOutput(true);
             InputStream in = connection.getInputStream();
             BufferedReader res = new BufferedReader(new InputStreamReader(in, "UTF-8"));
