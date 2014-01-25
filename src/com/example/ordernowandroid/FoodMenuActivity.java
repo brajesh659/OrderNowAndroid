@@ -6,8 +6,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.DialogInterface.OnClickListener;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -66,23 +69,13 @@ public class FoodMenuActivity extends FragmentActivity implements numListener{
         tableId = b.getString(TABLE_ID);
         
         setContentView(R.layout.food_menu);
-        restaurant = getResturant(tableId);
         mTitle = getTitle();
-        mDrawerTitle = restaurant.getName();
-
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
 
         navDrawerItems = new ArrayList<CategoryNavDrawerItem>();
 
-        for (Category category : getCategories()) {
-            CategoryNavDrawerItem categoryNavDrawerItem = new CategoryNavDrawerItem(category);
-            navDrawerItems.add(categoryNavDrawerItem);
-        }
-
-        // how to add a counter example
-        // navDrawerItems.add(new NavDrawerItem(navMenuTitles[3],
-        // navMenuIcons.getResourceId(3, -1), true, "22"));
+       
 
         // setting the nav drawer list adapter
         adapter = new NavDrawerListAdapter(getApplicationContext(), navDrawerItems);
@@ -92,14 +85,10 @@ public class FoodMenuActivity extends FragmentActivity implements numListener{
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
 
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer, // nav
-                                                                                             // menu
-                                                                                             // toggle
-                                                                                             // icon
-                R.string.app_name, // nav drawer open - description for
-                                   // accessibility
-                R.string.app_name // nav drawer close - description for
-                                  // accessibility
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, 
+                R.drawable.ic_drawer, // nav menu toggle icon
+                R.string.app_name, // nav drawer open - description for accessibility
+                R.string.app_name // nav drawer close - description for accessibility 
         ) {
             public void onDrawerClosed(View view) {
                 getActionBar().setTitle(mTitle);
@@ -115,12 +104,42 @@ public class FoodMenuActivity extends FragmentActivity implements numListener{
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-        if (savedInstanceState == null) {
-            // on first time display view for first menu item
-            displayView(0);
+       
+        restaurant = getResturant(tableId);
+        if (restaurant == null){
+            Toast.makeText(this, "null resturant ", Toast
+                    .LENGTH_SHORT).show();
+            AlertDialog.Builder builder = new AlertDialog.Builder(FoodMenuActivity.this);            
+            builder.setTitle("Invalid QR code");
+            builder.setMessage("Please scan a valid QR code");
+            builder.setPositiveButton(R.string.ok, new OnClickListener() {                  
+                @Override
+                public void onClick(DialogInterface dialog, int which) {                                                
+                    //Clear the Selected Quantities and Start the Food Menu Activity again
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(intent);                                              
+                }
+            });
+           // builder.setNegativeButton(R.string.cancel, null);
+            AlertDialog alert = builder.create();
+            alert.show();
+            return ;
+        } else {
+            mDrawerTitle = restaurant.getName();
+            if (savedInstanceState == null) {
+                // on first time display view for first menu item
+                displayView(0);
+            }
+            mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
+            mDrawerLayout.openDrawer(Gravity.LEFT);
+            for (Category category : getCategories()) {
+                CategoryNavDrawerItem categoryNavDrawerItem = new CategoryNavDrawerItem(category);
+                navDrawerItems.add(categoryNavDrawerItem);
+            }
         }
-        mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
-        mDrawerLayout.openDrawer(Gravity.LEFT);
+        
+      
+        
     }
 
     private List<Category> getCategories() {
@@ -331,6 +350,7 @@ public class FoodMenuActivity extends FragmentActivity implements numListener{
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
+        
         return restaurant;
     }
 

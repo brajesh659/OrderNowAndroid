@@ -13,11 +13,11 @@ import com.google.gson.Gson;
 
 public class DownloadResturantMenu {
 
-public static Restaurant getResturant(String endpoint, String qrCode) {
-    Restaurant resturant = null;
+    public static Restaurant getResturant(String endpoint, String qrCode) {
+        Restaurant resturant = null;
         try {
             URL url = new URL(endpoint + "?tableId=" + qrCode);
-            Log.e("DownloadResturantMenu", endpoint+qrCode);
+            Log.e("DownloadResturantMenu", endpoint + qrCode);
             URLConnection connection = url.openConnection();
 
             connection.setDoOutput(true);
@@ -27,16 +27,15 @@ public static Restaurant getResturant(String endpoint, String qrCode) {
             String inputLine;
             while ((inputLine = res.readLine()) != null)
                 sBuffer.append(inputLine);
-            
+
             res.close();
             Gson gs = new Gson();
-            resturant = gs.fromJson(sBuffer.toString(), Restaurant.class); 
-            
+            resturant = gs.fromJson(sBuffer.toString(), Restaurant.class);
+
         } catch (Exception ex) {
             ex.printStackTrace();
             Log.e("DownloadResturantMenu", ex.getMessage() + "got exception");
         }
-        Log.e("DownloadResturantMenu",resturant + "got exception");
         return resturant;
-}
+    }
 }
