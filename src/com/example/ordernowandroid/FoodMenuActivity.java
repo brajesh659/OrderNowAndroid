@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
@@ -32,6 +34,7 @@ import com.data.menu.Dish;
 import com.data.menu.FoodType;
 import com.data.menu.Restaurant;
 import com.dm.zbar.android.scanner.ZBarConstants;
+import com.example.ordernowandroid.adapter.DownloadResturantMenu;
 import com.example.ordernowandroid.adapter.NavDrawerListAdapter;
 import com.example.ordernowandroid.fragments.IndividualMenuTabFragment;
 import com.example.ordernowandroid.fragments.IndividualMenuTabFragment.numListener;
@@ -41,13 +44,14 @@ import com.example.ordernowandroid.model.MyOrderItem;
 
 public class FoodMenuActivity extends FragmentActivity implements numListener{
 
+    public static final String TABLE_ID = "TableId";
+    private String tableId;
     private static final int MY_ORDER_REQUEST_CODE = 1;
     protected static final String MY_ORDER = "MyOrder";
 	protected static final String CATEGORY_ID = null;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
-
     private CharSequence mDrawerTitle; // nav drawer title
     private CharSequence mTitle; // used to store app title
     private ArrayList<CategoryNavDrawerItem> navDrawerItems;
@@ -58,8 +62,11 @@ public class FoodMenuActivity extends FragmentActivity implements numListener{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Bundle b = getIntent().getExtras();
+        tableId = b.getString(TABLE_ID);
+        
         setContentView(R.layout.food_menu);
-        restaurant = getResturant();
+        restaurant = getResturant(tableId);
         mTitle = getTitle();
         mDrawerTitle = restaurant.getName();
 
@@ -110,7 +117,7 @@ public class FoodMenuActivity extends FragmentActivity implements numListener{
 
         if (savedInstanceState == null) {
             // on first time display view for first menu item
-            displayView(2);
+            displayView(0);
         }
         mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
         mDrawerLayout.openDrawer(Gravity.LEFT);
@@ -140,6 +147,7 @@ public class FoodMenuActivity extends FragmentActivity implements numListener{
 	            Intent intent = new Intent(context, MyOrderActivity.class);
 	            intent.putExtra(MY_ORDER, orderItems);
 	            intent.putExtra(CATEGORY_ID, mDrawerList.getCheckedItemPosition());
+	            intent.putExtra(TABLE_ID, tableId);
 	            startActivityForResult(intent, MY_ORDER_REQUEST_CODE);		
 			}
 		});
@@ -156,14 +164,6 @@ public class FoodMenuActivity extends FragmentActivity implements numListener{
         // Handle action bar actions click
         switch (item.getItemId()) {
         case R.id.action_cart :
-            ArrayList<MyOrderItem> orderItems = new ArrayList<MyOrderItem>();
-            if (foodMenuItemQuantityMap != null) {
-                orderItems.addAll(foodMenuItemQuantityMap.values());
-            }
-            Intent intent = new Intent(this, MyOrderActivity.class);
-            intent.putExtra(MY_ORDER, orderItems);
-            intent.putExtra(CATEGORY_ID, mDrawerList.getCheckedItemPosition());
-            startActivityForResult(intent, MY_ORDER_REQUEST_CODE);
             return true;
         default:
             return super.onOptionsItemSelected(item);
@@ -321,7 +321,20 @@ public class FoodMenuActivity extends FragmentActivity implements numListener{
         invalidateOptionsMenu();
     }
 
-    public Restaurant getResturant() {
+    public Restaurant getResturant(String tableId) {
+        //http://ordernow.herokuapp.com/serveTable?tableId=T1
+        Restaurant restaurant = null;
+        try {
+            restaurant = new DownloadRestaurantTask().execute("http://ordernow.herokuapp.com/serveTable",tableId).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return restaurant;
+    }
+
+    private Restaurant getResturantLocaly() {
         List<Integer> categoryItemName = new LinkedList<Integer>();
         categoryItemName.add(R.array.soups);
         categoryItemName.add(R.array.starters);
@@ -398,4 +411,14 @@ public class FoodMenuActivity extends FragmentActivity implements numListener{
             
         }
     }
+	
+    private class DownloadRestaurantTask extends AsyncTask<String, Integer, Restaurant> {
+        @Override
+        protected Restaurant doInBackground(String... params) {
+            // "http://www.creativefreedom.co.uk/icon-designers-blog/wp-content/uploads/2013/03/00-android-4-0_icons.png"
+            return DownloadResturantMenu.getResturant(params[0], params[1]);
+        }
+
+    }
+
 }

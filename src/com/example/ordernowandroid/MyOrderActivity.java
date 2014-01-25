@@ -37,6 +37,7 @@ public class MyOrderActivity extends Activity {
     
     public static final String FOOD_MENU_CATEGORY_ID = "foodMenuCategoryId";
     private int categoryId;
+    private String tableId;
     
     @SuppressWarnings("unchecked")
     @Override
@@ -46,6 +47,7 @@ public class MyOrderActivity extends Activity {
         Bundle b = getIntent().getExtras();
         myOrders = (ArrayList<MyOrderItem>) b.getSerializable(FoodMenuActivity.MY_ORDER);
         categoryId = b.getInt(FoodMenuActivity.CATEGORY_ID);
+        tableId = b.getString(FoodMenuActivity.TABLE_ID);
         setContentView(R.layout.my_order_summary);
         Button addMoreItemsBtn = (Button) findViewById(R.id.addMoreItemsButton);
         Button cancelOrderBtn = (Button) findViewById(R.id.cancelOrderButton);
@@ -69,6 +71,7 @@ public class MyOrderActivity extends Activity {
                         Toast.makeText(getApplicationContext(), "Order has been canceled.", Toast.LENGTH_LONG).show();
                         //Clear the Selected Quantities and Start the Food Menu Activity again
                         Intent intent = new Intent(getApplicationContext(), FoodMenuActivity.class);
+                        intent.putExtra(FoodMenuActivity.TABLE_ID, tableId);
                         startActivity(intent);                                              
                     }
                 });
@@ -103,15 +106,13 @@ public class MyOrderActivity extends Activity {
 						String url = "http://ordernow.herokuapp.com/order?order="
 								+ gs.toJson(c) + "&debug=1";
 						String response = "";
-						try {
-							response = new asyncNetwork().execute(url)
-									.get();
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						} catch (ExecutionException e) {
-							e.printStackTrace();
-						}
-
+                        try {
+                            response = new asyncNetwork().execute(url).get();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        } catch (ExecutionException e) {
+                            e.printStackTrace();
+                        }
 
 						// Toast.makeText(getApplicationContext(),
 						// "Order has been confirmed.",
@@ -119,6 +120,7 @@ public class MyOrderActivity extends Activity {
                         
                         //Clear the Selected Quantities and Start the Food Menu Activity again
                         Intent intent = new Intent(getApplicationContext(), FoodMenuActivity.class);
+                        intent.putExtra(FoodMenuActivity.TABLE_ID, tableId);
                         startActivity(intent);
 					}
 				});
@@ -133,8 +135,9 @@ public class MyOrderActivity extends Activity {
 		for (MyOrderItem myOrderItem: myOrders) {
 			totalOrderAmount = totalOrderAmount + (myOrderItem.getQuantity() * myOrderItem.getFoodMenuItem().getItemPrice()); 
 		}
-
-		totalAmount.setText("\u20B9" + " " + Float.toString(totalOrderAmount)); //UniCode for Rupee Symbol. HardCoding it here for now, cannot get R.string.id to make it work
+		
+		//UniCode for Rupee Symbol. HardCoding it here for now, cannot get R.string.id to make it work
+		totalAmount.setText("\u20B9" + " " + Float.toString(totalOrderAmount)); 
 
 		ListView myOrderListView = (ListView) findViewById(R.id.listMyOrder);
 		MyOrderAdapter myOrderAdapter = new MyOrderAdapter(MyOrderActivity.this, myOrders);
@@ -158,6 +161,7 @@ public class MyOrderActivity extends Activity {
 		Intent data = new Intent();
 		data.putExtra(RETURN_FROM_MY_ORDER, myOrders);
 		data.putExtra(FOOD_MENU_CATEGORY_ID, categoryId);
+		data.putExtra(FoodMenuActivity.TABLE_ID, tableId);
 		setResult(RESULT_OK, data); // Activity finished ok, return the data
 		super.finish();
 	}

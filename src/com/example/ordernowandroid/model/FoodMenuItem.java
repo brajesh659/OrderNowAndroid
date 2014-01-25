@@ -23,6 +23,7 @@ public class FoodMenuItem implements Serializable {
 
     public FoodMenuItem(Dish dish) {
         this.dish = dish;
+        getImage(); // To populate image cache. 
     }
 
     public String getItemName() {
@@ -69,14 +70,19 @@ public class FoodMenuItem implements Serializable {
 	}
 	
 	public Bitmap getImage() {
+	   
         String image = dish.getImg();
+        
+        if(image==null || image.equals("")){
+            return null;
+        }
+        
         Bitmap bitmap = null;
         try {
             bitmap = new DownloadImageTask().execute(image).get();
         } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
-        } catch (ExecutionException e) { // TODO Auto-generated catch block
+        } catch (ExecutionException e) {
             e.printStackTrace();
         }
         

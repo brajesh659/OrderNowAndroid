@@ -83,9 +83,12 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
         holder.txt_itemPrice.setText("\u20B9" + " " + foodItem.getItemPrice().toString());
 
         Bitmap bitmap = foodItem.getImage();
-        holder.itemImage.setImageBitmap(bitmap);
+        if (bitmap == null) {
+            holder.itemImage.setImageResource(R.drawable.bb1);
+        } else {
+            holder.itemImage.setImageBitmap(bitmap);
+        }
 
-//        holder.itemImage.setImageResource(R.drawable.bb1);
         if (numCallBack.getQuantity(foodItem) == 0) {
             holder.subItem.setVisibility(View.INVISIBLE);
             holder.txt_itemQuantity.setText("");

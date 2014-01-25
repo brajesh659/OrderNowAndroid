@@ -83,7 +83,10 @@ public class MainActivity extends Activity {
 		case ZBAR_QR_SCANNER_REQUEST:
 			if (resultCode == RESULT_OK) {
 				Toast.makeText(this, "Scan Result = " + data.getStringExtra(ZBarConstants.SCAN_RESULT), Toast.LENGTH_SHORT).show();
+				String tableId = data.getStringExtra(ZBarConstants.SCAN_RESULT);
+				
 				Intent intent = new Intent(this, FoodMenuActivity.class);
+				intent.putExtra(FoodMenuActivity.TABLE_ID, tableId);
 				startActivity(intent);
 				//finish this to disable back to this activity once scanned
 				this.finish();				
@@ -93,6 +96,7 @@ public class MainActivity extends Activity {
 					Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
 				}
 				Intent intent = new Intent(this, FoodMenuActivity.class);
+				intent.putExtra(FoodMenuActivity.TABLE_ID, "T1");
 				startActivity(intent);
 				//finish this to disable back to this activity once scanned
 				this.finish();
