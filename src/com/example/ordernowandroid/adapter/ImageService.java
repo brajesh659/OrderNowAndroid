@@ -18,7 +18,15 @@ import android.support.v4.util.LruCache;
 import android.util.Log;
 
 public class ImageService {
+    
     private LruCache<String, Bitmap> lruBitmap = new LruCache<String, Bitmap>(2048);
+    private static ImageService imageService = new ImageService();
+    public static ImageService getInstance (){
+        return imageService;
+    }
+    
+    private ImageService() {
+    }
 
     public Bitmap getImageWithCache(String param) {
         String urlEncodedParam = null; 

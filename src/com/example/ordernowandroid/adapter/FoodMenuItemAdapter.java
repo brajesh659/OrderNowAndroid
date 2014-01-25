@@ -1,24 +1,10 @@
 package com.example.ordernowandroid.adapter;
 
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.entity.BufferedHttpEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +16,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.data.menu.FoodType;
-import com.example.ordernowandroid.FoodMenuActivity;
 import com.example.ordernowandroid.R;
 import com.example.ordernowandroid.fragments.IndividualMenuTabFragment.numListener;
 import com.example.ordernowandroid.model.FoodMenuItem;
@@ -97,17 +82,7 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
         holder.txt_itemDescription.setText(foodItem.getDescription());
         holder.txt_itemPrice.setText("\u20B9" + " " + foodItem.getItemPrice().toString());
 
-        String image = foodItem.getImage();
-
-        Bitmap bitmap = null;
-        try {
-            bitmap = new DownloadImageTask().execute(image).get();
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (ExecutionException e) { // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        Bitmap bitmap = foodItem.getImage();
         holder.itemImage.setImageBitmap(bitmap);
 
 //        holder.itemImage.setImageResource(R.drawable.bb1);
@@ -184,15 +159,6 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
             filter = new ModelFilter();
         }
         return filter;
-    }
-
-    private class DownloadImageTask extends AsyncTask<String, Integer, Bitmap> {
-        @Override
-        protected Bitmap doInBackground(String... params) {
-            //"http://www.creativefreedom.co.uk/icon-designers-blog/wp-content/uploads/2013/03/00-android-4-0_icons.png"
-            return new ImageService().getImageWithCache(params[0]);
-        }
-        
     }
 
     private class ModelFilter extends Filter {
