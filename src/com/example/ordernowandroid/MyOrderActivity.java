@@ -94,30 +94,28 @@ public class MyOrderActivity extends Activity {
 						}
 						CharSequence text = ParseInstallation
 								.getCurrentInstallation().getObjectId();
+						
 						CustomerOrder c = new CustomerOrder(dishes, "R1",
-								"Temp",
-								text.toString());
+								"Temp", text.toString(), "T1");
+						
 						Gson gs = new Gson();
-						String json = gs.toJson(c);
 
-						String response = "";
 						String url = "http://ordernow.herokuapp.com/order?order="
-								+ json + "&debug=1";
+								+ gs.toJson(c) + "&debug=1";
+						String response = "";
 						try {
-							System.out.println(json);
-							System.out.println(url);
-							response = new asyncNetwork().execute(url).get();
-							System.out.println(response);
+							response = new asyncNetwork().execute(url)
+									.get();
 						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						} catch (ExecutionException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
-						}                   	
+						}
 
-						Toast.makeText(getApplicationContext(),"RESPONSE :" + response, Toast.LENGTH_LONG).show();
-                        Toast.makeText(getApplicationContext(), "Order has been confirmed.", Toast.LENGTH_LONG).show();
+
+						// Toast.makeText(getApplicationContext(),
+						// "Order has been confirmed.",
+						// Toast.LENGTH_LONG).show();
                         
                         //Clear the Selected Quantities and Start the Food Menu Activity again
                         Intent intent = new Intent(getApplicationContext(), FoodMenuActivity.class);

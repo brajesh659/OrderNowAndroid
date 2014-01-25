@@ -11,12 +11,13 @@ public class CustomerOrder {
 	private Map<String, Float> dishes;
 
 	public CustomerOrder(Map<String, Float> dishes, String restaurantId,
-			String orderId, String customerId) {
+			String orderId, String customerId, String tableId) {
 		super();
 		this.dishes = dishes;
 		this.restaurantId = restaurantId;
 		this.orderId = orderId;
 		this.customerId = customerId;
+		this.tableId = tableId;
 	}
 
 	private String restaurantId;
@@ -25,6 +26,8 @@ public class CustomerOrder {
 	 * Client can happen.
 	 */
 	private String orderId;
+	private String tableId;
+
 	/*
 	 * Customer ID same as parse object id.
 	 */
@@ -60,5 +63,13 @@ public class CustomerOrder {
 
 	public void setOrderId(String orderId) {
 		this.orderId = orderId;
+	}
+
+	public String getTableId() {
+		return tableId;
+	}
+
+	public void setTableId(String tableId) {
+		this.tableId = tableId;
 	}
 }

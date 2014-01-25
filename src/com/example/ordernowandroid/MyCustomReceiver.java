@@ -28,8 +28,11 @@ public void onReceive(Context context, Intent intent) {
               
               while (itr.hasNext()) {
                 String key = (String) itr.next();
-                toast = Toast.makeText(context,"..." + key + " => " + json.getString(key) , duration);
-                        toast.show();
+				if (key.equals("message")) {
+					toast = Toast.makeText(context, json.getString(key),
+							duration);
+					toast.show();
+				}
               }
             } catch (JSONException e) {
             }
