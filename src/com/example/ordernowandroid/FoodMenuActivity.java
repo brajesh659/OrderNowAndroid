@@ -436,7 +436,7 @@ public class FoodMenuActivity extends FragmentActivity implements numListener{
         @Override
         protected Restaurant doInBackground(String... params) {
             // "http://www.creativefreedom.co.uk/icon-designers-blog/wp-content/uploads/2013/03/00-android-4-0_icons.png"
-            return DownloadResturantMenu.getResturant(params[0], params[1]);
+            return DownloadResturantMenu.getInstance().getResturant(params[0], params[1]);
         }
 
     }

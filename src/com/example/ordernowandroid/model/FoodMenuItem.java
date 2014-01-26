@@ -20,10 +20,11 @@ public class FoodMenuItem implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private Dish dish;
+    AsyncTask<String, Integer, Bitmap> imageAsyncTask;
 
     public FoodMenuItem(Dish dish) {
         this.dish = dish;
-        getImage(); // To populate image cache. 
+        populateImageCache(); // To populate image cache.
     }
 
     public String getItemName() {
@@ -69,26 +70,38 @@ public class FoodMenuItem implements Serializable {
 		return dish.getDishId();
 	}
 	
-	public Bitmap getImage() {
-	   
+    public Bitmap getImage() {
+
         String image = dish.getImg();
-        
-        if(image==null || image.equals("")){
+        if (image == null || image.equals("")) {
             return null;
         }
-        
+
         Bitmap bitmap = null;
         try {
-            bitmap = new DownloadImageTask().execute(image).get();
+            if (imageAsyncTask != null) {
+                bitmap = imageAsyncTask.get();
+            } else {
+                bitmap = new DownloadImageTask().execute(image).get();
+            }
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-        
+
         return bitmap;
     }
 
+    public void populateImageCache() {
+
+        String image = dish.getImg();
+        if (image == null || image.equals("")) {
+            return;
+        }
+        imageAsyncTask = new DownloadImageTask().execute(image);
+
+    }
 	
 	private class DownloadImageTask extends AsyncTask<String, Integer, Bitmap> {
 	    @Override
