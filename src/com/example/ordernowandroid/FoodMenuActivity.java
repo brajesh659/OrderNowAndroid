@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import android.app.AlertDialog;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -29,9 +30,12 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.data.database.CustomDbAdapter;
+import com.data.database.DishHelper;
 import com.data.menu.Category;
 import com.data.menu.CustomerOrderWrapper;
 import com.data.menu.Dish;
@@ -73,15 +77,10 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+
         Bundle b = getIntent().getExtras();
         tableId = b.getString(TABLE_ID);
         subOrdersFromDB = (ArrayList<CustomerOrderWrapper>) b.getSerializable(SUB_ORDER_LIST);
-        if (subOrdersFromDB != null) {
-        	Toast.makeText(getApplicationContext(), "Sub Orders FMA: " + subOrdersFromDB.size(), Toast.LENGTH_SHORT).show();	
-        } else {
-        	Toast.makeText(getApplicationContext(), "Sub Orders FMA: Size 0", Toast.LENGTH_SHORT).show();
-        }
         
         setContentView(R.layout.food_menu);
         mTitle = getTitle();
@@ -116,7 +115,21 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
             }
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
-       
+
+        if(isSearchIntent(getIntent())) {
+            Bundle appData = getIntent().getBundleExtra(SearchManager.APP_DATA);
+            if (appData != null) {
+                tableId = appData.getString(TABLE_ID);
+                ArrayList<MyOrderItem> myOrders = (ArrayList<MyOrderItem>) appData.getSerializable(MY_ORDER);
+                if(myOrders!=null){
+                    foodMenuItemQuantityMap = new HashMap<String, MyOrderItem>();
+                    for (MyOrderItem myOrderItem : myOrders) {
+                        foodMenuItemQuantityMap.put(myOrderItem.getFoodMenuItem().getItemName(), myOrderItem);
+                    }
+                }
+            }
+        }
+
         restaurant = getResturant(tableId);
         if (restaurant == null){
             Toast.makeText(this, "null resturant ", Toast
@@ -143,11 +156,16 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
                 displayView(0);
             }
             mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
-            mDrawerLayout.openDrawer(Gravity.LEFT);
+            
             for (Category category : getCategories()) {
                 CategoryNavDrawerItem categoryNavDrawerItem = new CategoryNavDrawerItem(category);
                 navDrawerItems.add(categoryNavDrawerItem);
             }
+        }
+        
+        boolean search = handleIntent(getIntent());
+        if(!search) {
+            mDrawerLayout.openDrawer(Gravity.LEFT);
         }
         
     }
@@ -158,8 +176,18 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.main, menu);
-        
+             
+        // Associate searchable configuration with the SearchView
+        SearchManager searchManager =
+               (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView =
+                (SearchView) menu.findItem(R.id.search).getActionView();
+        searchView.setSearchableInfo(
+                searchManager.getSearchableInfo(getComponentName()));
+        searchView.setIconifiedByDefault(false);       
+
         RelativeLayout food_cart_layout = (RelativeLayout)menu.findItem(R.id.action_cart).getActionView();
         TextView food_item_notification = (TextView)food_cart_layout.findViewById(R.id.food_cart_notifcation_textview);
         food_item_notification.setText(Integer.toString(foodMenuItemQuantityMap.keySet().size()));
@@ -199,18 +227,23 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 			}
 		});
         
-        return super.onCreateOptionsMenu(menu);
+        return true;
+
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // toggle nav drawer on selecting action bar app icon/title
+        mDrawerLayout.closeDrawer(Gravity.LEFT);
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
         // Handle action bar actions click
         switch (item.getItemId()) {
         case R.id.action_cart :
+            return true;
+        case R.id.search:
+            onSearchRequested();
             return true;
         default:
             return super.onOptionsItemSelected(item);
@@ -378,6 +411,9 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
     }
 
     public Restaurant getResturant(String tableId) {
+        if(tableId == null || tableId.trim().length() == 0) {
+            return null;
+        }
         //http://ordernow.herokuapp.com/serveTable?tableId=T1
         Restaurant restaurant = null;
         try {
@@ -478,6 +514,7 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 
     }
 
+
     @Override
     public void showNote(FoodMenuItem foodMenuItem) {
         AddNoteDialogFragment noteFragment = AddNoteDialogFragment.newInstance(foodMenuItem,
@@ -494,5 +531,50 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
         invalidateOptionsMenu();
 
     }
+
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        handleIntent(intent);
+    }
+    
+    private boolean isSearchIntent(Intent intent) {
+        return Intent.ACTION_SEARCH.equals(intent.getAction());
+    }
+    private boolean handleIntent(Intent intent) {
+        
+        if (isSearchIntent(intent)) {
+            Utilities.info("search intent");
+            CustomDbAdapter dbManager = CustomDbAdapter
+                    .getInstance(getBaseContext());
+            DishHelper dh = new DishHelper(dbManager);   
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            if(dh!=null) {
+                ArrayList<FoodMenuItem> searchDishList = (ArrayList<FoodMenuItem>) dh.searchDishes(query);
+                //IndividualMenuTabFragment.newInstance("Search", searchDishList);
+                Fragment fragment = IndividualMenuTabFragment.newInstance("Search", searchDishList);
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).addToBackStack(null).commit();
+                return true;
+            }
+            
+        }
+        return false;
+        
+    }
+    
+    @Override
+    public boolean onSearchRequested() {
+         Bundle appData = new Bundle();
+         appData.putString(TABLE_ID, tableId);
+         ArrayList<MyOrderItem> orderItems = new ArrayList<MyOrderItem>();
+         if (foodMenuItemQuantityMap != null) {
+             orderItems.addAll(foodMenuItemQuantityMap.values());
+         }
+         appData.putSerializable(MY_ORDER, orderItems);
+         startSearch(null, false, appData, false);
+         return true;
+     }
 
 }

@@ -84,10 +84,29 @@ public class CustomDbAdapter implements DatabaseManager {
 		if (mDb == null) {
 			Utilities.info("GETTING WRITABLE CONNECTION...");
 			mDb = mDbHelper.getWritableDatabase();
+			try {
+			    //TODO Currently added to reflect sql changes
+			    readAndRunSqlScriptAlways(mDb, R.raw.db_script);
+            } catch (Exception e) {
+                throw new RuntimeException("!Err when executing sql file + e");
+            }
 			// mDb = mDbHelper.getWritableDatabase("@!De@!m@ker");
 		}
 		return this;
 	}
+	
+	//TODO this class will be rmoved
+	private void readAndRunSqlScriptAlways(final SQLiteDatabase db, int id)
+            throws Exception {
+        final SqlScriptReader reader = new SqlScriptReader();
+        final InputStream is = mCtx.getResources().openRawResource(id);
+        final List<String> sqls = reader.readSqlStatment(is);
+        for (String sql : sqls) {
+            Utilities.info(sql);
+            db.execSQL(sql);
+        }
+        is.close();
+    }
 
 	private class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -122,7 +141,6 @@ public class CustomDbAdapter implements DatabaseManager {
 			final InputStream is = mCtx.getResources().openRawResource(id);
 			final List<String> sqls = reader.readSqlStatment(is);
 			for (String sql : sqls) {
-				// DLog.i("db", sql);
 				db.execSQL(sql);
 			}
 			is.close();
