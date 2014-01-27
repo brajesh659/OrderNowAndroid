@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import android.app.AlertDialog;
@@ -72,6 +73,7 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
     private HashMap<String, MyOrderItem> foodMenuItemQuantityMap = new HashMap<String, MyOrderItem>();
     protected static final String SUB_ORDER_LIST = "SubOrderList";
     public static ArrayList<CustomerOrderWrapper> subOrdersFromDB;
+    private static Map<String, Boolean> restaurantLoadedInDb = new HashMap<String, Boolean>();
     
     @SuppressWarnings("unchecked")
 	@Override
@@ -182,11 +184,13 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
         // Associate searchable configuration with the SearchView
         SearchManager searchManager =
                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        MenuItem searchMenuItem = menu.findItem(R.id.search);
         SearchView searchView =
-                (SearchView) menu.findItem(R.id.search).getActionView();
+                (SearchView) searchMenuItem.getActionView();
         searchView.setSearchableInfo(
                 searchManager.getSearchableInfo(getComponentName()));
-        searchView.setIconifiedByDefault(false);       
+        //searchMenuItem.collapseActionView();
+        //searchView.setIconifiedByDefault(false);
 
         RelativeLayout food_cart_layout = (RelativeLayout)menu.findItem(R.id.action_cart).getActionView();
         TextView food_item_notification = (TextView)food_cart_layout.findViewById(R.id.food_cart_notifcation_textview);
@@ -298,6 +302,7 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
      */
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.search).collapseActionView();
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -418,6 +423,7 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
         Restaurant restaurant = null;
         try {
             restaurant = new DownloadRestaurantTask().execute("http://ordernow.herokuapp.com/serveTable",tableId).get();
+            loadRestaurantDishes(restaurant);
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -425,6 +431,30 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
         }
         
         return restaurant;
+    }
+
+    private void loadRestaurantDishes(final Restaurant restaurant) {
+        Utilities.info("restaurant load " + restaurant.getName() + restaurantLoadedInDb);
+        if (!restaurantLoadedInDb.containsKey(restaurant.getName())) {
+            new Thread(new Runnable() {
+                public void run() {
+                    try {
+                        CustomDbAdapter dbManager = CustomDbAdapter
+                                .getInstance(getBaseContext());
+                        DishHelper dh = new DishHelper(dbManager);
+                        for(Category category : restaurant.getMenu().getCategories()) {
+                            for(Dish dish: category.getDishes()) {
+                                dh.addDish(dish);
+                            }
+                        }
+                        restaurantLoadedInDb.put(restaurant.getName(), true);
+                       //for(Res)
+                    } catch (Exception e) {
+                        Utilities.error("Failed to load into DB " + e);
+                    }
+                }
+            }).start();
+        }
     }
 
     private Restaurant getResturantLocaly() {
@@ -536,6 +566,7 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        Utilities.info("on new intent");
         handleIntent(intent);
     }
     

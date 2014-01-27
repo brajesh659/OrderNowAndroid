@@ -20,7 +20,6 @@ public class FoodMenuItem implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private Dish dish;
-    AsyncTask<String, Integer, Bitmap> imageAsyncTask;
 
     public FoodMenuItem(Dish dish) {
         this.dish = dish;
@@ -78,12 +77,9 @@ public class FoodMenuItem implements Serializable {
         }
 
         Bitmap bitmap = null;
+        
         try {
-            if (imageAsyncTask != null) {
-                bitmap = imageAsyncTask.get();
-            } else {
-                bitmap = new DownloadImageTask().execute(image).get();
-            }
+            bitmap = new DownloadImageTask().execute(image).get();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -99,7 +95,9 @@ public class FoodMenuItem implements Serializable {
         if (image == null || image.equals("")) {
             return;
         }
-        imageAsyncTask = new DownloadImageTask().execute(image);
+        //not keeping the asynctask else it wont be serializable
+        //also the underlying class ImageService is singleton so no problem
+        new DownloadImageTask().execute(image);
 
     }
 	
