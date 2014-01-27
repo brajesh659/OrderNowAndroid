@@ -57,12 +57,6 @@ public class MyOrderActivity extends Activity {
         subOrdersFromDB = (ArrayList<CustomerOrderWrapper>) b.getSerializable(SUB_ORDER_LIST);
         setContentView(R.layout.my_order_summary);
         
-        if (subOrdersFromDB != null) {
-        	Toast.makeText(getApplicationContext(), "Sub Orders MOA: " + subOrdersFromDB.size(), Toast.LENGTH_SHORT).show();	
-        }  else {
-        	Toast.makeText(getApplicationContext(), "Sub Orders MOA: Size 0", Toast.LENGTH_SHORT).show();
-        }
-        
         Button addMoreItemsBtn = (Button) findViewById(R.id.addMoreItemsButton);
         Button cancelOrderBtn = (Button) findViewById(R.id.cancelOrderButton);
         Button confirmOrderBtn = (Button) findViewById(R.id.confirmOrderButton);        

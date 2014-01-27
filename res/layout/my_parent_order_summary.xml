@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white" >
+
+    <ListView
+        android:id="@+id/parentListMyOrder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/parentRelativeBtnLayout"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:choiceMode="singleChoice"
+        android:divider="@color/red"
+        android:dividerHeight="1dp" />
+
+    <RelativeLayout
+        android:id="@+id/parentRelativeBtnLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true" >
+
+        <TextView
+            android:id="@+id/parentTotal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:text="@string/total"
+            android:textColor="@color/red"
+            android:textSize="19sp"
+            android:textStyle="bold"
+            android:typeface="sans" />
+
+        <TextView
+            android:id="@+id/parentTotalAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:textColor="@color/green"
+            android:textSize="19sp"
+            android:textStyle="bold"
+            android:typeface="sans" />
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -40,6 +40,8 @@ import com.data.menu.Restaurant;
 import com.dm.zbar.android.scanner.ZBarConstants;
 import com.example.ordernowandroid.adapter.DownloadResturantMenu;
 import com.example.ordernowandroid.adapter.NavDrawerListAdapter;
+import com.example.ordernowandroid.fragments.AddNoteDialogFragment;
+import com.example.ordernowandroid.fragments.AddNoteListener;
 import com.example.ordernowandroid.fragments.IndividualMenuTabFragment;
 import com.example.ordernowandroid.fragments.IndividualMenuTabFragment.numListener;
 import com.example.ordernowandroid.model.CategoryNavDrawerItem;
