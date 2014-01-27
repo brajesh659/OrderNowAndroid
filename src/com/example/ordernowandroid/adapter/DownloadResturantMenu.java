@@ -32,7 +32,6 @@ public class DownloadResturantMenu {
         try {
             urlEncodedParam = URLEncoder.encode(urlString, "UTF-8");
         } catch (UnsupportedEncodingException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         if (lruResturant.get(urlEncodedParam) == null) {

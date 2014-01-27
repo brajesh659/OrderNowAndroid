@@ -17,6 +17,8 @@ import android.widget.TextView;
 
 import com.data.menu.FoodType;
 import com.example.ordernowandroid.R;
+import com.example.ordernowandroid.fragments.AddNoteDialogFragment;
+import com.example.ordernowandroid.fragments.AddNoteListener;
 import com.example.ordernowandroid.fragments.IndividualMenuTabFragment.numListener;
 import com.example.ordernowandroid.model.FoodMenuItem;
 
@@ -32,10 +34,12 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
     private ArrayList<FoodMenuItem> allfoodMenuItems;
 
     private numListener numCallBack;
+    private AddNoteListener addNoteListener;
     private ModelFilter filter;
 
-    public FoodMenuItemAdapter(Context context, ArrayList<FoodMenuItem> foodMenuItems, numListener numCallBack) {
+    public FoodMenuItemAdapter(Context context, ArrayList<FoodMenuItem> foodMenuItems, numListener numCallBack, AddNoteListener addNoteListener) {
         super(context, R.layout.food_menu_item, foodMenuItems);
+        this.addNoteListener = addNoteListener;
         allfoodMenuItems = new ArrayList<FoodMenuItem>();
         allfoodMenuItems.addAll(foodMenuItems);
         this.foodMenuItems = foodMenuItems;
@@ -72,12 +76,14 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
             holder.itemImage = (ImageView) convertView.findViewById(R.id.dish_photo);
             holder.addItem = (ImageButton) convertView.findViewById(R.id.addbutton);
             holder.subItem = (ImageButton) convertView.findViewById(R.id.subbutton);
+            holder.addNote = (ImageButton) convertView.findViewById(R.id.addnote);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
         holder.addItem.setTag(foodItem);
         holder.subItem.setTag(foodItem);
+        holder.addNote.setTag(foodItem);
         holder.txt_itemName.setText(foodItem.getItemName());
         holder.txt_itemDescription.setText(foodItem.getDescription());
         holder.txt_itemPrice.setText("\u20B9" + " " + foodItem.getItemPrice().toString());
@@ -91,6 +97,7 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
 
         if (numCallBack.getQuantity(foodItem) == 0) {
             holder.subItem.setVisibility(View.INVISIBLE);
+            holder.addNote.setVisibility(View.INVISIBLE);
             holder.txt_itemQuantity.setText("");
             holder.itemImage.setAlpha(1f);
         } else {
@@ -101,6 +108,7 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
                 holder.txt_itemQuantity.setText(quantity + "");
             
                 holder.subItem.setVisibility(View.VISIBLE);
+                holder.addNote.setVisibility(View.VISIBLE);
             holder.itemImage.setAlpha(0.3f);
         }
 
@@ -111,6 +119,7 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
                 FoodMenuItem foodItem = (FoodMenuItem) v.getTag();
                 numCallBack.incrementQuantity(foodItem);
                 holder.subItem.setVisibility(View.VISIBLE);
+                holder.addNote.setVisibility(View.VISIBLE);
                 final Float quantity = numCallBack.getQuantity(foodItem);
                 if ((quantity - quantity.intValue()) == 0)
                     holder.txt_itemQuantity.setText(quantity.intValue() + "");
@@ -133,11 +142,21 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
                     holder.txt_itemQuantity.setText(quantity + "");
                 if (quantity == 0) {
                     holder.subItem.setVisibility(View.INVISIBLE);
+                    holder.addNote.setVisibility(View.INVISIBLE);
                     holder.txt_itemQuantity.setText("");
                     holder.itemImage.setAlpha(1f);
                 }
             }
 
+        });
+       
+        holder.addNote.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                FoodMenuItem foodItem = (FoodMenuItem) v.getTag();
+                addNoteListener.showNote(foodItem);
+            }
         });
 
         // imageLoader.DisplayImage("http://192.168.1.28:8082/ANDROID/images/BEVE.jpeg",
@@ -154,6 +173,7 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
         ImageView itemImage;
         ImageButton addItem;
         ImageButton subItem;
+        ImageButton addNote;
     }
 
     @Override

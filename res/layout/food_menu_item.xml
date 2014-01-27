@@ -64,6 +64,8 @@
         android:layout_below="@id/dish_description"
         android:background="@color/white"
         android:src="@drawable/add" />
+    
+   
 
     <ImageButton
         android:id="@+id/subbutton"
@@ -74,5 +76,14 @@
         android:layout_toLeftOf="@id/addbutton"
         android:background="@color/white"
         android:src="@drawable/sub" />
+
+     <ImageButton
+         android:id="@+id/addnote"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignParentRight="true"
+         android:layout_alignParentTop="true"
+         android:background="@color/white"
+         android:src="@drawable/addnote" />
 
 </RelativeLayout>

@@ -17,7 +17,13 @@
     <string name="total">"Total"</string>
     <string name="ok">"OK"</string>
     <string name="cancel">"Cancel"</string> 
-    <string name="myorder">"My Order"</string>    
+    <string name="myorder">"My Order"</string> 
+    <string name="addnotes">"Add Notes"</string>
+    <string name="save">"Save"</string>
+    
+    <string-array name="toppings">
+         <item>spices</item>
+    </string-array>    
 
     <!-- Nav Drawer Menu Items -->
     <string-array name="nav_drawer_items">

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import android.app.AlertDialog;
@@ -39,19 +40,22 @@ import com.data.menu.Restaurant;
 import com.dm.zbar.android.scanner.ZBarConstants;
 import com.example.ordernowandroid.adapter.DownloadResturantMenu;
 import com.example.ordernowandroid.adapter.NavDrawerListAdapter;
+import com.example.ordernowandroid.fragments.AddNoteDialogFragment;
+import com.example.ordernowandroid.fragments.AddNoteListener;
 import com.example.ordernowandroid.fragments.IndividualMenuTabFragment;
 import com.example.ordernowandroid.fragments.IndividualMenuTabFragment.numListener;
 import com.example.ordernowandroid.model.CategoryNavDrawerItem;
 import com.example.ordernowandroid.model.FoodMenuItem;
 import com.example.ordernowandroid.model.MyOrderItem;
+import com.util.Utilities;
 
-public class FoodMenuActivity extends FragmentActivity implements numListener{
+public class FoodMenuActivity extends FragmentActivity implements numListener, AddNoteListener{
 
     public static final String TABLE_ID = "TableId";
     private String tableId;
     private static final int MY_ORDER_REQUEST_CODE = 1;
     protected static final String MY_ORDER = "MyOrder";
-	protected static final String CATEGORY_ID = null;
+	protected static final String CATEGORY_ID = "CategoryId";
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -165,6 +169,7 @@ public class FoodMenuActivity extends FragmentActivity implements numListener{
 	            }
 	            Intent intent = new Intent(context, MyOrderActivity.class);
 	            intent.putExtra(MY_ORDER, orderItems);
+	            Utilities.info("mDrawerList " + mDrawerList.getCheckedItemPosition());
 	            intent.putExtra(CATEGORY_ID, mDrawerList.getCheckedItemPosition());
 	            intent.putExtra(TABLE_ID, tableId);
 	            startActivityForResult(intent, MY_ORDER_REQUEST_CODE);		
@@ -304,39 +309,34 @@ public class FoodMenuActivity extends FragmentActivity implements numListener{
 
     @Override
     public void incrementQuantity(FoodMenuItem foodMenuItem) {
-		float quantity = 0;
         final String itemName = foodMenuItem.getItemName();
         
-        if (foodMenuItemQuantityMap.get(itemName) != null) {
-            quantity = foodMenuItemQuantityMap.get(itemName).getQuantity();
+        if (foodMenuItemQuantityMap.get(itemName) == null) {
+            MyOrderItem myOrderItem = new MyOrderItem(foodMenuItem, 1);
+            foodMenuItemQuantityMap.put(itemName, myOrderItem);
+        } else {
+            float quantity = foodMenuItemQuantityMap.get(itemName).getQuantity();
+            foodMenuItemQuantityMap.get(itemName).setQuantity(++quantity);
         }
-        quantity++;
-        MyOrderItem myOrderItem = new MyOrderItem(foodMenuItem, quantity);
-        foodMenuItemQuantityMap.put(itemName, myOrderItem);
         //updateFoodCartNotificationText();
         invalidateOptionsMenu();
     }
 
     @Override
     public void decrementQuantity(FoodMenuItem foodMenuItem) {
-		float quantity = 0;
+        float quantity = 0;
         final String itemName = foodMenuItem.getItemName();
         if (foodMenuItemQuantityMap.get(itemName) != null) {
             quantity = foodMenuItemQuantityMap.get(itemName).getQuantity();
-        }
-        if (quantity == 0) {
-            Toast.makeText(this, foodMenuItem.toString() + " " + quantity + " can't be decreased", Toast.LENGTH_SHORT)
-                    .show();
-        } else {
             quantity--;
             if (quantity == 0) {
                 foodMenuItemQuantityMap.remove(itemName);
             } else {
-                MyOrderItem myOrderItem = new MyOrderItem(foodMenuItem, quantity);
-                foodMenuItemQuantityMap.put(itemName, myOrderItem );
+                foodMenuItemQuantityMap.get(itemName).setQuantity(quantity);
             }
         }
-        //updateFoodCartNotificationText();
+
+        // updateFoodCartNotificationText();
         invalidateOptionsMenu();
     }
 
@@ -438,6 +438,23 @@ public class FoodMenuActivity extends FragmentActivity implements numListener{
             // "http://www.creativefreedom.co.uk/icon-designers-blog/wp-content/uploads/2013/03/00-android-4-0_icons.png"
             return DownloadResturantMenu.getInstance().getResturant(params[0], params[1]);
         }
+
+    }
+
+    @Override
+    public void showNote(FoodMenuItem foodMenuItem) {
+        AddNoteDialogFragment noteFragment = AddNoteDialogFragment.newInstance(foodMenuItem,
+                foodMenuItemQuantityMap.get(foodMenuItem.getItemName()));
+        noteFragment.show(getSupportFragmentManager(), "notes");
+        invalidateOptionsMenu();
+
+    }
+
+    @Override
+    public void saveNote(FoodMenuItem foodMenuItem, HashMap<String, String> metaData) {
+        foodMenuItemQuantityMap.get(foodMenuItem.getItemName()).setNotes("");
+        foodMenuItemQuantityMap.get(foodMenuItem.getItemName()).setMetaData(metaData);
+        invalidateOptionsMenu();
 
     }
 

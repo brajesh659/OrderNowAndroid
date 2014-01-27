@@ -1,6 +1,7 @@
 package com.example.ordernowandroid.fragments;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
@@ -42,17 +43,18 @@ public class IndividualMenuTabFragment extends Fragment implements TabListener {
 	}
 
 	numListener numCallBack;	
+	AddNoteListener addNoteListener;   
 
-	@Override
-	public void onAttach(android.app.Activity activity) {
-		super.onAttach(activity);
-		try {
-			numCallBack = (numListener)activity;
-		} catch(ClassCastException e) {
-			throw new ClassCastException(activity.toString()
-					+ " must implement Listeners!!");
-		};
-	};
+    @Override
+    public void onAttach(android.app.Activity activity) {
+        super.onAttach(activity);
+        try {
+            numCallBack = (numListener) activity;
+            addNoteListener = (AddNoteListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement Listeners!!");
+        };
+    };
 
 	public static Fragment newInstance(String categoryName, ArrayList<FoodMenuItem> foodMenuItem) {		
 		IndividualMenuTabFragment imt = new IndividualMenuTabFragment();		
@@ -88,8 +90,8 @@ public class IndividualMenuTabFragment extends Fragment implements TabListener {
 	@Override
 	public View onCreateView(final LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {		
-		View foodCategoryView = inflater.inflate(R.layout.category_page, null);
-		this.foodMenuItemAdapter = new FoodMenuItemAdapter(getActivity(), foodMenuItemList, numCallBack);
+		View foodCategoryView = inflater.inflate(R.layout.category_page, null);	
+		this.foodMenuItemAdapter = new FoodMenuItemAdapter(getActivity(), foodMenuItemList, numCallBack, addNoteListener);
 		ListView lv = (ListView) foodCategoryView.findViewById(R.id.dish_list);
 		lv.setAdapter(foodMenuItemAdapter);
 		lv.setOnCreateContextMenuListener(getActivity());
