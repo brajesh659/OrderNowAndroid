@@ -31,24 +31,19 @@ public class MainActivity extends Activity {
 				.getInstance(getBaseContext());
 		CurrentOrdersHelpers coh = new CurrentOrdersHelpers(dbManager);
 		coh.getCurrentOrders();
-		  Parse.initialize(this, "vMFTELLhOo9RDRql9HpV9lKRot5xQTCCD63wkYdQ", "mdz7n8XUjy3u0MSQRnuwmogqXZrw3qJnRwmRxx0g"); 
-          PushService.setDefaultPushCallback(this, MainActivity.class);
-          ParseInstallation.getCurrentInstallation().saveInBackground();
-          
-          Context context = getApplicationContext();
-          CharSequence text = ParseInstallation.getCurrentInstallation().getObjectId();
-          int duration = Toast.LENGTH_LONG;
+		Parse.initialize(this, "vMFTELLhOo9RDRql9HpV9lKRot5xQTCCD63wkYdQ", "mdz7n8XUjy3u0MSQRnuwmogqXZrw3qJnRwmRxx0g"); 
+		PushService.setDefaultPushCallback(this, MainActivity.class);
+		ParseInstallation.getCurrentInstallation().saveInBackground();
 
-          Toast toast = Toast.makeText(context, text, duration);
-          toast.show();
-          
-          
-          toast = Toast.makeText(context, "Aplication opened", duration);
-          toast.show();
-          
-          ParseAnalytics.trackAppOpened(getIntent());
-          
-		
+		Context context = getApplicationContext();
+		CharSequence text = ParseInstallation.getCurrentInstallation().getObjectId();
+		int duration = Toast.LENGTH_LONG;
+
+		Toast toast = Toast.makeText(context, text, duration);
+		toast.show();     
+
+		ParseAnalytics.trackAppOpened(getIntent());
+
 		setContentView(R.layout.activity_main);
 	}
 

@@ -1,14 +1,22 @@
 package com.data.menu;
 
+import java.io.Serializable;
 import java.util.Map;
 
-public class CustomerOrder {
+public class CustomerOrder implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	/*
 	 * Will contain the dish id's and quantity. Keeping the Quantity as float to
 	 * accommodate for half and full dishes.
-	 */
-
+	 */	
 	private Map<String, Float> dishes;
+	private String restaurantId;	
+	private String orderId; //Giving an order id so that the communication between the Restaurant and Client can happen.
+	private String customerId; //Customer ID same as parse object id.
+	private String tableId;	
 
 	public CustomerOrder(Map<String, Float> dishes, String restaurantId,
 			String orderId, String customerId, String tableId) {
@@ -18,20 +26,7 @@ public class CustomerOrder {
 		this.orderId = orderId;
 		this.customerId = customerId;
 		this.tableId = tableId;
-	}
-
-	private String restaurantId;
-	/*
-	 * Giving an order id so that the communication between the Restaurant and
-	 * Client can happen.
-	 */
-	private String orderId;
-	private String tableId;
-
-	/*
-	 * Customer ID same as parse object id.
-	 */
-	private String customerId;
+	}	
 
 	public String getCustomerId() {
 		return customerId;
@@ -72,4 +67,5 @@ public class CustomerOrder {
 	public void setTableId(String tableId) {
 		this.tableId = tableId;
 	}
+	
 }

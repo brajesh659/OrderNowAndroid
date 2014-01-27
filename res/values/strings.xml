@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">OrderNowAndroid</string>
+    <string name="app_name">Order Now</string>
     <string name="action_settings">Settings</string>
     <string name="hello_app">Hi, Welcome to Order Now Application. Please Scan the QR code provided on the table.</string>
     <string name="scan_qr_codes">Scan QR Code</string>
@@ -20,10 +20,10 @@
     <string name="myorder">"My Order"</string> 
     <string name="addnotes">"Add Notes"</string>
     <string name="save">"Save"</string>
-    
     <string-array name="toppings">
          <item>spices</item>
     </string-array>    
+    <string name="confirmed_order">"Confirmed Order"</string>
 
     <!-- Nav Drawer Menu Items -->
     <string-array name="nav_drawer_items">

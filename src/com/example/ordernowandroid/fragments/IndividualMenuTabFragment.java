@@ -106,7 +106,6 @@ public class IndividualMenuTabFragment extends Fragment implements TabListener {
 
 	@Override
 	public void onTabSelected(Tab tab, FragmentTransaction arg1) {
-		Toast.makeText(getActivity(), "Tab selected" + tab + " arg "+arg1, Toast.LENGTH_SHORT).show();
 		if(foodMenuItemAdapter != null) {
 		    foodMenuItemAdapter.getFilter().filter(tab.getTag().toString());
 		}

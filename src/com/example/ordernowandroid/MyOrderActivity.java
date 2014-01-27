@@ -26,18 +26,24 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.data.menu.CustomerOrder;
+import com.data.menu.CustomerOrderWrapper;
 import com.example.ordernowandroid.adapter.MyOrderAdapter;
 import com.example.ordernowandroid.model.MyOrderItem;
+import com.example.ordernowandroid.model.OrderNowConstants;
 import com.google.gson.Gson;
 import com.parse.ParseInstallation;
 
 public class MyOrderActivity extends Activity {
     public static final String RETURN_FROM_MY_ORDER = "ReturnFromMyOrder";
-    private ArrayList<MyOrderItem> myOrders;
+    private ArrayList<MyOrderItem> myOrderItemList;
+    private CustomerOrderWrapper customerOrderWrapper;
     
     public static final String FOOD_MENU_CATEGORY_ID = "foodMenuCategoryId";
     private int categoryId;
     private String tableId;
+    
+    protected static final String SUB_ORDER_LIST = "SubOrderList";
+    public static ArrayList<CustomerOrderWrapper> subOrdersFromDB;
     
     @SuppressWarnings("unchecked")
     @Override
@@ -45,13 +51,22 @@ public class MyOrderActivity extends Activity {
         super.onCreate(savedInstanceState);
         setTitle("My Order");
         Bundle b = getIntent().getExtras();
-        myOrders = (ArrayList<MyOrderItem>) b.getSerializable(FoodMenuActivity.MY_ORDER);
-        categoryId = b.getInt(FoodMenuActivity.CATEGORY_ID);
+        myOrderItemList = (ArrayList<MyOrderItem>) b.getSerializable(FoodMenuActivity.MY_ORDER);
+        categoryId = b.getInt(FoodMenuActivity.FOOD_MENU_CATEGORY_ID);
         tableId = b.getString(FoodMenuActivity.TABLE_ID);
+        subOrdersFromDB = (ArrayList<CustomerOrderWrapper>) b.getSerializable(SUB_ORDER_LIST);
         setContentView(R.layout.my_order_summary);
+        
+        if (subOrdersFromDB != null) {
+        	Toast.makeText(getApplicationContext(), "Sub Orders MOA: " + subOrdersFromDB.size(), Toast.LENGTH_SHORT).show();	
+        }  else {
+        	Toast.makeText(getApplicationContext(), "Sub Orders MOA: Size 0", Toast.LENGTH_SHORT).show();
+        }
+        
         Button addMoreItemsBtn = (Button) findViewById(R.id.addMoreItemsButton);
         Button cancelOrderBtn = (Button) findViewById(R.id.cancelOrderButton);
-        Button confirmOrderBtn = (Button) findViewById(R.id.confirmOrderButton);
+        Button confirmOrderBtn = (Button) findViewById(R.id.confirmOrderButton);        
+        final TextView totalAmount = (TextView) findViewById(R.id.totalAmount);
         
         addMoreItemsBtn.setOnClickListener(new Button.OnClickListener() {           
             @Override
@@ -69,10 +84,14 @@ public class MyOrderActivity extends Activity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {                                                
                         Toast.makeText(getApplicationContext(), "Order has been canceled.", Toast.LENGTH_LONG).show();
+
                         //Clear the Selected Quantities and Start the Food Menu Activity again
                         Intent intent = new Intent(getApplicationContext(), FoodMenuActivity.class);
                         intent.putExtra(FoodMenuActivity.TABLE_ID, tableId);
-                        startActivity(intent);                                              
+                        intent.putExtra(SUB_ORDER_LIST, subOrdersFromDB);
+                        startActivity(intent);
+
+                        finish();
                     }
                 });
                 builder.setNegativeButton(R.string.cancel, null);                           
@@ -89,22 +108,23 @@ public class MyOrderActivity extends Activity {
                 builder.setPositiveButton(R.string.ok, new OnClickListener() {                  
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
                     	Map<String, Float> dishes = new HashMap<String, Float>();
-						for (MyOrderItem myOrderItem : myOrders) {
-							dishes.put(myOrderItem.getFoodMenuItem()
-									.getDishId(), myOrderItem.getQuantity());
+						for (MyOrderItem myOrderItem : myOrderItemList) {
+							dishes.put(myOrderItem.getFoodMenuItem().getDishId(), myOrderItem.getQuantity());
 						}
-						CharSequence text = ParseInstallation
-								.getCurrentInstallation().getObjectId();
-						
-						CustomerOrder c = new CustomerOrder(dishes, "R1",
-								"Temp", text.toString(), "T1");
+						CharSequence text = ParseInstallation.getCurrentInstallation().getObjectId();						
+						CustomerOrder customerOrder = new CustomerOrder(dishes, "R1", "Temp", text.toString(), "T1");
+					
+						String orderTotalPriceStr = (String) totalAmount.getText();
+						if (orderTotalPriceStr.indexOf(OrderNowConstants.INDIAN_RUPEE_UNICODE) != -1){
+							orderTotalPriceStr = orderTotalPriceStr.substring(orderTotalPriceStr.indexOf(OrderNowConstants.INDIAN_RUPEE_UNICODE) + 1).trim();
+						}
+						//Append Confirmed Order to CustomerOrderWrapper Object
+						customerOrderWrapper = new CustomerOrderWrapper(customerOrder, myOrderItemList, Float.parseFloat(orderTotalPriceStr));
 						
 						Gson gs = new Gson();
-
 						String url = "http://ordernow.herokuapp.com/order?order="
-								+ gs.toJson(c) + "&debug=1";
+								+ gs.toJson(customerOrder) + "&debug=1";
 						String response = "";
                         try {
                             response = new asyncNetwork().execute(url).get();
@@ -114,14 +134,17 @@ public class MyOrderActivity extends Activity {
                             e.printStackTrace();
                         }
 
-						// Toast.makeText(getApplicationContext(),
-						// "Order has been confirmed.",
-						// Toast.LENGTH_LONG).show();
-                        
-                        //Clear the Selected Quantities and Start the Food Menu Activity again
-                        Intent intent = new Intent(getApplicationContext(), FoodMenuActivity.class);
-                        intent.putExtra(FoodMenuActivity.TABLE_ID, tableId);
+                        //Un-commenting it till we have Push Notifications in place 
+						Toast.makeText(getApplicationContext(), "Order has been confirmed.", Toast.LENGTH_LONG).show();
+						
+                        Intent intent = new Intent(getApplicationContext(), MyParentOrderActivity.class);
+                        intent.putExtra(MyParentOrderActivity.CUSTOMER_ORDER_WRAPPER, customerOrderWrapper);
+                        intent.putExtra(MyParentOrderActivity.FOOD_MENU_CATEGORY_ID, categoryId);
+                        intent.putExtra(MyParentOrderActivity.TABLE_ID, tableId);                
+                        intent.putExtra(SUB_ORDER_LIST, subOrdersFromDB);
                         startActivity(intent);
+                        
+                        finish();
 					}
 				});
 				builder.setNegativeButton(R.string.cancel, null);                               
@@ -130,17 +153,15 @@ public class MyOrderActivity extends Activity {
 			}
 		}); 
 
-		TextView totalAmount = (TextView) findViewById(R.id.totalAmount);
 		Float totalOrderAmount = (float) 0.00;
-		for (MyOrderItem myOrderItem: myOrders) {
+		for (MyOrderItem myOrderItem: myOrderItemList) {
 			totalOrderAmount = totalOrderAmount + (myOrderItem.getQuantity() * myOrderItem.getFoodMenuItem().getItemPrice()); 
 		}
 		
-		//UniCode for Rupee Symbol. HardCoding it here for now, cannot get R.string.id to make it work
-		totalAmount.setText("\u20B9" + " " + Float.toString(totalOrderAmount)); 
+		totalAmount.setText(OrderNowConstants.INDIAN_RUPEE_UNICODE + " " + Float.toString(totalOrderAmount)); 
 
 		ListView myOrderListView = (ListView) findViewById(R.id.listMyOrder);
-		MyOrderAdapter myOrderAdapter = new MyOrderAdapter(MyOrderActivity.this, myOrders);
+		MyOrderAdapter myOrderAdapter = new MyOrderAdapter(MyOrderActivity.this, myOrderItemList);
 		myOrderListView.setAdapter(myOrderAdapter);
 	}
 
@@ -150,21 +171,18 @@ public class MyOrderActivity extends Activity {
 		switch (item.getItemId()) {
 		// Respond to the action bar's Up/Home button
 		case android.R.id.home:
+			Intent intent = new Intent();
+			intent.putExtra(RETURN_FROM_MY_ORDER, myOrderItemList);
+			intent.putExtra(FOOD_MENU_CATEGORY_ID, categoryId);
+			intent.putExtra(FoodMenuActivity.TABLE_ID, tableId);
+			intent.putExtra(SUB_ORDER_LIST, subOrdersFromDB);
+			setResult(RESULT_OK, intent); // Activity finished ok, return the data
 			finish();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
-	@Override
-	public void finish() {
-		Intent data = new Intent();
-		data.putExtra(RETURN_FROM_MY_ORDER, myOrders);
-		data.putExtra(FOOD_MENU_CATEGORY_ID, categoryId);
-		data.putExtra(FoodMenuActivity.TABLE_ID, tableId);
-		setResult(RESULT_OK, data); // Activity finished ok, return the data
-		super.finish();
-	}
 }
 
 

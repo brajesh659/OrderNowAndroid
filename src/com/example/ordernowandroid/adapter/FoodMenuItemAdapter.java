@@ -21,6 +21,7 @@ import com.example.ordernowandroid.fragments.AddNoteDialogFragment;
 import com.example.ordernowandroid.fragments.AddNoteListener;
 import com.example.ordernowandroid.fragments.IndividualMenuTabFragment.numListener;
 import com.example.ordernowandroid.model.FoodMenuItem;
+import com.example.ordernowandroid.model.OrderNowConstants;
 
 /**
  * 
@@ -86,7 +87,7 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
         holder.addNote.setTag(foodItem);
         holder.txt_itemName.setText(foodItem.getItemName());
         holder.txt_itemDescription.setText(foodItem.getDescription());
-        holder.txt_itemPrice.setText("\u20B9" + " " + foodItem.getItemPrice().toString());
+        holder.txt_itemPrice.setText(OrderNowConstants.INDIAN_RUPEE_UNICODE + " " + foodItem.getItemPrice().toString());
 
         Bitmap bitmap = foodItem.getImage();
         if (bitmap == null) {

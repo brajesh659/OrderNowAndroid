@@ -6,5 +6,12 @@
         android:showAsAction="always"
         android:actionLayout="@layout/food_cart"
         android:title="@string/myorder"/>
+    
+    <item
+        android:id="@+id/confirmed_order"
+        android:orderInCategory="200"
+        android:showAsAction="always"
+        android:actionLayout="@layout/confirmed_order"
+        android:title="@string/confirmed_order"/>
 
 </menu>

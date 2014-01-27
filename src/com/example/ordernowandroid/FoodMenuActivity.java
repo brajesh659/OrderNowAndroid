@@ -4,14 +4,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -34,14 +33,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.data.menu.Category;
+import com.data.menu.CustomerOrderWrapper;
 import com.data.menu.Dish;
 import com.data.menu.FoodType;
 import com.data.menu.Restaurant;
 import com.dm.zbar.android.scanner.ZBarConstants;
 import com.example.ordernowandroid.adapter.DownloadResturantMenu;
 import com.example.ordernowandroid.adapter.NavDrawerListAdapter;
-import com.example.ordernowandroid.fragments.AddNoteDialogFragment;
-import com.example.ordernowandroid.fragments.AddNoteListener;
 import com.example.ordernowandroid.fragments.IndividualMenuTabFragment;
 import com.example.ordernowandroid.fragments.IndividualMenuTabFragment.numListener;
 import com.example.ordernowandroid.model.CategoryNavDrawerItem;
@@ -54,8 +52,9 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
     public static final String TABLE_ID = "TableId";
     private String tableId;
     private static final int MY_ORDER_REQUEST_CODE = 1;
+    //private static final int CONFIRMED_ORDER_REQUEST_CODE = 2;
     protected static final String MY_ORDER = "MyOrder";
-	protected static final String CATEGORY_ID = "CategoryId";
+	protected static final String FOOD_MENU_CATEGORY_ID = "foodMenuCategoryId";
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -65,12 +64,22 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
     private NavDrawerListAdapter adapter;
     private Restaurant restaurant;
     private HashMap<String, MyOrderItem> foodMenuItemQuantityMap = new HashMap<String, MyOrderItem>();
+    protected static final String SUB_ORDER_LIST = "SubOrderList";
+    public static ArrayList<CustomerOrderWrapper> subOrdersFromDB;
     
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
         Bundle b = getIntent().getExtras();
         tableId = b.getString(TABLE_ID);
+        subOrdersFromDB = (ArrayList<CustomerOrderWrapper>) b.getSerializable(SUB_ORDER_LIST);
+        if (subOrdersFromDB != null) {
+        	Toast.makeText(getApplicationContext(), "Sub Orders FMA: " + subOrdersFromDB.size(), Toast.LENGTH_SHORT).show();	
+        } else {
+        	Toast.makeText(getApplicationContext(), "Sub Orders FMA: Size 0", Toast.LENGTH_SHORT).show();
+        }
         
         setContentView(R.layout.food_menu);
         mTitle = getTitle();
@@ -78,8 +87,6 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
         mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
 
         navDrawerItems = new ArrayList<CategoryNavDrawerItem>();
-
-       
 
         // setting the nav drawer list adapter
         adapter = new NavDrawerListAdapter(getApplicationContext(), navDrawerItems);
@@ -107,7 +114,6 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
             }
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
-
        
         restaurant = getResturant(tableId);
         if (restaurant == null){
@@ -142,37 +148,52 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
             }
         }
         
-      
-        
     }
 
     private List<Category> getCategories() {
         return restaurant.getMenu().getCategories();
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
+        
         RelativeLayout food_cart_layout = (RelativeLayout)menu.findItem(R.id.action_cart).getActionView();
         TextView food_item_notification = (TextView)food_cart_layout.findViewById(R.id.food_cart_notifcation_textview);
         food_item_notification.setText(Integer.toString(foodMenuItemQuantityMap.keySet().size()));
         ImageView cart_image = (ImageView)food_cart_layout.findViewById(R.id.action_cart_image);
+        
+        RelativeLayout confirmed_order_layout = (RelativeLayout) menu.findItem(R.id.confirmed_order).getActionView();
+        ImageView confirmed_order_image = (ImageView) confirmed_order_layout.findViewById(R.id.confirmed_order_image);
+        
         final Context context = this;
+        final ArrayList<MyOrderItem> orderItems = new ArrayList<MyOrderItem>();
+        if (foodMenuItemQuantityMap != null) {
+            orderItems.addAll(foodMenuItemQuantityMap.values());
+        }
+        
         cart_image.setOnClickListener(new View.OnClickListener() {
-			
 			@Override
 			public void onClick(View v) {
-				ArrayList<MyOrderItem> orderItems = new ArrayList<MyOrderItem>();
-	            if (foodMenuItemQuantityMap != null) {
-	                orderItems.addAll(foodMenuItemQuantityMap.values());
-	            }
 	            Intent intent = new Intent(context, MyOrderActivity.class);
 	            intent.putExtra(MY_ORDER, orderItems);
 	            Utilities.info("mDrawerList " + mDrawerList.getCheckedItemPosition());
-	            intent.putExtra(CATEGORY_ID, mDrawerList.getCheckedItemPosition());
+	            intent.putExtra(FOOD_MENU_CATEGORY_ID, mDrawerList.getCheckedItemPosition());
 	            intent.putExtra(TABLE_ID, tableId);
+	            intent.putExtra(SUB_ORDER_LIST, subOrdersFromDB);
 	            startActivityForResult(intent, MY_ORDER_REQUEST_CODE);		
+			}
+		});
+        
+        confirmed_order_image.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+	            Intent intent = new Intent(context, MyParentOrderActivity.class);
+	            intent.putExtra(MY_ORDER, orderItems);
+	            intent.putExtra(FOOD_MENU_CATEGORY_ID, mDrawerList.getCheckedItemPosition());
+	            intent.putExtra(TABLE_ID, tableId);
+	            intent.putExtra(SUB_ORDER_LIST, subOrdersFromDB);
+	            startActivity(intent);
 			}
 		});
         
@@ -219,7 +240,21 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
                 startActivity(intent);
             }
             break;
-        }
+       /* case CONFIRMED_ORDER_REQUEST_CODE:
+        	if (resultCode == RESULT_OK) {            	    	
+                Bundle bundleExtra = data.getExtras();
+                @SuppressWarnings("unchecked")
+                ArrayList<MyOrderItem> myOrderItems = (ArrayList<MyOrderItem>) bundleExtra.getSerializable(MyParentOrderActivity.MY_ORDER);
+                if(myOrderItems!=null){
+                	foodMenuItemQuantityMap = new HashMap<String, MyOrderItem>();
+                    for (MyOrderItem myOrderItem : myOrderItems) {
+                        foodMenuItemQuantityMap.put(myOrderItem.getFoodMenuItem().getItemName(), myOrderItem);
+                    }
+                }
+                displayView(bundleExtra.getInt(MyParentOrderActivity.FOOD_MENU_CATEGORY_ID));
+            }
+        	break;
+*/        }
         invalidateOptionsMenu();
     }
 
