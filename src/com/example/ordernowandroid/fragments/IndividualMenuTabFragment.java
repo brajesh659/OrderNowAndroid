@@ -56,7 +56,10 @@ public class IndividualMenuTabFragment extends Fragment implements TabListener {
         };
     };
 
-	public static Fragment newInstance(String categoryName, ArrayList<FoodMenuItem> foodMenuItem) {		
+	public static Fragment newInstance(String categoryName, ArrayList<FoodMenuItem> foodMenuItem) {	
+	    if(foodMenuItem == null||foodMenuItem.size()==0) {
+	        return new NullDishesFragment();
+	    }
 		IndividualMenuTabFragment imt = new IndividualMenuTabFragment();		
 		Bundle b = new Bundle();
 		b.putString(TAB_TITLE, categoryName);
