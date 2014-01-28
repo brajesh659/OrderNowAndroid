@@ -28,6 +28,7 @@ import android.widget.Toast;
 import com.data.menu.CustomerOrder;
 import com.data.menu.CustomerOrderWrapper;
 import com.example.ordernowandroid.adapter.MyOrderAdapter;
+import com.example.ordernowandroid.fragments.ConfirmOrderDialogFragment;
 import com.example.ordernowandroid.model.MyOrderItem;
 import com.example.ordernowandroid.model.OrderNowConstants;
 import com.google.gson.Gson;
@@ -36,9 +37,8 @@ import com.parse.ParseInstallation;
 public class MyOrderActivity extends Activity {
     public static final String RETURN_FROM_MY_ORDER = "ReturnFromMyOrder";
     private ArrayList<MyOrderItem> myOrderItemList;
-    private CustomerOrderWrapper customerOrderWrapper;
     
-    public static final String FOOD_MENU_CATEGORY_ID = "foodMenuCategoryId";
+    public static final String FOOD_MENU_CATEGORY_ID = "FoodMenuCategoryId";
     private int categoryId;
     private String tableId;
     
@@ -50,7 +50,7 @@ public class MyOrderActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTitle("My Order");
-        Bundle b = getIntent().getExtras();
+        final Bundle b = getIntent().getExtras();
         myOrderItemList = (ArrayList<MyOrderItem>) b.getSerializable(FoodMenuActivity.MY_ORDER);
         categoryId = b.getInt(FoodMenuActivity.FOOD_MENU_CATEGORY_ID);
         tableId = b.getString(FoodMenuActivity.TABLE_ID);
@@ -96,54 +96,7 @@ public class MyOrderActivity extends Activity {
         
         confirmOrderBtn.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(MyOrderActivity.this);            
-                builder.setTitle("Confirm Order");
-                builder.setMessage("Are you sure you want to confirm the order ?");
-                builder.setPositiveButton(R.string.ok, new OnClickListener() {                  
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    	Map<String, Float> dishes = new HashMap<String, Float>();
-						for (MyOrderItem myOrderItem : myOrderItemList) {
-							dishes.put(myOrderItem.getFoodMenuItem().getDishId(), myOrderItem.getQuantity());
-						}
-						CharSequence text = ParseInstallation.getCurrentInstallation().getObjectId();						
-						CustomerOrder customerOrder = new CustomerOrder(dishes, "R1", "Temp", text.toString(), "T1");
-					
-						String orderTotalPriceStr = (String) totalAmount.getText();
-						if (orderTotalPriceStr.indexOf(OrderNowConstants.INDIAN_RUPEE_UNICODE) != -1){
-							orderTotalPriceStr = orderTotalPriceStr.substring(orderTotalPriceStr.indexOf(OrderNowConstants.INDIAN_RUPEE_UNICODE) + 1).trim();
-						}
-						//Append Confirmed Order to CustomerOrderWrapper Object
-						customerOrderWrapper = new CustomerOrderWrapper(customerOrder, myOrderItemList, Float.parseFloat(orderTotalPriceStr));
-						
-						Gson gs = new Gson();
-						String url = "http://ordernow.herokuapp.com/order?order="
-								+ gs.toJson(customerOrder);
-						String response = "";
-                        try {
-                            response = new asyncNetwork().execute(url).get();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        } catch (ExecutionException e) {
-                            e.printStackTrace();
-                        }
-
-                        //Un-commenting it till we have Push Notifications in place 
-						Toast.makeText(getApplicationContext(), "Order has been confirmed.", Toast.LENGTH_LONG).show();
-						
-                        Intent intent = new Intent(getApplicationContext(), MyParentOrderActivity.class);
-                        intent.putExtra(MyParentOrderActivity.CUSTOMER_ORDER_WRAPPER, customerOrderWrapper);
-                        intent.putExtra(MyParentOrderActivity.FOOD_MENU_CATEGORY_ID, categoryId);
-                        intent.putExtra(MyParentOrderActivity.TABLE_ID, tableId);                
-                        intent.putExtra(SUB_ORDER_LIST, subOrdersFromDB);
-                        startActivity(intent);
-                        
-                        finish();
-					}
-				});
-				builder.setNegativeButton(R.string.cancel, null);                               
-				AlertDialog alert = builder.create();
-				alert.show();
+                showConfirmOrderDialog();
 			}
 		}); 
 
@@ -177,15 +130,52 @@ public class MyOrderActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
-}
+	void showConfirmOrderDialog() {
+		new ConfirmOrderDialogFragment().show(getFragmentManager(), "confirmOrderEditText");
+	}
 
+	public void doPositiveClick() {
+		Map<String, Float> dishes = new HashMap<String, Float>();
+		for (MyOrderItem myOrderItem : myOrderItemList) {
+			dishes.put(myOrderItem.getFoodMenuItem().getDishId(), myOrderItem.getQuantity());
+		}
+		CharSequence text = ParseInstallation.getCurrentInstallation().getObjectId();						
+		CustomerOrder customerOrder = new CustomerOrder(dishes, "R1", "Temp", text.toString(), "T1");
+		CustomerOrderWrapper customerOrderWrapper = new CustomerOrderWrapper(customerOrder, myOrderItemList);
+
+		Gson gs = new Gson();
+		String url = "http://ordernow.herokuapp.com/order?order="+ gs.toJson(customerOrder) + "&debug=1";
+		String response = "";
+		try {
+			response = new asyncNetwork().execute(url).get();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			e.printStackTrace();
+		}
+
+		//Un-commenting it till we have Push Notifications in place 
+		Toast.makeText(getApplicationContext(), "Order has been confirmed.", Toast.LENGTH_LONG).show();
+
+		Intent intent = new Intent(getApplicationContext(), MyParentOrderActivity.class);
+		intent.putExtra(MyParentOrderActivity.CUSTOMER_ORDER_WRAPPER, customerOrderWrapper);
+		intent.putExtra(MyParentOrderActivity.FOOD_MENU_CATEGORY_ID, categoryId);
+		intent.putExtra(MyParentOrderActivity.TABLE_ID, tableId);                
+		intent.putExtra(SUB_ORDER_LIST, subOrdersFromDB);
+		startActivity(intent);
+
+		finish();
+	
+	}
+	public void doNegativeClick() {
+	}
+}
 
 class asyncNetwork extends AsyncTask<String, Void, String> {
 
 	@Override
 	protected String doInBackground(String... params) {
 		String response = "";
-
 		try {
 			URL url = new URL(params[0]);
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -197,14 +187,13 @@ class asyncNetwork extends AsyncTask<String, Void, String> {
 				response += line;
 			}
 		} catch (ProtocolException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 		return response;
 	}
 
 }
+
+

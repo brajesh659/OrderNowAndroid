@@ -16,9 +16,9 @@ import com.example.ordernowandroid.model.OrderNowConstants;
 
 public class MyParentOrderActivity extends Activity {
 
-	protected static final String CUSTOMER_ORDER_WRAPPER = "customerOrderList";
-	protected static final String FOOD_MENU_CATEGORY_ID = "foodMenuCategoryId";
-	protected static final String TABLE_ID = "TableId";
+	public static final String CUSTOMER_ORDER_WRAPPER = "customerOrderList";
+	public static final String FOOD_MENU_CATEGORY_ID = "foodMenuCategoryId";
+	public static final String TABLE_ID = "TableId";
 	protected static final String MY_ORDER = "MyOrder";
 	protected static final String SUB_ORDER_LIST = "SubOrderList";
 
@@ -63,10 +63,10 @@ public class MyParentOrderActivity extends Activity {
 			subOrdersFromDB.add(customerOrderWrapper);
 		}
 
-		for (CustomerOrderWrapper subOrder: subOrdersFromDB){
-			totalOrderAmount = totalOrderAmount + subOrder.getOrderTotal();
+		for (CustomerOrderWrapper subOrder: subOrdersFromDB){			
 			for (MyOrderItem myOrderItem: subOrder.getMyOrderItemList()) {
 				myOrderItemList.add(myOrderItem);
+				totalOrderAmount = totalOrderAmount + (myOrderItem.getQuantity() * myOrderItem.getFoodMenuItem().getItemPrice());
 			}
 		}		
 

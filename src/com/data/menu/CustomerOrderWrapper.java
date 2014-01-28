@@ -18,13 +18,11 @@ public class CustomerOrderWrapper implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private CustomerOrder customerOrder;
 	private ArrayList<MyOrderItem> myOrderItemList;
-	private Float orderTotal;
 
-	public CustomerOrderWrapper (CustomerOrder customerOrder, ArrayList<MyOrderItem> myOrderItemList, Float orderTotal) {
+	public CustomerOrderWrapper (CustomerOrder customerOrder, ArrayList<MyOrderItem> myOrderItemList) {
 		super();
 		this.customerOrder = customerOrder;
 		this.myOrderItemList = myOrderItemList;
-		this.orderTotal = orderTotal;
 	}
 
 	public CustomerOrder getCustomerOrder() {
@@ -42,14 +40,6 @@ public class CustomerOrderWrapper implements Serializable {
 	public void setMyOrderItemList(ArrayList<MyOrderItem> myOrderItemList) {
 		this.myOrderItemList = myOrderItemList;
 	}
-
-	public Float getOrderTotal() {
-		return orderTotal;
-	}
-
-	public void setOrderTotal(Float orderTotal) {
-		this.orderTotal = orderTotal;
-	}	
 
 }
 
