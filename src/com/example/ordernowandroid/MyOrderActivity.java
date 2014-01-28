@@ -118,7 +118,7 @@ public class MyOrderActivity extends Activity {
 						
 						Gson gs = new Gson();
 						String url = "http://ordernow.herokuapp.com/order?order="
-								+ gs.toJson(customerOrder) + "&debug=1";
+								+ gs.toJson(customerOrder);
 						String response = "";
                         try {
                             response = new asyncNetwork().execute(url).get();
