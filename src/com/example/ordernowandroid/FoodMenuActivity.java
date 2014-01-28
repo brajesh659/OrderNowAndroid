@@ -44,6 +44,7 @@ import com.data.menu.FoodType;
 import com.data.menu.Restaurant;
 import com.dm.zbar.android.scanner.ZBarConstants;
 import com.example.ordernowandroid.adapter.DownloadResturantMenu;
+import com.example.ordernowandroid.adapter.ImageService;
 import com.example.ordernowandroid.adapter.NavDrawerListAdapter;
 import com.example.ordernowandroid.fragments.AddNoteDialogFragment;
 import com.example.ordernowandroid.fragments.AddNoteListener;
@@ -445,6 +446,10 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
                         for(Category category : restaurant.getMenu().getCategories()) {
                             for(Dish dish: category.getDishes()) {
                                 dh.addDish(dish);
+                                // Populating images during db creation. 
+                                if (dish.getImg() != null) {
+                                    ImageService.getInstance().getImageWithCache(dish.getImg());
+                                }
                             }
                         }
                         restaurantLoadedInDb.put(restaurant.getName(), true);

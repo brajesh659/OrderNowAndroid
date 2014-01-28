@@ -1,7 +1,6 @@
 package com.example.ordernowandroid.fragments;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
@@ -13,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.data.menu.FoodType;
 import com.example.ordernowandroid.R;

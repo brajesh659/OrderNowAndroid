@@ -2,7 +2,6 @@ package com.example.ordernowandroid.model;
 
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.Map;
 
 public class MyOrderItem implements Serializable {
 

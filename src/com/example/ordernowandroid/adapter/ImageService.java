@@ -12,14 +12,18 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.entity.BufferedHttpEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import com.util.Utilities;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v4.util.LruCache;
 import android.util.Log;
 
 public class ImageService {
-    
-    private LruCache<String, Bitmap> lruBitmap = new LruCache<String, Bitmap>(2048);
+    final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
+    // Use 1/8th of the available memory for this memory cache.
+    final int cacheSize = maxMemory / 8;
+    private LruCache<String, Bitmap> lruBitmap = new LruCache<String, Bitmap>(cacheSize);
     private static ImageService imageService = new ImageService();
     public static ImageService getInstance (){
         return imageService;
@@ -52,12 +56,14 @@ public class ImageService {
                 InputStream input = b_entity.getContent();
 
                 bitmap = BitmapFactory.decodeStream(input);
+                Utilities.info("Image cached successfullly : "+ urlEncodedParam);
                 lruBitmap.put(urlEncodedParam, bitmap);
             } catch (Exception ex) {
                 ex.printStackTrace();
                 Log.e("FoodMenuItemAdapter", ex.getMessage() + "got exception");
             }
         }
+        
         return lruBitmap.get(urlEncodedParam);
     }
 }

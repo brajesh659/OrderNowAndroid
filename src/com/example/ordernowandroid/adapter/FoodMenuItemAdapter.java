@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 import com.data.menu.FoodType;
 import com.example.ordernowandroid.R;
-import com.example.ordernowandroid.fragments.AddNoteDialogFragment;
 import com.example.ordernowandroid.fragments.AddNoteListener;
 import com.example.ordernowandroid.fragments.IndividualMenuTabFragment.numListener;
 import com.example.ordernowandroid.model.FoodMenuItem;
