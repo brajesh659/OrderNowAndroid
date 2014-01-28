@@ -51,19 +51,18 @@ CREATE TABLE [customerInfo] (
 --  Table structure for "dishes"
 -- ----------------------------------------------------
 DROP TABLE IF EXISTS "dishes";
-CREATE TABLE [dishes] (
+CREATE VIRTUAL TABLE [dishes] USING fts3(
   [dishId] nvarchar(300) not null
 , [name] nvarchar(300) not null
 , [description] nvarchar(300) not null
 , [img] nvarchar(300) not null
 , [price] nvarchar(300) not null
 , [type] nvarchar(300) not null
-, primary key ([dishId])
 );
 
-INSERT INTO dishes VALUES('d1','paneer kurma','paneer gravy','','90.0','Veg');
-INSERT INTO dishes VALUES('d2','paneer kadhai','kurma','','94.0','Veg');
-INSERT INTO dishes VALUES('d3','kadhai do pyaza','kadhai','','95.0','NonVeg');
-INSERT INTO dishes VALUES('d4','mushroom vegetable','mushroom and tomato','','110.0','NonVeg');
-INSERT INTO dishes VALUES('d5','mixed vegetable','mix of vegetables','','210.0','Veg');
+INSERT INTO dishes VALUES('d101','paneer kurma','paneer gravy','','90.0','Veg');
+INSERT INTO dishes VALUES('d102','paneer kadhai','kurma','','94.0','Veg');
+INSERT INTO dishes VALUES('d103','kadhai do pyaza','kadhai','','95.0','NonVeg');
+INSERT INTO dishes VALUES('d104','mushroom vegetable','mushroom and tomato','','110.0','NonVeg');
+INSERT INTO dishes VALUES('d105','mixed vegetable','mix of vegetables','','210.0','Veg');
 

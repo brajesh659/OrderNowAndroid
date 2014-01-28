@@ -24,12 +24,26 @@ public class DishHelper extends SQLHelper {
         super(dbManager);
     }
 
-    private static final String TABLE_NAME = "dishes";
+    private static final String TABLE_NAME_FTS = "dishes";
 
 
     public List<FoodMenuItem> searchDishes(String searchCriteria) {
-        String GET_ALL_EVENTS = "SELECT * FROM " + TABLE_NAME + " WHERE name LIKE '%" + searchCriteria
-                + "%' OR description LIKE '%" + searchCriteria + "%'";
+        List<FoodMenuItem> searchFoodList = new ArrayList<FoodMenuItem>();
+        //String GET_ALL_EVENTS = "SELECT * FROM " + TABLE_NAME_FTS + " WHERE name LIKE '%" + searchCriteria
+          //      + "%' OR description LIKE '%" + searchCriteria + "%'";
+        String GET_ALL_EVENTS = "";
+        String[] searchStrings = searchCriteria.split(" ");
+        if(searchStrings == null) {
+            return searchFoodList;
+        }
+        //for one element normal matching
+        if(searchStrings.length == 1) {
+        GET_ALL_EVENTS = "SELECT * FROM " + TABLE_NAME_FTS + " WHERE " + TABLE_NAME_FTS + " MATCH '"+searchCriteria + "*'";
+        } else {
+            //for more elements do a near search between first two words
+            GET_ALL_EVENTS = "SELECT * FROM " + TABLE_NAME_FTS + " WHERE " + TABLE_NAME_FTS + " MATCH '"+searchStrings[0] + "* NEAR " + searchStrings[1] + "*'";
+        }
+        
         Cursor cursor = dbManager.rawQuery(GET_ALL_EVENTS, null);
 
         Utilities.info(Integer.toString(cursor.getCount()));
@@ -40,7 +54,6 @@ public class DishHelper extends SQLHelper {
         String price = "";
         String type = "";
 
-        List<FoodMenuItem> searchFoodList = new ArrayList<FoodMenuItem>();
 
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
@@ -74,7 +87,7 @@ public class DishHelper extends SQLHelper {
                 values.put(KEY_PRICE, Float.toString(dish.getPrice()));
                 values.put(KEY_TYPE, dish.getType().toString());
                 
-                dbManager.insert(TABLE_NAME, null, values);
+                dbManager.insert(TABLE_NAME_FTS, null, values);
                 Utilities.info("insert " + values);
             }
         } catch (Exception e) {
