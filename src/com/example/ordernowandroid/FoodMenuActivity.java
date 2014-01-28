@@ -55,7 +55,7 @@ import com.example.ordernowandroid.model.FoodMenuItem;
 import com.example.ordernowandroid.model.MyOrderItem;
 import com.util.Utilities;
 
-public class FoodMenuActivity extends FragmentActivity implements numListener, AddNoteListener{
+public class FoodMenuActivity extends FragmentActivity implements numListener, AddNoteListener,SearchView.OnQueryTextListener{
 
     public static final String TABLE_ID = "TableId";
     private String tableId;
@@ -71,6 +71,7 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
     private ArrayList<CategoryNavDrawerItem> navDrawerItems;
     private NavDrawerListAdapter adapter;
     private Restaurant restaurant;
+    private DishHelper dh;
     private HashMap<String, MyOrderItem> foodMenuItemQuantityMap = new HashMap<String, MyOrderItem>();
     protected static final String SUB_ORDER_LIST = "SubOrderList";
     public static ArrayList<CustomerOrderWrapper> subOrdersFromDB;
@@ -119,20 +120,6 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-        if(isSearchIntent(getIntent())) {
-            Bundle appData = getIntent().getBundleExtra(SearchManager.APP_DATA);
-            if (appData != null) {
-                tableId = appData.getString(TABLE_ID);
-                ArrayList<MyOrderItem> myOrders = (ArrayList<MyOrderItem>) appData.getSerializable(MY_ORDER);
-                if(myOrders!=null){
-                    foodMenuItemQuantityMap = new HashMap<String, MyOrderItem>();
-                    for (MyOrderItem myOrderItem : myOrders) {
-                        foodMenuItemQuantityMap.put(myOrderItem.getFoodMenuItem().getItemName(), myOrderItem);
-                    }
-                }
-            }
-        }
-
         restaurant = getResturant(tableId);
         if (restaurant == null){
             Toast.makeText(this, "null resturant ", Toast
@@ -165,11 +152,11 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
                 navDrawerItems.add(categoryNavDrawerItem);
             }
         }
+        mDrawerLayout.openDrawer(Gravity.LEFT);
         
-        boolean search = handleIntent(getIntent());
-        if(!search) {
-            mDrawerLayout.openDrawer(Gravity.LEFT);
-        }
+        CustomDbAdapter dbManager = CustomDbAdapter
+                .getInstance(getBaseContext());
+        dh = new DishHelper(dbManager); 
         
     }
 
@@ -179,7 +166,7 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
+        
         getMenuInflater().inflate(R.menu.main, menu);
              
         // Associate searchable configuration with the SearchView
@@ -190,6 +177,7 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
                 (SearchView) searchMenuItem.getActionView();
         searchView.setSearchableInfo(
                 searchManager.getSearchableInfo(getComponentName()));
+        searchView.setOnQueryTextListener(this);
         //searchMenuItem.collapseActionView();
         //searchView.setIconifiedByDefault(false);
 
@@ -232,7 +220,7 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 			}
 		});
         
-        return true;
+        return super.onCreateOptionsMenu(menu);
 
     }
 
@@ -567,50 +555,34 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 
     }
 
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        Utilities.info("on new intent");
-        handleIntent(intent);
-    }
-    
-    private boolean isSearchIntent(Intent intent) {
-        return Intent.ACTION_SEARCH.equals(intent.getAction());
-    }
-    private boolean handleIntent(Intent intent) {
-        
-        if (isSearchIntent(intent)) {
-            Utilities.info("search intent");
-            CustomDbAdapter dbManager = CustomDbAdapter
-                    .getInstance(getBaseContext());
-            DishHelper dh = new DishHelper(dbManager);   
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            if(dh!=null) {
-                ArrayList<FoodMenuItem> searchDishList = (ArrayList<FoodMenuItem>) dh.searchDishes(query);
-                //IndividualMenuTabFragment.newInstance("Search", searchDishList);
-                Fragment fragment = IndividualMenuTabFragment.newInstance("Search", searchDishList);
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).addToBackStack(null).commit();
-                return true;
-            }
-            
-        }
-        return false;
-        
-    }
-    
     @Override
     public boolean onSearchRequested() {
-         Bundle appData = new Bundle();
-         appData.putString(TABLE_ID, tableId);
-         ArrayList<MyOrderItem> orderItems = new ArrayList<MyOrderItem>();
-         if (foodMenuItemQuantityMap != null) {
-             orderItems.addAll(foodMenuItemQuantityMap.values());
-         }
-         appData.putSerializable(MY_ORDER, orderItems);
-         startSearch(null, false, appData, false);
-         return true;
+        //overriding this method is letting onQueryTextChange to work
+        return false;
      }
+
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        if(newText == null || newText.isEmpty()) {
+            return false;
+        }
+        String query = newText;
+        if(dh!=null) {
+            ArrayList<FoodMenuItem> searchDishList = (ArrayList<FoodMenuItem>) dh.searchDishes(query);
+            //IndividualMenuTabFragment.newInstance("Search", searchDishList);
+            Fragment fragment = IndividualMenuTabFragment.newInstance("Search", searchDishList);
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).addToBackStack(null).commit();
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String finalText) {
+        onQueryTextChange(finalText);
+        return false;
+    }
 
 }
