@@ -16,6 +16,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.SearchRecentSuggestions;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -76,6 +77,7 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
     protected static final String SUB_ORDER_LIST = "SubOrderList";
     public static ArrayList<CustomerOrderWrapper> subOrdersFromDB;
     private static Map<String, Boolean> restaurantLoadedInDb = new HashMap<String, Boolean>();
+    private SearchRecentSuggestions suggestionProvider;
     
     @SuppressWarnings("unchecked")
 	@Override
@@ -157,7 +159,10 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
         CustomDbAdapter dbManager = CustomDbAdapter
                 .getInstance(getBaseContext());
         dh = new DishHelper(dbManager); 
-        
+
+        suggestionProvider = new SearchRecentSuggestions(this, SearchSuggestionProvider.AUTHORITY,
+                SearchSuggestionProvider.MODE);
+
     }
 
     private List<Category> getCategories() {
@@ -582,6 +587,7 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
     @Override
     public boolean onQueryTextSubmit(String finalText) {
         onQueryTextChange(finalText);
+        suggestionProvider.saveRecentQuery(finalText, null);
         return false;
     }
 

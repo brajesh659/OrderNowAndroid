@@ -59,10 +59,3 @@ CREATE VIRTUAL TABLE [dishes] USING fts3(
 , [price] nvarchar(300) not null
 , [type] nvarchar(300) not null
 );
-
-INSERT INTO dishes VALUES('d101','paneer kurma','paneer gravy','','90.0','Veg');
-INSERT INTO dishes VALUES('d102','paneer kadhai','kurma','','94.0','Veg');
-INSERT INTO dishes VALUES('d103','kadhai do pyaza','kadhai','','95.0','NonVeg');
-INSERT INTO dishes VALUES('d104','mushroom vegetable','mushroom and tomato','','110.0','NonVeg');
-INSERT INTO dishes VALUES('d105','mixed vegetable','mix of vegetables','','210.0','Veg');
-
