@@ -144,7 +144,8 @@ public class MyOrderActivity extends Activity {
 		CustomerOrderWrapper customerOrderWrapper = new CustomerOrderWrapper(customerOrder, myOrderItemList);
 
 		Gson gs = new Gson();
-		String url = "http://ordernow.herokuapp.com/order?order="+ gs.toJson(customerOrder) + "&debug=1";
+		String url = "http://ordernow.herokuapp.com/order?order="
+				+ gs.toJson(customerOrder);
 		String response = "";
 		try {
 			response = new asyncNetwork().execute(url).get();
