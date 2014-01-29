@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.data.menu.CustomerOrder;
 import com.data.menu.CustomerOrderWrapper;
+import com.data.menu.OrderDish;
 import com.example.ordernowandroid.adapter.MyOrderAdapter;
 import com.example.ordernowandroid.fragments.ConfirmOrderDialogFragment;
 import com.example.ordernowandroid.model.MyOrderItem;
@@ -44,6 +45,8 @@ public class MyOrderActivity extends Activity {
     
     protected static final String SUB_ORDER_LIST = "SubOrderList";
     public static ArrayList<CustomerOrderWrapper> subOrdersFromDB;
+    private static final String TEXT_COMMENT = "TextComment"; //FIXME: Make the Properties names more readable
+    public static final String SPICE_LEVEL = "SpiceLevel";
     
     @SuppressWarnings("unchecked")
     @Override
@@ -141,10 +144,17 @@ public class MyOrderActivity extends Activity {
 	}
 
 	public void doPositiveClick(String orderNote) {
-		Map<String, Float> dishes = new HashMap<String, Float>();
+		OrderDish orderDish;
+		Map<String, OrderDish> dishes = new HashMap<String, OrderDish>();
 		for (MyOrderItem myOrderItem : myOrderItemList) {
-			dishes.put(myOrderItem.getFoodMenuItem().getDishId(), myOrderItem.getQuantity());
+			if (myOrderItem.getMetaData() != null) {
+				orderDish = new OrderDish(myOrderItem.getQuantity(), myOrderItem.getMetaData().get(TEXT_COMMENT), myOrderItem.getMetaData().get(SPICE_LEVEL));	
+			} else {
+				orderDish = new OrderDish(myOrderItem.getQuantity());
+			}
+			dishes.put(myOrderItem.getFoodMenuItem().getDishId(), orderDish);
 		}
+
 		CharSequence text = ParseInstallation.getCurrentInstallation().getObjectId();
 		CustomerOrder customerOrder = new CustomerOrder(dishes, "R1", "Temp", text.toString(), "T1", orderNote);
 		CustomerOrderWrapper customerOrderWrapper = new CustomerOrderWrapper(customerOrder, myOrderItemList);
@@ -172,7 +182,7 @@ public class MyOrderActivity extends Activity {
 		startActivity(intent);
 
 		finish();
-	
+
 	}
 	public void doNegativeClick() {
 	}

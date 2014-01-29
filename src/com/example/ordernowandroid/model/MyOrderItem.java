@@ -7,22 +7,17 @@ public class MyOrderItem implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public MyOrderItem(FoodMenuItem foodMenuItem, float quantity) {
-		super();
-		this.foodMenuItem = foodMenuItem;
-		this.quantity = quantity;
-	}
-
-	@Override
-	public String toString() {
-		return "MyOrderItem [item=" + foodMenuItem + ", quantity=" + quantity + "]";
-	}
-
 	private FoodMenuItem foodMenuItem;
 	private float quantity;
 	private String notes;
 	private HashMap<String, String> metaData;
 
+	public MyOrderItem(FoodMenuItem foodMenuItem, float quantity) {
+		super();
+		this.foodMenuItem = foodMenuItem;
+		this.quantity = quantity;
+	}
+	
 	public void setFoodMenuItem(FoodMenuItem foodMenuItem) {
 		this.foodMenuItem = foodMenuItem;
 	}
@@ -62,4 +57,9 @@ public class MyOrderItem implements Serializable {
        this.metaData = metaData; 
     }
 
+    @Override
+	public String toString() {
+		return "MyOrderItem [item=" + foodMenuItem + ", quantity=" + quantity + "]";
+	}
+    
 }

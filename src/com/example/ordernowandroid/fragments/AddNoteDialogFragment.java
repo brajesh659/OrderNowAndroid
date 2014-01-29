@@ -7,11 +7,13 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.example.ordernowandroid.R;
 import com.example.ordernowandroid.model.FoodMenuItem;
@@ -81,7 +83,11 @@ public class AddNoteDialogFragment extends DialogFragment {
                 int checkedRadioButtonId = radioGroup.getCheckedRadioButtonId();
                 RadioButton radioButton = (RadioButton) view.findViewById(checkedRadioButtonId);
                 HashMap<String, String> metaData = new HashMap<String, String>();
-                metaData.put(SPICE_LEVEL, radioButton.getText().toString());
+                String dishSpiceLevel = null;
+                if (radioButton != null && radioButton.getText() != null){
+                	dishSpiceLevel = (String) radioButton.getText();
+                }
+                metaData.put(SPICE_LEVEL, dishSpiceLevel);
                 metaData.put(TEXT_COMMENT, editText.getText().toString());
                 numCallBack.saveNote(foodMenuItem, metaData);
             }
