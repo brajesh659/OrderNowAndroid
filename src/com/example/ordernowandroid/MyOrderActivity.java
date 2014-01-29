@@ -65,7 +65,7 @@ public class MyOrderActivity extends Activity {
         addMoreItemsBtn.setOnClickListener(new Button.OnClickListener() {           
             @Override
             public void onClick(View v) {
-                onBackPressed();
+            	onBackPressed();
             }
         });
 		
@@ -118,18 +118,24 @@ public class MyOrderActivity extends Activity {
 		switch (item.getItemId()) {
 		// Respond to the action bar's Up/Home button
 		case android.R.id.home:
-			Intent intent = new Intent();
-			intent.putExtra(RETURN_FROM_MY_ORDER, myOrderItemList);
-			intent.putExtra(FOOD_MENU_CATEGORY_ID, categoryId);
-			intent.putExtra(FoodMenuActivity.TABLE_ID, tableId);
-			intent.putExtra(SUB_ORDER_LIST, subOrdersFromDB);
-			setResult(RESULT_OK, intent); // Activity finished ok, return the data
-			finish();
+			onBackPressed();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
+	@Override
+	public void onBackPressed() {
+		//Start the FoodMenuActivity with updated MyOrderItem List
+		Intent intent = new Intent();
+		intent.putExtra(RETURN_FROM_MY_ORDER, myOrderItemList);
+		intent.putExtra(FOOD_MENU_CATEGORY_ID, categoryId);
+		intent.putExtra(FoodMenuActivity.TABLE_ID, tableId);
+		intent.putExtra(SUB_ORDER_LIST, subOrdersFromDB);
+		setResult(RESULT_OK, intent); // Activity finished ok, return the data
+		finish();
+	}
+	
 	void showConfirmOrderDialog() {
 		new ConfirmOrderDialogFragment().show(getFragmentManager(), "confirmOrderEditText");
 	}
