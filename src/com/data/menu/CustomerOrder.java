@@ -16,16 +16,18 @@ public class CustomerOrder implements Serializable {
 	private String restaurantId;	
 	private String orderId; //Giving an order id so that the communication between the Restaurant and Client can happen.
 	private String customerId; //Customer ID same as parse object id.
-	private String tableId;	
+	private String tableId;
+	private String orderNote;
 
 	public CustomerOrder(Map<String, Float> dishes, String restaurantId,
-			String orderId, String customerId, String tableId) {
+			String orderId, String customerId, String tableId, String orderNote) {
 		super();
 		this.dishes = dishes;
 		this.restaurantId = restaurantId;
 		this.orderId = orderId;
 		this.customerId = customerId;
 		this.tableId = tableId;
+		this.orderNote = orderNote;
 	}	
 
 	public String getCustomerId() {
@@ -67,5 +69,13 @@ public class CustomerOrder implements Serializable {
 	public void setTableId(String tableId) {
 		this.tableId = tableId;
 	}
-	
+
+	public String getOrderNote() {
+		return orderNote;
+	}
+
+	public void setOrderNote(String orderNote) {
+		this.orderNote = orderNote;
+	}
+
 }

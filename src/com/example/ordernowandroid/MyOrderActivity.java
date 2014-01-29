@@ -140,13 +140,13 @@ public class MyOrderActivity extends Activity {
 		new ConfirmOrderDialogFragment().show(getFragmentManager(), "confirmOrderEditText");
 	}
 
-	public void doPositiveClick() {
+	public void doPositiveClick(String orderNote) {
 		Map<String, Float> dishes = new HashMap<String, Float>();
 		for (MyOrderItem myOrderItem : myOrderItemList) {
 			dishes.put(myOrderItem.getFoodMenuItem().getDishId(), myOrderItem.getQuantity());
 		}
-		CharSequence text = ParseInstallation.getCurrentInstallation().getObjectId();						
-		CustomerOrder customerOrder = new CustomerOrder(dishes, "R1", "Temp", text.toString(), "T1");
+		CharSequence text = ParseInstallation.getCurrentInstallation().getObjectId();
+		CustomerOrder customerOrder = new CustomerOrder(dishes, "R1", "Temp", text.toString(), "T1", orderNote);
 		CustomerOrderWrapper customerOrderWrapper = new CustomerOrderWrapper(customerOrder, myOrderItemList);
 
 		Gson gs = new Gson();

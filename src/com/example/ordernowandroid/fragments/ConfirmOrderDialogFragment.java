@@ -6,8 +6,10 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
+import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
 
 import com.example.ordernowandroid.MyOrderActivity;
 import com.example.ordernowandroid.R;
@@ -29,17 +31,17 @@ public class ConfirmOrderDialogFragment extends DialogFragment {
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		LayoutInflater inflater = getActivity().getLayoutInflater();
-		final View view = inflater.inflate(R.layout.confirm_order_dialog, null);
-		/*	EditText orderCommentEditText = (EditText) view.findViewById(R.id.confirmOrderEditText);  
-			orderCommentEditText.setText(ALERT_DIALOG_ORDER_COMMENT_EDIT_TEXT);
-		 */
-		return new AlertDialog.Builder(getActivity())        
+		final View view = inflater.inflate(R.layout.confirm_order_dialog, null);		
+		final EditText confirmOrderEditText = (EditText) view.findViewById(R.id.confirmOrderEditText);  
+
+		return new AlertDialog.Builder(getActivity())
 		.setTitle(ALERT_DIALOG_TITLE)
 		.setMessage(ALERT_DIALOG_MESSAGE)
 		.setView(view)
 		.setPositiveButton(R.string.ok, new OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
-				((MyOrderActivity)getActivity()).doPositiveClick();
+				String orderNote = confirmOrderEditText.getText().toString();
+				((MyOrderActivity)getActivity()).doPositiveClick(orderNote);
 			}
 		}
 				)
