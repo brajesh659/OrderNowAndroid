@@ -2,7 +2,6 @@ package com.example.ordernowandroid;
 
 import net.sourceforge.zbar.Symbol;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -23,23 +22,17 @@ public class MainActivity extends Activity {
 	private static final int ZBAR_QR_SCANNER_REQUEST = 1;
 
 	@Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 
-        Parse.initialize(this, "vMFTELLhOo9RDRql9HpV9lKRot5xQTCCD63wkYdQ", "mdz7n8XUjy3u0MSQRnuwmogqXZrw3qJnRwmRxx0g");
-        PushService.setDefaultPushCallback(this, MainActivity.class);
-        ParseInstallation.getCurrentInstallation().saveInBackground();
+		Parse.initialize(this, "vMFTELLhOo9RDRql9HpV9lKRot5xQTCCD63wkYdQ", "mdz7n8XUjy3u0MSQRnuwmogqXZrw3qJnRwmRxx0g");
+		PushService.setDefaultPushCallback(this, MainActivity.class);
+		ParseInstallation.getCurrentInstallation().saveInBackground();
+		ParseAnalytics.trackAppOpened(getIntent());
 
-        Context context = getApplicationContext();
-        CharSequence text = ParseInstallation.getCurrentInstallation().getObjectId();
-        int duration = Toast.LENGTH_LONG;
-        Toast toast = Toast.makeText(context, text, duration);
-        toast.show();
-
-        ParseAnalytics.trackAppOpened(getIntent());
-
-        setContentView(R.layout.activity_main);
-    }
+		//Toast.makeText(this, ParseInstallation.getCurrentInstallation().getObjectId(), Toast.LENGTH_SHORT).show();
+		setContentView(R.layout.activity_main);
+	}
 
 	public void launchScanner(View v) {
 		if (isCameraAvailable()) {
@@ -71,14 +64,21 @@ public class MainActivity extends Activity {
 		case ZBAR_SCANNER_REQUEST:
 		case ZBAR_QR_SCANNER_REQUEST:
 			if (resultCode == RESULT_OK) {
-				Toast.makeText(this, "Scan Result = " + data.getStringExtra(ZBarConstants.SCAN_RESULT), Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, "Table Id = " + data.getStringExtra(ZBarConstants.SCAN_RESULT), Toast.LENGTH_SHORT).show();
 				String tableId = data.getStringExtra(ZBarConstants.SCAN_RESULT);
-				
-				Intent intent = new Intent(this, FoodMenuActivity.class);
-				intent.putExtra(FoodMenuActivity.TABLE_ID, tableId);
-				startActivity(intent);
-				//finish this to disable back to this activity once scanned
-				this.finish();				
+
+				//FIXME: Validate QR Code with Backend Server before calling FoodMenuActivity Class
+				if (tableId.equalsIgnoreCase("T1")) {
+					Intent intent = new Intent(this, FoodMenuActivity.class);
+					intent.putExtra(FoodMenuActivity.TABLE_ID, tableId);
+					startActivity(intent);				
+					this.finish(); //finish this to disable back to this activity once scanned	
+				} else {
+					Toast.makeText(this, "This QR Code is not a valid code as per our database. Please contact the Restaurant Staff if the issue persists.", Toast.LENGTH_LONG).show();
+					Intent intent = new Intent(this, MainActivity.class);
+					startActivity(intent);				
+					this.finish();				
+				}
 			} else if(resultCode == RESULT_CANCELED && data != null) {
 				String error = data.getStringExtra(ZBarConstants.ERROR_INFO);
 				if(!TextUtils.isEmpty(error)) {
@@ -86,9 +86,8 @@ public class MainActivity extends Activity {
 				}
 				Intent intent = new Intent(this, FoodMenuActivity.class);
 				intent.putExtra(FoodMenuActivity.TABLE_ID, "T1");
-				startActivity(intent);
-				//finish this to disable back to this activity once scanned
-				this.finish();
+				startActivity(intent);				
+				this.finish(); //finish this to disable back to this activity once scanned
 			}
 			break;
 		}
