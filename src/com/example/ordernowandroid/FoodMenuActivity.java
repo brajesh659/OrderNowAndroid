@@ -195,33 +195,41 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
         ImageView confirmed_order_image = (ImageView) confirmed_order_layout.findViewById(R.id.confirmed_order_image);
         
         final Context context = this;
-        final ArrayList<MyOrderItem> orderItems = new ArrayList<MyOrderItem>();
+        final ArrayList<MyOrderItem> myOrderItemList = new ArrayList<MyOrderItem>();
         if (foodMenuItemQuantityMap != null) {
-            orderItems.addAll(foodMenuItemQuantityMap.values());
+            myOrderItemList.addAll(foodMenuItemQuantityMap.values());
         }
         
         cart_image.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-	            Intent intent = new Intent(context, MyOrderActivity.class);
-	            intent.putExtra(MY_ORDER, orderItems);
-	            Utilities.info("mDrawerList " + mDrawerList.getCheckedItemPosition());
-	            intent.putExtra(FOOD_MENU_CATEGORY_ID, mDrawerList.getCheckedItemPosition());
-	            intent.putExtra(TABLE_ID, tableId);
-	            intent.putExtra(SUB_ORDER_LIST, subOrdersFromDB);
-	            startActivityForResult(intent, MY_ORDER_REQUEST_CODE);		
+				if (myOrderItemList !=null && myOrderItemList.size() >= 1) {
+		            Intent intent = new Intent(context, MyOrderActivity.class);
+		            intent.putExtra(MY_ORDER, myOrderItemList);
+		            Utilities.info("mDrawerList " + mDrawerList.getCheckedItemPosition());
+		            intent.putExtra(FOOD_MENU_CATEGORY_ID, mDrawerList.getCheckedItemPosition());
+		            intent.putExtra(TABLE_ID, tableId);
+		            intent.putExtra(SUB_ORDER_LIST, subOrdersFromDB);
+		            startActivityForResult(intent, MY_ORDER_REQUEST_CODE);
+				} else {
+					Toast.makeText(getApplicationContext(), "Hey wait!! Let's add some items to the order first.", Toast.LENGTH_LONG).show();
+				}
 			}
 		});
         
         confirmed_order_image.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-	            Intent intent = new Intent(context, MyParentOrderActivity.class);
-	            intent.putExtra(MY_ORDER, orderItems);
-	            intent.putExtra(FOOD_MENU_CATEGORY_ID, mDrawerList.getCheckedItemPosition());
-	            intent.putExtra(TABLE_ID, tableId);
-	            intent.putExtra(SUB_ORDER_LIST, subOrdersFromDB);
-	            startActivity(intent);
+				if (subOrdersFromDB !=null && subOrdersFromDB.size() >= 1) {
+		            Intent intent = new Intent(context, MyParentOrderActivity.class);
+		            intent.putExtra(MY_ORDER, myOrderItemList);
+		            intent.putExtra(FOOD_MENU_CATEGORY_ID, mDrawerList.getCheckedItemPosition());
+		            intent.putExtra(TABLE_ID, tableId);
+		            intent.putExtra(SUB_ORDER_LIST, subOrdersFromDB);
+		            startActivity(intent);
+				}  else {
+					Toast.makeText(getApplicationContext(), "You currently have no confirmed orders to view.", Toast.LENGTH_LONG).show();
+				}
 			}
 		});
         
@@ -589,6 +597,11 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
         onQueryTextChange(finalText);
         suggestionProvider.saveRecentQuery(finalText, null);
         return false;
+    }
+    
+    @Override
+    public void onBackPressed(){
+    	//Do Nothing as of now
     }
 
 }

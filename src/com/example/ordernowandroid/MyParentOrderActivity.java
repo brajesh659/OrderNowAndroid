@@ -42,7 +42,7 @@ public class MyParentOrderActivity extends Activity {
 		myOrderItems = (ArrayList<MyOrderItem>) b.getSerializable(MY_ORDER);	
 		tableId = b.getString(TABLE_ID);
 		categoryId = b.getInt(FOOD_MENU_CATEGORY_ID);
-		
+
 		/**
 		 * Fetch Sub Orders from Database //FIXME
 		 * Add Current Order to SubOrder List
@@ -58,7 +58,7 @@ public class MyParentOrderActivity extends Activity {
 
 		TextView totalAmount = (TextView) findViewById(R.id.parentTotalAmount);
 		Float totalOrderAmount = (float) 0.00;
-		
+
 		if(customerOrderWrapper !=null) {
 			subOrdersFromDB.add(customerOrderWrapper);
 		}
@@ -82,17 +82,22 @@ public class MyParentOrderActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			Intent intent = new Intent(getApplicationContext(), FoodMenuActivity.class);
-			intent.putExtra(TABLE_ID, tableId);
-			intent.putExtra(FOOD_MENU_CATEGORY_ID, categoryId);
-			intent.putExtra(MY_ORDER, myOrderItems);
-			intent.putExtra(SUB_ORDER_LIST, subOrdersFromDB);
-			startActivity(intent);
-
-			finish();
+			onBackPressed(); //FIXME: Persist the myOrderItem List Data on FoodMenuActivity Page		
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public void onBackPressed() {
+		Intent intent = new Intent(getApplicationContext(), FoodMenuActivity.class);
+		intent.putExtra(TABLE_ID, tableId);
+		intent.putExtra(FOOD_MENU_CATEGORY_ID, categoryId);
+		intent.putExtra(MY_ORDER, myOrderItems);
+		intent.putExtra(SUB_ORDER_LIST, subOrdersFromDB);
+		startActivity(intent);
+
+		finish();		
 	}
 
 }
