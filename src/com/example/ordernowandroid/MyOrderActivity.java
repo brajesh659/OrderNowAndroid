@@ -56,7 +56,6 @@ public class MyOrderActivity extends Activity {
         final Bundle b = getIntent().getExtras();
         myOrderItemList = (ArrayList<MyOrderItem>) b.getSerializable(FoodMenuActivity.MY_ORDER);
         categoryId = b.getInt(FoodMenuActivity.FOOD_MENU_CATEGORY_ID);
-        tableId = b.getString(FoodMenuActivity.TABLE_ID);
         subOrdersFromDB = (ArrayList<CustomerOrderWrapper>) b.getSerializable(SUB_ORDER_LIST);
         setContentView(R.layout.my_order_summary);
         
@@ -84,7 +83,6 @@ public class MyOrderActivity extends Activity {
 
                         //Clear the Selected Quantities and Start the Food Menu Activity again
                         Intent intent = new Intent(getApplicationContext(), FoodMenuActivity.class);
-                        intent.putExtra(FoodMenuActivity.TABLE_ID, tableId);
                         intent.putExtra(SUB_ORDER_LIST, subOrdersFromDB);
                         startActivity(intent);
 
@@ -133,7 +131,6 @@ public class MyOrderActivity extends Activity {
 		Intent intent = new Intent();
 		intent.putExtra(RETURN_FROM_MY_ORDER, myOrderItemList);
 		intent.putExtra(FOOD_MENU_CATEGORY_ID, categoryId);
-		intent.putExtra(FoodMenuActivity.TABLE_ID, tableId);
 		intent.putExtra(SUB_ORDER_LIST, subOrdersFromDB);
 		setResult(RESULT_OK, intent); // Activity finished ok, return the data
 		finish();
@@ -177,7 +174,6 @@ public class MyOrderActivity extends Activity {
 		Intent intent = new Intent(getApplicationContext(), MyParentOrderActivity.class);
 		intent.putExtra(MyParentOrderActivity.CUSTOMER_ORDER_WRAPPER, customerOrderWrapper);
 		intent.putExtra(MyParentOrderActivity.FOOD_MENU_CATEGORY_ID, categoryId);
-		intent.putExtra(MyParentOrderActivity.TABLE_ID, tableId);                
 		intent.putExtra(SUB_ORDER_LIST, subOrdersFromDB);
 		startActivity(intent);
 

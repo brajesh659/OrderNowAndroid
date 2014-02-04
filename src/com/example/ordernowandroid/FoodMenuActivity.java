@@ -58,7 +58,6 @@ import com.util.Utilities;
 
 public class FoodMenuActivity extends FragmentActivity implements numListener, AddNoteListener,SearchView.OnQueryTextListener{
 
-    public static final String TABLE_ID = "TableId";
     private String tableId;
     private static final int MY_ORDER_REQUEST_CODE = 1;
     //private static final int CONFIRMED_ORDER_REQUEST_CODE = 2;
@@ -75,7 +74,7 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
     private DishHelper dh;
     private HashMap<String, MyOrderItem> foodMenuItemQuantityMap = new HashMap<String, MyOrderItem>();
     protected static final String SUB_ORDER_LIST = "SubOrderList";
-    public static ArrayList<CustomerOrderWrapper> subOrdersFromDB;
+    private static ArrayList<CustomerOrderWrapper> subOrdersFromDB;
     private static Map<String, Boolean> restaurantLoadedInDb = new HashMap<String, Boolean>();
     private SearchRecentSuggestions suggestionProvider;
     
@@ -83,9 +82,10 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        ApplicationState applicationContext = (ApplicationState) getApplicationContext();
+        Toast.makeText(this, applicationContext.getTableId() + " using application", Toast.LENGTH_LONG).show();
         Bundle b = getIntent().getExtras();
-        tableId = b.getString(TABLE_ID);
+        tableId = applicationContext.getTableId();
         subOrdersFromDB = (ArrayList<CustomerOrderWrapper>) b.getSerializable(SUB_ORDER_LIST);
         
         setContentView(R.layout.food_menu);
@@ -208,7 +208,6 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 		            intent.putExtra(MY_ORDER, myOrderItemList);
 		            Utilities.info("mDrawerList " + mDrawerList.getCheckedItemPosition());
 		            intent.putExtra(FOOD_MENU_CATEGORY_ID, mDrawerList.getCheckedItemPosition());
-		            intent.putExtra(TABLE_ID, tableId);
 		            intent.putExtra(SUB_ORDER_LIST, subOrdersFromDB);
 		            startActivityForResult(intent, MY_ORDER_REQUEST_CODE);
 				} else {
@@ -224,7 +223,6 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 		            Intent intent = new Intent(context, MyParentOrderActivity.class);
 		            intent.putExtra(MY_ORDER, myOrderItemList);
 		            intent.putExtra(FOOD_MENU_CATEGORY_ID, mDrawerList.getCheckedItemPosition());
-		            intent.putExtra(TABLE_ID, tableId);
 		            intent.putExtra(SUB_ORDER_LIST, subOrdersFromDB);
 		            startActivity(intent);
 				}  else {

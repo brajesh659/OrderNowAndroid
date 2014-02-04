@@ -18,7 +18,6 @@ public class MyParentOrderActivity extends Activity {
 
 	public static final String CUSTOMER_ORDER_WRAPPER = "customerOrderList";
 	public static final String FOOD_MENU_CATEGORY_ID = "foodMenuCategoryId";
-	public static final String TABLE_ID = "TableId";
 	protected static final String MY_ORDER = "MyOrder";
 	protected static final String SUB_ORDER_LIST = "SubOrderList";
 
@@ -33,6 +32,7 @@ public class MyParentOrderActivity extends Activity {
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+	    ApplicationState applicationState = (ApplicationState) getApplicationContext();
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.my_parent_order_summary);
 		setTitle("Confirmed Order");
@@ -40,7 +40,7 @@ public class MyParentOrderActivity extends Activity {
 		Bundle b = getIntent().getExtras();
 		customerOrderWrapper = (CustomerOrderWrapper) b.getSerializable(CUSTOMER_ORDER_WRAPPER);
 		myOrderItems = (ArrayList<MyOrderItem>) b.getSerializable(MY_ORDER);	
-		tableId = b.getString(TABLE_ID);
+		tableId = applicationState.getTableId();
 		categoryId = b.getInt(FOOD_MENU_CATEGORY_ID);
 
 		/**
@@ -91,7 +91,6 @@ public class MyParentOrderActivity extends Activity {
 	@Override
 	public void onBackPressed() {
 		Intent intent = new Intent(getApplicationContext(), FoodMenuActivity.class);
-		intent.putExtra(TABLE_ID, tableId);
 		intent.putExtra(FOOD_MENU_CATEGORY_ID, categoryId);
 		intent.putExtra(MY_ORDER, myOrderItems);
 		intent.putExtra(SUB_ORDER_LIST, subOrdersFromDB);

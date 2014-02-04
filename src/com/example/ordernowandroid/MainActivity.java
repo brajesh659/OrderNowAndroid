@@ -60,17 +60,20 @@ public class MainActivity extends Activity {
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	    ApplicationState applicationContext = (ApplicationState) getApplicationContext();
 		switch (requestCode) {
 		case ZBAR_SCANNER_REQUEST:
 		case ZBAR_QR_SCANNER_REQUEST:
 			if (resultCode == RESULT_OK) {
-				Toast.makeText(this, "Table Id = " + data.getStringExtra(ZBarConstants.SCAN_RESULT), Toast.LENGTH_SHORT).show();
-				String tableId = data.getStringExtra(ZBarConstants.SCAN_RESULT);
+			    String tableId = data.getStringExtra(ZBarConstants.SCAN_RESULT);
+				Toast.makeText(this, "Table Id = " + tableId, Toast.LENGTH_SHORT).show();
 
 				//FIXME: Validate QR Code with Backend Server before calling FoodMenuActivity Class
 				if (tableId.equalsIgnoreCase("T1")) {
+				    applicationContext.setTableId(tableId);
 					Intent intent = new Intent(this, FoodMenuActivity.class);
-					intent.putExtra(FoodMenuActivity.TABLE_ID, tableId);
+					//TODO delete below line
+					intent.putExtra("TableId1", tableId);
 					startActivity(intent);				
 					this.finish(); //finish this to disable back to this activity once scanned	
 				} else {
@@ -84,8 +87,10 @@ public class MainActivity extends Activity {
 				if(!TextUtils.isEmpty(error)) {
 					Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
 				}
+				applicationContext.setTableId("T1");
 				Intent intent = new Intent(this, FoodMenuActivity.class);
-				intent.putExtra(FoodMenuActivity.TABLE_ID, "T1");
+				//TODO delete below line
+				intent.putExtra("TableId1", "T1");
 				startActivity(intent);				
 				this.finish(); //finish this to disable back to this activity once scanned
 			}
