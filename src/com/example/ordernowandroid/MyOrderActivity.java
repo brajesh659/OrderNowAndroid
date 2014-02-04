@@ -54,7 +54,8 @@ public class MyOrderActivity extends Activity {
         super.onCreate(savedInstanceState);
         setTitle("My Order");
         final Bundle b = getIntent().getExtras();
-        myOrderItemList = (ArrayList<MyOrderItem>) b.getSerializable(FoodMenuActivity.MY_ORDER);
+        ApplicationState applicationContext = (ApplicationState) getApplicationContext();
+        myOrderItemList = applicationContext.getMyOrderItems();
         categoryId = b.getInt(FoodMenuActivity.FOOD_MENU_CATEGORY_ID);
         subOrdersFromDB = (ArrayList<CustomerOrderWrapper>) b.getSerializable(SUB_ORDER_LIST);
         setContentView(R.layout.my_order_summary);

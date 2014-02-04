@@ -61,7 +61,6 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
     private String tableId;
     private static final int MY_ORDER_REQUEST_CODE = 1;
     //private static final int CONFIRMED_ORDER_REQUEST_CODE = 2;
-    protected static final String MY_ORDER = "MyOrder";
 	protected static final String FOOD_MENU_CATEGORY_ID = "foodMenuCategoryId";
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
@@ -205,7 +204,8 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 			public void onClick(View v) {
 				if (myOrderItemList !=null && myOrderItemList.size() >= 1) {
 		            Intent intent = new Intent(context, MyOrderActivity.class);
-		            intent.putExtra(MY_ORDER, myOrderItemList);
+		            ApplicationState applicationContext = (ApplicationState) getApplicationContext();
+		            applicationContext.setMyOrderItems(myOrderItemList);
 		            Utilities.info("mDrawerList " + mDrawerList.getCheckedItemPosition());
 		            intent.putExtra(FOOD_MENU_CATEGORY_ID, mDrawerList.getCheckedItemPosition());
 		            intent.putExtra(SUB_ORDER_LIST, subOrdersFromDB);
@@ -220,8 +220,9 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 			@Override
 			public void onClick(View v) {
 				if (subOrdersFromDB !=null && subOrdersFromDB.size() >= 1) {
+				    ApplicationState applicationContext = (ApplicationState) getApplicationContext();
+				    applicationContext.setMyOrderItems(myOrderItemList);
 		            Intent intent = new Intent(context, MyParentOrderActivity.class);
-		            intent.putExtra(MY_ORDER, myOrderItemList);
 		            intent.putExtra(FOOD_MENU_CATEGORY_ID, mDrawerList.getCheckedItemPosition());
 		            intent.putExtra(SUB_ORDER_LIST, subOrdersFromDB);
 		            startActivity(intent);
