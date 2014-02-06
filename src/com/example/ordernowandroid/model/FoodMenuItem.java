@@ -80,9 +80,7 @@ public class FoodMenuItem implements Serializable {
         
         try {
             bitmap = new DownloadImageTask().execute(image).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

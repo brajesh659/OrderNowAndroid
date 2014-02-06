@@ -19,6 +19,7 @@ public class DishHelper extends SQLHelper {
     private static final String KEY_DESCRIPTION = "description";
     private static final String KEY_NAME = "name";
     private static final String KEY_DISH_ID = "dishId";
+    private static final String KEY_DISH_DETAIL = "dishDetail";
 
     public DishHelper(DatabaseManager dbManager) {
         super(dbManager);
@@ -76,17 +77,19 @@ public class DishHelper extends SQLHelper {
         return searchFoodList;
     }
 
-    public void addDish(Dish dish) {
+    public void addDish(Dish dish, String category) {
         try {
             if (dish != null) {
                 ContentValues values = new ContentValues();
                 values.put(KEY_DISH_ID, dish.getDishId());
                 values.put(KEY_NAME, dish.getName());
                 values.put(KEY_DESCRIPTION, dish.getDescription());
-                values.put(KEY_IMG, (dish.getImg()!=null)?dish.getImg():"");
+                values.put(KEY_IMG, (dish.getImg() != null) ? dish.getImg() : "");
                 values.put(KEY_PRICE, Float.toString(dish.getPrice()));
                 values.put(KEY_TYPE, dish.getType().toString());
-                
+                values.put(KEY_DISH_DETAIL, category + " " + dish.getName() + " " + dish.getType().toString() + " "
+                        + dish.getDescription());
+
                 dbManager.insert(TABLE_NAME_FTS, null, values);
                 Utilities.info("insert " + values);
             }

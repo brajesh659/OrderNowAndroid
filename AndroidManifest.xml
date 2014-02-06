@@ -71,7 +71,7 @@
         </activity>
         
         <provider android:name=".SearchSuggestionProvider"
-              android:authorities="com.data.database.SearchSuggestionProvider" />
+              android:authorities="com.example.ordernowandroid.SearchSuggestionProvider" />
 
         <service android:name="com.parse.PushService" />
 

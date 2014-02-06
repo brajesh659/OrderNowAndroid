@@ -60,7 +60,7 @@ public class ImageService {
                 lruBitmap.put(urlEncodedParam, bitmap);
             } catch (Exception ex) {
                 ex.printStackTrace();
-                Log.e("FoodMenuItemAdapter", ex.getMessage() + "got exception");
+                Log.e("ImageService", ex.getMessage() + " got exception");
             }
         }
         

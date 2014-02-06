@@ -445,10 +445,14 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
                         DishHelper dh = new DishHelper(dbManager);
                         for(Category category : restaurant.getMenu().getCategories()) {
                             for(Dish dish: category.getDishes()) {
-                                dh.addDish(dish);
+                                dh.addDish(dish, category.getName());
                                 // Populating images during db creation. 
                                 if (dish.getImg() != null) {
+                                    try {
                                     ImageService.getInstance().getImageWithCache(dish.getImg());
+                                    } catch(Exception e) {
+                                        Utilities.error("Could not load iamge " + dish.getImg());
+                                    }
                                 }
                             }
                         }
@@ -527,7 +531,8 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
             Dish dish = new Dish();
             dish.setName(itemNames[i]);
             dish.setPrice(itemPrices[i]);
-            dish.setImg(itemImages[i]);
+            //dish.setImg(itemImages[i]);
+            dish.setImg("");
             if (i % 2 == 0) {
                 dish.setType(FoodType.Veg);
             } else {
