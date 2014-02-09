@@ -19,13 +19,22 @@
         android:minSdkVersion="14"
         android:targetSdkVersion="18" />
 
-    <application android:name=".ApplicationState" 
+    <application
+        android:name=".ApplicationState"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" >
         <meta-data
             android:name="android.app.default_searchable"
             android:value="com.example.ordernowandroid.FoodMenuActivity" />
+
+        <activity
+            android:name="com.facebook.LoginActivity"
+            android:label="@string/app_name" />
+
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/app_id" />
 
         <activity
             android:name="com.example.ordernowandroid.MainActivity"
@@ -35,6 +44,10 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name="com.example.ordernowandroid.QRCodeScannerActivity"
+            android:label="@string/app_name" >
         </activity>
         <activity
             android:name="com.dm.zbar.android.scanner.ZBarScannerActivity"
@@ -69,9 +82,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.ordernowandroid.FoodMenuActivity" />
         </activity>
-        
-        <provider android:name=".SearchSuggestionProvider"
-              android:authorities="com.example.ordernowandroid.SearchSuggestionProvider" />
+
+        <provider
+            android:name=".SearchSuggestionProvider"
+            android:authorities="com.example.ordernowandroid.SearchSuggestionProvider" />
 
         <service android:name="com.parse.PushService" />
 

@@ -41,7 +41,6 @@ public class MyOrderActivity extends Activity {
     
     public static final String FOOD_MENU_CATEGORY_ID = "FoodMenuCategoryId";
     private int categoryId;
-    private String tableId;
     
     protected static final String SUB_ORDER_LIST = "SubOrderList";
     public static ArrayList<CustomerOrderWrapper> subOrdersFromDB;
