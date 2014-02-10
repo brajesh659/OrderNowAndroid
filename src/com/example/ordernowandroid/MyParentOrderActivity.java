@@ -17,10 +17,8 @@ import com.example.ordernowandroid.model.OrderNowConstants;
 public class MyParentOrderActivity extends Activity {
 
 	public static final String CUSTOMER_ORDER_WRAPPER = "customerOrderList";
-	public static final String FOOD_MENU_CATEGORY_ID = "foodMenuCategoryId";
 	protected static final String SUB_ORDER_LIST = "SubOrderList";
 
-	private int categoryId;
 
 	public static CustomerOrderWrapper customerOrderWrapper;
 	private ArrayList<MyOrderItem> myOrderItemList = new ArrayList<MyOrderItem>();
@@ -35,7 +33,6 @@ public class MyParentOrderActivity extends Activity {
 
 		Bundle b = getIntent().getExtras();
 		customerOrderWrapper = (CustomerOrderWrapper) b.getSerializable(CUSTOMER_ORDER_WRAPPER);
-		categoryId = b.getInt(FOOD_MENU_CATEGORY_ID);
 
 		/**
 		 * Fetch Sub Orders from Database //FIXME
@@ -85,7 +82,6 @@ public class MyParentOrderActivity extends Activity {
 	@Override
 	public void onBackPressed() {
 		Intent intent = new Intent(getApplicationContext(), FoodMenuActivity.class);
-		intent.putExtra(FOOD_MENU_CATEGORY_ID, categoryId);
 		intent.putExtra(SUB_ORDER_LIST, subOrdersFromDB);
 		startActivity(intent);
 

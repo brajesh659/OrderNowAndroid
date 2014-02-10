@@ -39,9 +39,6 @@ public class MyOrderActivity extends Activity {
     public static final String RETURN_FROM_MY_ORDER = "ReturnFromMyOrder";
     private ArrayList<MyOrderItem> myOrderItemList;
     
-    public static final String FOOD_MENU_CATEGORY_ID = "FoodMenuCategoryId";
-    private int categoryId;
-    
     protected static final String SUB_ORDER_LIST = "SubOrderList";
     public static ArrayList<CustomerOrderWrapper> subOrdersFromDB;
     private static final String TEXT_COMMENT = "TextComment"; //FIXME: Make the Properties names more readable
@@ -54,8 +51,7 @@ public class MyOrderActivity extends Activity {
         setTitle("My Order");
         final Bundle b = getIntent().getExtras();
         ApplicationState applicationContext = (ApplicationState) getApplicationContext();
-        myOrderItemList = applicationContext.getMyOrderItems();
-        categoryId = b.getInt(FoodMenuActivity.FOOD_MENU_CATEGORY_ID);
+        myOrderItemList = ApplicationState.getMyOrderItems((ApplicationState) getApplicationContext());
         subOrdersFromDB = (ArrayList<CustomerOrderWrapper>) b.getSerializable(SUB_ORDER_LIST);
         setContentView(R.layout.my_order_summary);
         
@@ -130,7 +126,6 @@ public class MyOrderActivity extends Activity {
 		//Start the FoodMenuActivity with updated MyOrderItem List
 		Intent intent = new Intent();
 		intent.putExtra(RETURN_FROM_MY_ORDER, myOrderItemList);
-		intent.putExtra(FOOD_MENU_CATEGORY_ID, categoryId);
 		intent.putExtra(SUB_ORDER_LIST, subOrdersFromDB);
 		setResult(RESULT_OK, intent); // Activity finished ok, return the data
 		finish();
@@ -173,7 +168,6 @@ public class MyOrderActivity extends Activity {
 
 		Intent intent = new Intent(getApplicationContext(), MyParentOrderActivity.class);
 		intent.putExtra(MyParentOrderActivity.CUSTOMER_ORDER_WRAPPER, customerOrderWrapper);
-		intent.putExtra(MyParentOrderActivity.FOOD_MENU_CATEGORY_ID, categoryId);
 		intent.putExtra(SUB_ORDER_LIST, subOrdersFromDB);
 		startActivity(intent);
 

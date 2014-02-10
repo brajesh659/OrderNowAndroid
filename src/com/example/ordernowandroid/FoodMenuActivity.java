@@ -62,7 +62,6 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 	private String tableId;
 	private static final int MY_ORDER_REQUEST_CODE = 1;
 	//private static final int CONFIRMED_ORDER_REQUEST_CODE = 2;
-	protected static final String FOOD_MENU_CATEGORY_ID = "foodMenuCategoryId";
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
 	private ActionBarDrawerToggle mDrawerToggle;
@@ -214,8 +213,6 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 					Intent intent = new Intent(context, MyOrderActivity.class);
 					ApplicationState applicationContext = (ApplicationState) getApplicationContext();
 					applicationContext.setMyOrderItems(myOrderItemList);
-					Utilities.info("mDrawerList " + mDrawerList.getCheckedItemPosition());
-					intent.putExtra(FOOD_MENU_CATEGORY_ID, mDrawerList.getCheckedItemPosition());
 					intent.putExtra(SUB_ORDER_LIST, subOrdersFromDB);
 					startActivityForResult(intent, MY_ORDER_REQUEST_CODE);
 				} else {
@@ -231,7 +228,6 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 					ApplicationState applicationContext = (ApplicationState) getApplicationContext();
 					applicationContext.setMyOrderItems(myOrderItemList);
 					Intent intent = new Intent(context, MyParentOrderActivity.class);
-					intent.putExtra(FOOD_MENU_CATEGORY_ID, mDrawerList.getCheckedItemPosition());
 					intent.putExtra(SUB_ORDER_LIST, subOrdersFromDB);
 					startActivity(intent);
 				}  else {
@@ -279,7 +275,8 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 						foodMenuItemQuantityMap.put(myOrderItem.getFoodMenuItem().getItemName(), myOrderItem);
 					}
 				}
-				displayView(bundleExtra.getInt(MyOrderActivity.FOOD_MENU_CATEGORY_ID));
+
+				displayView(ApplicationState.getCategoryId((ApplicationState)getApplicationContext()));
 			} else if(resultCode == RESULT_CANCELED && data != null) {
 				String error = data.getStringExtra(ZBarConstants.ERROR_INFO);
 				if(!TextUtils.isEmpty(error)) {
@@ -307,7 +304,7 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 		invalidateOptionsMenu();
 	}
 
-	/***
+    /***
 	 * Called when invalidateOptionsMenu() is triggered
 	 */
 	@Override
@@ -371,6 +368,7 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 		// update selected item and title, then close the drawer
 		mDrawerList.setItemChecked(position, true);
 		mDrawerList.setSelection(position);
+		ApplicationState.setCategoryId((ApplicationState)getApplicationContext(), position);
 		setTitle(category.getName());
 		mDrawerLayout.closeDrawer(mDrawerList);
 	}
