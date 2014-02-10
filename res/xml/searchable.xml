@@ -4,5 +4,4 @@
         android:label="@string/app_name"
         android:hint="@string/search_hint"
         android:searchSuggestAuthority="com.example.ordernowandroid.SearchSuggestionProvider"
-        android:searchSuggestThreshold="5"
         android:searchSuggestSelection=" ?" />

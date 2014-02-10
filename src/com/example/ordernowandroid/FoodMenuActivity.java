@@ -13,6 +13,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
@@ -28,6 +29,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -54,7 +56,8 @@ import com.example.ordernowandroid.model.FoodMenuItem;
 import com.example.ordernowandroid.model.MyOrderItem;
 import com.util.Utilities;
 
-public class FoodMenuActivity extends FragmentActivity implements numListener, AddNoteListener,SearchView.OnQueryTextListener{
+public class FoodMenuActivity extends FragmentActivity implements numListener, AddNoteListener,
+        SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 
 	private String tableId;
 	private static final int MY_ORDER_REQUEST_CODE = 1;
@@ -74,6 +77,8 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 	private static ArrayList<CustomerOrderWrapper> subOrdersFromDB;
 	private static Map<String, Boolean> restaurantLoadedInDb = new HashMap<String, Boolean>();
 	private SearchRecentSuggestions suggestionProvider;
+	private CursorAdapter suggestionAdapter;
+	private SearchView searchView;
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -178,11 +183,13 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 		SearchManager searchManager =
 				(SearchManager) getSystemService(Context.SEARCH_SERVICE);
 		MenuItem searchMenuItem = menu.findItem(R.id.search);
-		SearchView searchView =
+		searchView =
 				(SearchView) searchMenuItem.getActionView();
 		searchView.setSearchableInfo(
 				searchManager.getSearchableInfo(getComponentName()));
 		searchView.setOnQueryTextListener(this);
+		searchView.setOnSuggestionListener(this);
+		suggestionAdapter = searchView.getSuggestionsAdapter();
 		//searchMenuItem.collapseActionView();
 		//searchView.setIconifiedByDefault(false);
 
@@ -240,7 +247,8 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// toggle nav drawer on selecting action bar app icon/title
-		mDrawerLayout.closeDrawer(Gravity.LEFT);
+	    searchView.setQuery("", true);
+	    mDrawerLayout.closeDrawer(Gravity.LEFT);
 		if (mDrawerToggle.onOptionsItemSelected(item)) {
 			return true;
 		}
@@ -604,5 +612,17 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 	public void onBackPressed(){
 		//Do Nothing as of now
 	}
+
+    @Override
+    public boolean onSuggestionClick(int position) {
+        String suggestion = (String) suggestionAdapter.convertToString((Cursor) suggestionAdapter.getItem(position));
+        searchView.setQuery(suggestion, false);
+        return false;
+    }
+
+    @Override
+    public boolean onSuggestionSelect(int position) {
+        return false;
+    }
 
 }
