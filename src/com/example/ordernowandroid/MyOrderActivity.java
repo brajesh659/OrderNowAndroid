@@ -36,8 +36,7 @@ import com.google.gson.Gson;
 import com.parse.ParseInstallation;
 
 public class MyOrderActivity extends Activity {
-    public static final String RETURN_FROM_MY_ORDER = "ReturnFromMyOrder";
-    private ArrayList<MyOrderItem> myOrderItemList;
+//    private ArrayList<MyOrderItem> myOrderItemList;
     
     protected static final String SUB_ORDER_LIST = "SubOrderList";
     public static ArrayList<CustomerOrderWrapper> subOrdersFromDB;
@@ -50,8 +49,7 @@ public class MyOrderActivity extends Activity {
         super.onCreate(savedInstanceState);
         setTitle("My Order");
         final Bundle b = getIntent().getExtras();
-        ApplicationState applicationContext = (ApplicationState) getApplicationContext();
-        myOrderItemList = ApplicationState.getMyOrderItems((ApplicationState) getApplicationContext());
+        ArrayList<MyOrderItem> myOrderItemList = ApplicationState.getMyOrderItems((ApplicationState) getApplicationContext());
         subOrdersFromDB = (ArrayList<CustomerOrderWrapper>) b.getSerializable(SUB_ORDER_LIST);
         setContentView(R.layout.my_order_summary);
         
@@ -125,7 +123,6 @@ public class MyOrderActivity extends Activity {
 	public void onBackPressed() {
 		//Start the FoodMenuActivity with updated MyOrderItem List
 		Intent intent = new Intent();
-		intent.putExtra(RETURN_FROM_MY_ORDER, myOrderItemList);
 		intent.putExtra(SUB_ORDER_LIST, subOrdersFromDB);
 		setResult(RESULT_OK, intent); // Activity finished ok, return the data
 		finish();
@@ -138,6 +135,7 @@ public class MyOrderActivity extends Activity {
 	public void doPositiveClick(String orderNote) {
 		OrderDish orderDish;
 		Map<String, OrderDish> dishes = new HashMap<String, OrderDish>();
+		ArrayList<MyOrderItem> myOrderItemList = ApplicationState.getMyOrderItems((ApplicationState)getApplicationContext());
 		for (MyOrderItem myOrderItem : myOrderItemList) {
 			if (myOrderItem.getMetaData() != null) {
 				orderDish = new OrderDish(myOrderItem.getQuantity(), myOrderItem.getMetaData().get(TEXT_COMMENT), myOrderItem.getMetaData().get(SPICE_LEVEL));	

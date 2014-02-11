@@ -59,7 +59,6 @@ import com.util.Utilities;
 public class FoodMenuActivity extends FragmentActivity implements numListener, AddNoteListener,
         SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 
-	private String tableId;
 	private static final int MY_ORDER_REQUEST_CODE = 1;
 	//private static final int CONFIRMED_ORDER_REQUEST_CODE = 2;
 	private DrawerLayout mDrawerLayout;
@@ -73,8 +72,8 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 	private DishHelper dh;
 	private HashMap<String, MyOrderItem> foodMenuItemQuantityMap = new HashMap<String, MyOrderItem>();
 	protected static final String SUB_ORDER_LIST = "SubOrderList";
-	private static ArrayList<CustomerOrderWrapper> subOrdersFromDB;
-	private static Map<String, Boolean> restaurantLoadedInDb = new HashMap<String, Boolean>();
+	private ArrayList<CustomerOrderWrapper> subOrdersFromDB;
+	private Map<String, Boolean> restaurantLoadedInDb = new HashMap<String, Boolean>();
 	private SearchRecentSuggestions suggestionProvider;
 	private CursorAdapter suggestionAdapter;
 	private SearchView searchView;
@@ -86,7 +85,6 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 		setContentView(R.layout.food_menu);
 
 		ApplicationState applicationContext = (ApplicationState) getApplicationContext();
-		tableId = applicationContext.getTableId();
 
 		Bundle b = getIntent().getExtras();
 		if (b != null) {
@@ -126,7 +124,7 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 		};
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-		restaurant = getResturant(tableId);
+		restaurant = getResturant(applicationContext.getTableId());
 		if (restaurant == null){
 			Toast.makeText(this, "null resturant ", Toast
 					.LENGTH_SHORT).show();
@@ -178,19 +176,15 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 
 		getMenuInflater().inflate(R.menu.main, menu);
 
-		// Associate searchable configuration with the SearchView
-		SearchManager searchManager =
-				(SearchManager) getSystemService(Context.SEARCH_SERVICE);
-		MenuItem searchMenuItem = menu.findItem(R.id.search);
-		searchView =
-				(SearchView) searchMenuItem.getActionView();
-		searchView.setSearchableInfo(
-				searchManager.getSearchableInfo(getComponentName()));
-		searchView.setOnQueryTextListener(this);
-		searchView.setOnSuggestionListener(this);
-		suggestionAdapter = searchView.getSuggestionsAdapter();
-		//searchMenuItem.collapseActionView();
-		//searchView.setIconifiedByDefault(false);
+
+        // Associate searchable configuration with the SearchView
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        MenuItem searchMenuItem = menu.findItem(R.id.search);
+        SearchView searchView = (SearchView) searchMenuItem.getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setOnQueryTextListener(this);
+        // searchMenuItem.collapseActionView();
+        // searchView.setIconifiedByDefault(false);
 
 		RelativeLayout food_cart_layout = (RelativeLayout)menu.findItem(R.id.action_cart).getActionView();
 		TextView food_item_notification = (TextView)food_cart_layout.findViewById(R.id.food_cart_notifcation_textview);
@@ -201,18 +195,19 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 		ImageView confirmed_order_image = (ImageView) confirmed_order_layout.findViewById(R.id.confirmed_order_image);
 
 		final Context context = this;
-		final ArrayList<MyOrderItem> myOrderItemList = new ArrayList<MyOrderItem>();
 		if (foodMenuItemQuantityMap != null) {
-			myOrderItemList.addAll(foodMenuItemQuantityMap.values());
-		}
+		    ArrayList<MyOrderItem> myOrder = new ArrayList<MyOrderItem>();
+		    myOrder.addAll(foodMenuItemQuantityMap.values());
+		    ApplicationState.setMyOrderItems((ApplicationState) getApplicationContext(), myOrder);
+		} 
+		
 
 		cart_image.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (myOrderItemList !=null && myOrderItemList.size() >= 1) {
+			    ArrayList<MyOrderItem> myOrderItems = ApplicationState.getMyOrderItems((ApplicationState)getApplicationContext());
+				if (myOrderItems !=null && myOrderItems.size() >= 1) {
 					Intent intent = new Intent(context, MyOrderActivity.class);
-					ApplicationState applicationContext = (ApplicationState) getApplicationContext();
-					applicationContext.setMyOrderItems(myOrderItemList);
 					intent.putExtra(SUB_ORDER_LIST, subOrdersFromDB);
 					startActivityForResult(intent, MY_ORDER_REQUEST_CODE);
 				} else {
@@ -225,8 +220,6 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 			@Override
 			public void onClick(View v) {
 				if (subOrdersFromDB !=null && subOrdersFromDB.size() >= 1) {
-					ApplicationState applicationContext = (ApplicationState) getApplicationContext();
-					applicationContext.setMyOrderItems(myOrderItemList);
 					Intent intent = new Intent(context, MyParentOrderActivity.class);
 					intent.putExtra(SUB_ORDER_LIST, subOrdersFromDB);
 					startActivity(intent);
@@ -266,9 +259,8 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 		switch (requestCode) {
 		case MY_ORDER_REQUEST_CODE:
 			if (resultCode == RESULT_OK) {            	    	
-				Bundle bundleExtra = data.getExtras();
-				@SuppressWarnings("unchecked")
-				ArrayList<MyOrderItem> myOrders = (ArrayList<MyOrderItem>) bundleExtra.getSerializable(MyOrderActivity.RETURN_FROM_MY_ORDER);
+				final ApplicationState applicationContext = (ApplicationState)getApplicationContext();
+                ArrayList<MyOrderItem> myOrders = ApplicationState.getMyOrderItems(applicationContext);
 				if(myOrders!=null){
 					foodMenuItemQuantityMap = new HashMap<String, MyOrderItem>();
 					for (MyOrderItem myOrderItem : myOrders) {
@@ -276,7 +268,7 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 					}
 				}
 
-				displayView(ApplicationState.getCategoryId((ApplicationState)getApplicationContext()));
+				displayView(ApplicationState.getCategoryId(applicationContext));
 			} else if(resultCode == RESULT_CANCELED && data != null) {
 				String error = data.getStringExtra(ZBarConstants.ERROR_INFO);
 				if(!TextUtils.isEmpty(error)) {
@@ -286,21 +278,7 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 				startActivity(intent);
 			}
 			break;
-			/* case CONFIRMED_ORDER_REQUEST_CODE:
-        	if (resultCode == RESULT_OK) {            	    	
-                Bundle bundleExtra = data.getExtras();
-                @SuppressWarnings("unchecked")
-                ArrayList<MyOrderItem> myOrderItems = (ArrayList<MyOrderItem>) bundleExtra.getSerializable(MyParentOrderActivity.MY_ORDER);
-                if(myOrderItems!=null){
-                	foodMenuItemQuantityMap = new HashMap<String, MyOrderItem>();
-                    for (MyOrderItem myOrderItem : myOrderItems) {
-                        foodMenuItemQuantityMap.put(myOrderItem.getFoodMenuItem().getItemName(), myOrderItem);
-                    }
-                }
-                displayView(bundleExtra.getInt(MyParentOrderActivity.FOOD_MENU_CATEGORY_ID));
-            }
-        	break;
-			 */        }
+		  }
 		invalidateOptionsMenu();
 	}
 

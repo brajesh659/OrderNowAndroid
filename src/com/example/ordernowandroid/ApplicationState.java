@@ -3,7 +3,6 @@ package com.example.ordernowandroid;
 import java.util.ArrayList;
 
 import android.app.Application;
-import android.content.Context;
 
 import com.example.ordernowandroid.model.MyOrderItem;
 
@@ -11,6 +10,10 @@ public class ApplicationState extends Application {
     private String tableId;
     private ArrayList<MyOrderItem> myOrderItems;
     private int categoryId;
+    
+    public ApplicationState() {
+        myOrderItems = new ArrayList<MyOrderItem>();
+    }
 
     public String getTableId() {
         return tableId;
@@ -49,4 +52,8 @@ public class ApplicationState extends Application {
         return applicationContext.getMyOrderItems();
     }
 
+    public static void setMyOrderItems(ApplicationState applicationContext, ArrayList<MyOrderItem> myOrderItemList) {
+        applicationContext.setMyOrderItems(myOrderItemList);
+    }
+    
 }
