@@ -1,5 +1,6 @@
 package com.example.ordernowandroid;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +29,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.widget.AdapterView;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
@@ -165,6 +167,21 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 		suggestionProvider = new SearchRecentSuggestions(this, SearchSuggestionProvider.AUTHORITY,
 				SearchSuggestionProvider.MODE);
 
+		getOverflowMenu();
+	}
+	
+	private void getOverflowMenu() {
+
+	     try {
+	        ViewConfiguration config = ViewConfiguration.get(this);
+	        Field menuKeyField = ViewConfiguration.class.getDeclaredField("sHasPermanentMenuKey");
+	        if(menuKeyField != null) {
+	            menuKeyField.setAccessible(true);
+	            menuKeyField.setBoolean(config, false);
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
 	}
 
 	private List<Category> getCategories() {
@@ -574,6 +591,7 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 			Fragment fragment = IndividualMenuTabFragment.newInstance("Search", searchDishList);
 			FragmentManager fragmentManager = getSupportFragmentManager();
 			fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).addToBackStack(null).commit();
+			setTitle(newText);
 			return true;
 		}
 		return false;
