@@ -180,9 +180,11 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
         // Associate searchable configuration with the SearchView
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         MenuItem searchMenuItem = menu.findItem(R.id.search);
-        SearchView searchView = (SearchView) searchMenuItem.getActionView();
+        searchView = (SearchView) searchMenuItem.getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setOnQueryTextListener(this);
+        searchView.setOnSuggestionListener(this);
+        suggestionAdapter = searchView.getSuggestionsAdapter();
         // searchMenuItem.collapseActionView();
         // searchView.setIconifiedByDefault(false);
 
