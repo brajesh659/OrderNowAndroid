@@ -21,6 +21,13 @@
           android:icon="@drawable/ic_action_search"
           android:showAsAction="collapseActionView|ifRoom"
           android:actionViewClass="android.widget.SearchView" />
+    
+    <item
+        android:id="@+id/filter_menu"
+        android:icon="@drawable/ic_filter"
+        android:orderInCategory="130"
+        android:showAsAction="ifRoom"
+        android:title="@string/filter_menu"/>
 
 </menu>
 

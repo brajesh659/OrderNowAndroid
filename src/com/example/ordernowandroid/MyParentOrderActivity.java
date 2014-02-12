@@ -30,6 +30,7 @@ public class MyParentOrderActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.my_parent_order_summary);
 		setTitle("Confirmed Order");
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 
 		Bundle b = getIntent().getExtras();
 		customerOrderWrapper = (CustomerOrderWrapper) b.getSerializable(CUSTOMER_ORDER_WRAPPER);

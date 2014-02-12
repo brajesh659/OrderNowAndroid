@@ -75,7 +75,7 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 	private HashMap<String, MyOrderItem> foodMenuItemQuantityMap = new HashMap<String, MyOrderItem>();
 	protected static final String SUB_ORDER_LIST = "SubOrderList";
 	private ArrayList<CustomerOrderWrapper> subOrdersFromDB;
-	private Map<String, Boolean> restaurantLoadedInDb = new HashMap<String, Boolean>();
+	private static Map<String, Boolean> restaurantLoadedInDb = new HashMap<String, Boolean>();
 	private SearchRecentSuggestions suggestionProvider;
 	private CursorAdapter suggestionAdapter;
 	private SearchView searchView;
@@ -223,14 +223,12 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 			public void onClick(View v) {
 			    startMyOrderActivity(context);
 			}
-
-			
 		});
 		
 		return super.onCreateOptionsMenu(menu);
 
 	}
-	
+
 	private void startPartentOrderActivity(final Context context) {
 		if (subOrdersFromDB !=null && subOrdersFromDB.size() >= 1) {
 			Intent intent = new Intent(context, MyParentOrderActivity.class);
@@ -252,6 +250,7 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 		}
 	}
 
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// toggle nav drawer on selecting action bar app icon/title
@@ -267,10 +266,13 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 			return true;
 		case R.id.confirmed_order :
 			startPartentOrderActivity(getApplicationContext());
-			return true;
+		    return true;
 		case R.id.search:
 			onSearchRequested();
 			return true;
+		case R.id.filter_menu:
+		    Intent intent = new Intent(this, FilterMenuActivity.class);
+		    startActivity(intent);
 		default:
 			return super.onOptionsItemSelected(item);
 		}

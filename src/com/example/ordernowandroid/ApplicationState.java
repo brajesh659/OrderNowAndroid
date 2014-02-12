@@ -4,15 +4,18 @@ import java.util.ArrayList;
 
 import android.app.Application;
 
+import com.example.ordernowandroid.filter.MenuFilter;
 import com.example.ordernowandroid.model.MyOrderItem;
 
 public class ApplicationState extends Application {
     private String tableId;
     private ArrayList<MyOrderItem> myOrderItems;
     private int categoryId;
+    private MenuFilter menuFilter;
     
     public ApplicationState() {
         myOrderItems = new ArrayList<MyOrderItem>();
+        menuFilter = new MenuFilter();
     }
 
     public String getTableId() {
@@ -54,6 +57,14 @@ public class ApplicationState extends Application {
 
     public static void setMyOrderItems(ApplicationState applicationContext, ArrayList<MyOrderItem> myOrderItemList) {
         applicationContext.setMyOrderItems(myOrderItemList);
+    }
+
+    public MenuFilter getMenuFilter() {
+        return menuFilter;
+    }
+
+    public static MenuFilter getMenuFilter(ApplicationState applicationContext) {
+        return applicationContext.getMenuFilter();
     }
     
 }

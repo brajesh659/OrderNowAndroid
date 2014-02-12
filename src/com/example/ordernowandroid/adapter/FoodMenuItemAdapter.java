@@ -16,11 +16,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.data.menu.FoodType;
+import com.example.ordernowandroid.ApplicationState;
 import com.example.ordernowandroid.R;
+import com.example.ordernowandroid.filter.MenuFilter;
 import com.example.ordernowandroid.fragments.AddNoteListener;
 import com.example.ordernowandroid.fragments.IndividualMenuTabFragment.numListener;
 import com.example.ordernowandroid.model.FoodMenuItem;
 import com.example.ordernowandroid.model.OrderNowConstants;
+import com.util.Utilities;
 
 /**
  * 
@@ -36,6 +39,8 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
     private numListener numCallBack;
     private AddNoteListener addNoteListener;
     private ModelFilter filter;
+    
+    private MenuFilter menuFilter;
 
     public FoodMenuItemAdapter(Context context, ArrayList<FoodMenuItem> foodMenuItems, numListener numCallBack, AddNoteListener addNoteListener) {
         super(context, R.layout.food_menu_item, foodMenuItems);
@@ -44,6 +49,7 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
         allfoodMenuItems.addAll(foodMenuItems);
         this.foodMenuItems = foodMenuItems;
         this.numCallBack = numCallBack;
+        this.menuFilter = ApplicationState.getMenuFilter((ApplicationState)context);
     }
 
     /*
@@ -190,6 +196,18 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
         protected FilterResults performFiltering(CharSequence constraint) {
             FilterResults filterResults = new FilterResults();
             List<FoodMenuItem> filteredItemList = new ArrayList<FoodMenuItem>();
+            if(menuFilter.getFilterProperties() !=null && !menuFilter.getFilterProperties().isEmpty()) {
+                for (FoodMenuItem foodItem : allfoodMenuItems) {
+                    if(menuFilter.isItemFiltered(foodItem)) {
+                        filteredItemList.add(foodItem);
+                    }
+                }
+            } else {
+                filteredItemList.addAll(allfoodMenuItems);
+            }
+            
+            
+            /*
             if (constraint.equals(FoodType.Veg.toString())) {
                 for (FoodMenuItem foodItem : allfoodMenuItems) {
                     if (foodItem.getFoodType().equals(FoodType.Veg)) {
@@ -205,6 +223,7 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
             } else {
                 filteredItemList.addAll(allfoodMenuItems);
             }
+            */
             filterResults.count = filteredItemList.size();
             filterResults.values = filteredItemList;
             return filterResults;

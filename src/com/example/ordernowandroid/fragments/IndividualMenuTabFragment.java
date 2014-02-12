@@ -12,10 +12,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.data.menu.FoodType;
+import com.example.ordernowandroid.ApplicationState;
 import com.example.ordernowandroid.R;
 import com.example.ordernowandroid.adapter.FoodMenuItemAdapter;
+import com.example.ordernowandroid.filter.MenuFilter;
 import com.example.ordernowandroid.model.FoodMenuItem;
 
 public class IndividualMenuTabFragment extends Fragment implements TabListener {
@@ -30,6 +33,7 @@ public class IndividualMenuTabFragment extends Fragment implements TabListener {
 	private ArrayList<FoodMenuItem> foodMenuItemList;
 	private FoodMenuItemAdapter foodMenuItemAdapter;
 	
+	
 
 	public interface numListener {
 		
@@ -41,7 +45,8 @@ public class IndividualMenuTabFragment extends Fragment implements TabListener {
 	}
 
 	numListener numCallBack;	
-	AddNoteListener addNoteListener;   
+	AddNoteListener addNoteListener;
+    private MenuFilter menuFilter;   
 
     @Override
     public void onAttach(android.app.Activity activity) {
@@ -92,10 +97,16 @@ public class IndividualMenuTabFragment extends Fragment implements TabListener {
 	public View onCreateView(final LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {		
 		View foodCategoryView = inflater.inflate(R.layout.category_page, null);	
-		this.foodMenuItemAdapter = new FoodMenuItemAdapter(getActivity(), foodMenuItemList, numCallBack, addNoteListener);
-		ListView lv = (ListView) foodCategoryView.findViewById(R.id.dish_list);
+        this.foodMenuItemAdapter = new FoodMenuItemAdapter(getActivity().getApplicationContext(), foodMenuItemList,
+                numCallBack, addNoteListener);
+        ListView lv = (ListView) foodCategoryView.findViewById(R.id.dish_list);
 		lv.setAdapter(foodMenuItemAdapter);
 		lv.setOnCreateContextMenuListener(getActivity());
+		//check if filter is present
+		this.menuFilter = ApplicationState.getMenuFilter((ApplicationState)getActivity().getApplicationContext());
+		if(menuFilter.getFilterProperties() != null && !menuFilter.getFilterProperties().isEmpty()) {
+		this.foodMenuItemAdapter.getFilter().filter("");
+		}
 		return foodCategoryView;
 	}
 

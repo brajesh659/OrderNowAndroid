@@ -1,7 +1,8 @@
 package com.example.ordernowandroid.model;
 
 import java.io.Serializable;
-import java.util.concurrent.ExecutionException;
+import java.util.HashMap;
+import java.util.Map;
 
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -9,6 +10,9 @@ import android.os.AsyncTask;
 import com.data.menu.Dish;
 import com.data.menu.FoodType;
 import com.example.ordernowandroid.adapter.ImageService;
+import com.example.ordernowandroid.filter.MenuPropertyKey;
+import com.example.ordernowandroid.filter.MenuPropertyValue;
+import com.util.Utilities;
 
 /**
  * 
@@ -105,6 +109,17 @@ public class FoodMenuItem implements Serializable {
 	        //"http://www.creativefreedom.co.uk/icon-designers-blog/wp-content/uploads/2013/03/00-android-4-0_icons.png"
 	        return ImageService.getInstance().getImageWithCache(params[0]);
 	    }
+	    
+	}
+	
+	public Map<MenuPropertyKey, MenuPropertyValue> getDishFilterProperties() {
+	    Map<MenuPropertyKey, MenuPropertyValue> dishProperties = new HashMap<MenuPropertyKey, MenuPropertyValue>();
+	    dishProperties.put(MenuPropertyKey.FoodType, MenuPropertyValue.valueOf(getFoodType().toString()));
+	    if(dish.getPrice() < 110f) {
+	        dishProperties.put(MenuPropertyKey.CousineType, MenuPropertyValue.NorthIndian);
+	    }
+	    Utilities.info("getDishFilterProperties " + dishProperties);
+	    return dishProperties;
 	    
 	}
 

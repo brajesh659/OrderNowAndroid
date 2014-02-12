@@ -48,6 +48,7 @@ public class MyOrderActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTitle("My Order");
+        getActionBar().setDisplayHomeAsUpEnabled(true);
         final Bundle b = getIntent().getExtras();
         ArrayList<MyOrderItem> myOrderItemList = ApplicationState.getMyOrderItems((ApplicationState) getApplicationContext());
         subOrdersFromDB = (ArrayList<CustomerOrderWrapper>) b.getSerializable(SUB_ORDER_LIST);
