@@ -3,13 +3,14 @@
     <item
         android:id="@+id/action_cart"
         android:actionLayout="@layout/food_cart"
+        android:icon="@drawable/ic_cart_icon"
         android:orderInCategory="140"
         android:showAsAction="ifRoom"
         android:title="@string/myorder"/>
     
     <item
         android:id="@+id/confirmed_order"
-        android:actionLayout="@layout/confirmed_order"
+        android:icon="@drawable/confirmed_order_icon"
         android:orderInCategory="150"
         android:showAsAction="ifRoom"
         android:title="@string/confirmed_order"/>

@@ -210,9 +210,6 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 		food_item_notification.setText(Integer.toString(foodMenuItemQuantityMap.keySet().size()));
 		ImageView cart_image = (ImageView)food_cart_layout.findViewById(R.id.action_cart_image);
 
-		RelativeLayout confirmed_order_layout = (RelativeLayout) menu.findItem(R.id.confirmed_order).getActionView();
-		ImageView confirmed_order_image = (ImageView) confirmed_order_layout.findViewById(R.id.confirmed_order_image);
-
 		final Context context = this;
 		if (foodMenuItemQuantityMap != null) {
 		    ArrayList<MyOrderItem> myOrder = new ArrayList<MyOrderItem>();
@@ -224,32 +221,35 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 		cart_image.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-			    ArrayList<MyOrderItem> myOrderItems = ApplicationState.getMyOrderItems((ApplicationState)getApplicationContext());
-				if (myOrderItems !=null && myOrderItems.size() >= 1) {
-					Intent intent = new Intent(context, MyOrderActivity.class);
-					intent.putExtra(SUB_ORDER_LIST, subOrdersFromDB);
-					startActivityForResult(intent, MY_ORDER_REQUEST_CODE);
-				} else {
-					Toast.makeText(getApplicationContext(), "Hey wait!! Let's add some items to the order first.", Toast.LENGTH_LONG).show();
-				}
+			    startMyOrderActivity(context);
 			}
-		});
 
-		confirmed_order_image.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (subOrdersFromDB !=null && subOrdersFromDB.size() >= 1) {
-					Intent intent = new Intent(context, MyParentOrderActivity.class);
-					intent.putExtra(SUB_ORDER_LIST, subOrdersFromDB);
-					startActivity(intent);
-				}  else {
-					Toast.makeText(getApplicationContext(), "You currently have no confirmed orders to view.", Toast.LENGTH_LONG).show();
-				}
-			}
+			
 		});
-
+		
 		return super.onCreateOptionsMenu(menu);
 
+	}
+	
+	private void startPartentOrderActivity(final Context context) {
+		if (subOrdersFromDB !=null && subOrdersFromDB.size() >= 1) {
+			Intent intent = new Intent(context, MyParentOrderActivity.class);
+			intent.putExtra(SUB_ORDER_LIST, subOrdersFromDB);
+			startActivity(intent);
+		}  else {
+			Toast.makeText(getApplicationContext(), "You currently have no confirmed orders to view.", Toast.LENGTH_LONG).show();
+		}
+	}
+
+	private void startMyOrderActivity(final Context context) {
+		ArrayList<MyOrderItem> myOrderItems = ApplicationState.getMyOrderItems((ApplicationState)getApplicationContext());
+		if (myOrderItems !=null && myOrderItems.size() >= 1) {
+			Intent intent = new Intent(context, MyOrderActivity.class);
+			intent.putExtra(SUB_ORDER_LIST, subOrdersFromDB);
+			startActivityForResult(intent, MY_ORDER_REQUEST_CODE);
+		} else {
+			Toast.makeText(getApplicationContext(), "Hey wait!! Let's add some items to the order first.", Toast.LENGTH_LONG).show();
+		}
 	}
 
 	@Override
@@ -263,6 +263,10 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 		// Handle action bar actions click
 		switch (item.getItemId()) {
 		case R.id.action_cart :
+			startMyOrderActivity(getApplicationContext());
+			return true;
+		case R.id.confirmed_order :
+			startPartentOrderActivity(getApplicationContext());
 			return true;
 		case R.id.search:
 			onSearchRequested();
