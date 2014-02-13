@@ -1,5 +1,11 @@
 package com.data.menu;
 
+import java.util.List;
+import java.util.Map;
+
+import com.example.ordernowandroid.filter.MenuPropertyKey;
+import com.example.ordernowandroid.filter.MenuPropertyValue;
+
 public class Restaurant {
 	private String rId;
 	private String name;
@@ -7,8 +13,9 @@ public class Restaurant {
 	private String contactInfo;
 	private String img;
 	private Menu menu;
-	
-	public String getContactInfo() {
+    private Map<MenuPropertyKey, List<MenuPropertyValue>> availableFilters;
+
+    public String getContactInfo() {
 		return contactInfo;
 	}
 	public void setContactInfo(String contactInfo) {
@@ -49,6 +56,14 @@ public class Restaurant {
 	public void setMenu(Menu menu) {
 		this.menu = menu;
 	}
+	
+	public Map<MenuPropertyKey, List<MenuPropertyValue>> getAvailableFilters() {
+	    return availableFilters;
+	}	
+	   
+    public void setAvailableFilters(Map<MenuPropertyKey, List<MenuPropertyValue>> availableFilters) {
+        this.availableFilters = availableFilters;
+    }
 	
 	@Override
 	public String toString() {

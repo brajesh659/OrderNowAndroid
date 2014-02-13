@@ -33,15 +33,9 @@ public class FilterMenuActivity extends Activity {
 
         LinearLayout ll = new LinearLayout(this);
         ll.setOrientation(LinearLayout.VERTICAL);
+        ll.setBackgroundColor(getResources().getColor(R.color.white));
 
-        /*
-         * CheckBox vegCheck = new CheckBox(this); vegCheck.setText("Veg");
-         * ll.addView(vegCheck); CheckBox nonvegCheck = new CheckBox(this);
-         * nonvegCheck.setText("NonVeg"); ll.addView(nonvegCheck); Button
-         * applyButton = new Button(this);
-         * 
-         * applyButton.setText("Apply Filter to Menu"); ll.addView(applyButton);
-         */
+        
         final MenuFilter menuFilter = ApplicationState.getMenuFilter((ApplicationState) getApplicationContext());
         selectedFilters = menuFilter.getFilterProperties();
         if (selectedFilters == null) {
@@ -54,6 +48,7 @@ public class FilterMenuActivity extends Activity {
                 // Add Text
                 TextView tv = new TextView(this);
                 tv.setText(filterKey.toString());
+                tv.setTextColor(getResources().getColor(R.color.purple));
                 ll.addView(tv);
                 // Add All checkbox for it
                 List<MenuPropertyValue> filterKeyValues = availableFilters.get(filterKey);
@@ -61,6 +56,7 @@ public class FilterMenuActivity extends Activity {
                     for (final MenuPropertyValue filterValue : filterKeyValues) {
                         final CheckBox ch = new CheckBox(this);
                         ch.setText(filterValue.toString());
+                        ch.setTextColor(getResources().getColor(R.color.burlywood));
                         if (selectedFilters.get(filterKey) != null
                                 && selectedFilters.get(filterKey).contains(filterValue)) {
                             ch.setChecked(true);
@@ -80,11 +76,14 @@ public class FilterMenuActivity extends Activity {
                                     selectedFilters.put(filterKey, filterValuesForFilterKey);
                                 } else {
                                     List<MenuPropertyValue> filterValuesForFilterKey = selectedFilters.get(filterKey);
-                                    if (filterValuesForFilterKey == null) {
-                                        filterValuesForFilterKey = new ArrayList<MenuPropertyValue>();
+                                    if (filterValuesForFilterKey != null) {
+                                        filterValuesForFilterKey.remove(filterValue);
+                                        if (filterValuesForFilterKey.isEmpty()) {
+                                            selectedFilters.remove(filterKey);
+                                        } else {
+                                            selectedFilters.put(filterKey, filterValuesForFilterKey);
+                                        }
                                     }
-                                    filterValuesForFilterKey.remove(filterValue);
-                                    selectedFilters.put(filterKey, filterValuesForFilterKey);
                                 }
 
                             }

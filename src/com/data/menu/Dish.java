@@ -1,6 +1,10 @@
 package com.data.menu;
 
 import java.io.Serializable;
+import java.util.Map;
+
+import com.example.ordernowandroid.filter.MenuPropertyKey;
+import com.example.ordernowandroid.filter.MenuPropertyValue;
 
 public class Dish implements Serializable {
     
@@ -27,7 +31,17 @@ public class Dish implements Serializable {
     private String img;
     private Float price;
     private FoodType type; // Veg or non-veg
-	private boolean isAvailable = true;
+    private Map<MenuPropertyKey, MenuPropertyValue> dishProperties;
+    
+	public Map<MenuPropertyKey, MenuPropertyValue> getDishProperties() {
+        return dishProperties;
+    }
+
+    public void setDishProperties(Map<MenuPropertyKey, MenuPropertyValue> dishProperties) {
+        this.dishProperties = dishProperties;
+    }
+
+    private boolean isAvailable = true;
 
     public String getDishId() {
         return dishId;

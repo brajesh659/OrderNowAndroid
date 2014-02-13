@@ -49,6 +49,7 @@ import com.dm.zbar.android.scanner.ZBarConstants;
 import com.example.ordernowandroid.adapter.DownloadResturantMenu;
 import com.example.ordernowandroid.adapter.ImageService;
 import com.example.ordernowandroid.adapter.NavDrawerListAdapter;
+import com.example.ordernowandroid.filter.MenuFilter;
 import com.example.ordernowandroid.fragments.AddNoteDialogFragment;
 import com.example.ordernowandroid.fragments.AddNoteListener;
 import com.example.ordernowandroid.fragments.IndividualMenuTabFragment;
@@ -447,6 +448,9 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 	private void loadRestaurantDishes(final Restaurant restaurant) {
 		Utilities.info("restaurant load " + restaurant.getName() + restaurantLoadedInDb);
 		if (!restaurantLoadedInDb.containsKey(restaurant.getName())) {
+		    //load filter first time
+		    MenuFilter menuFilter = ApplicationState.getMenuFilter((ApplicationState) getApplicationContext());
+		    menuFilter.setAvailableFilters(restaurant.getAvailableFilters());
 			new Thread(new Runnable() {
 				public void run() {
 					try {

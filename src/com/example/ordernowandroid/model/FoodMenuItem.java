@@ -111,19 +111,23 @@ public class FoodMenuItem implements Serializable {
 	    }
 	    
 	}
-	
-	public Map<MenuPropertyKey, MenuPropertyValue> getDishFilterProperties() {
-	    Map<MenuPropertyKey, MenuPropertyValue> dishProperties = new HashMap<MenuPropertyKey, MenuPropertyValue>();
-	    dishProperties.put(MenuPropertyKey.FoodType, MenuPropertyValue.valueOf(getFoodType().toString()));
-	    if(dish.getPrice() < 110f) {
-	        dishProperties.put(MenuPropertyKey.CousineType, MenuPropertyValue.NorthIndian);
-	    } else {
-	        dishProperties.put(MenuPropertyKey.CousineType, MenuPropertyValue.SouthIndian);
-	    }
-	    Utilities.info("getDishFilterProperties " + dishProperties);
-	    return dishProperties;
-	    
-	}
+
+    public Map<MenuPropertyKey, MenuPropertyValue> getDishFilterProperties() {
+        Map<MenuPropertyKey, MenuPropertyValue> dishProperties = dish.getDishProperties();
+        if (dishProperties == null) {
+            dishProperties = new HashMap<MenuPropertyKey, MenuPropertyValue>();
+            
+            if (dish.getPrice() < 110f) {
+                dishProperties.put(MenuPropertyKey.CousineType, MenuPropertyValue.NorthIndian);
+            } else {
+                dishProperties.put(MenuPropertyKey.CousineType, MenuPropertyValue.SouthIndian);
+            }
+        }
+        Utilities.info("getDishFilterProperties " + dishProperties);
+        dishProperties.put(MenuPropertyKey.FoodType, MenuPropertyValue.valueOf(getFoodType().toString()));
+        return dishProperties;
+
+    }
 
 }
 
