@@ -2,32 +2,23 @@ package com.example.ordernowandroid.fragments;
 
 import java.util.ArrayList;
 
-import android.app.ActionBar;
-import android.app.ActionBar.Tab;
-import android.app.ActionBar.TabListener;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import com.data.menu.FoodType;
 import com.example.ordernowandroid.ApplicationState;
 import com.example.ordernowandroid.R;
 import com.example.ordernowandroid.adapter.FoodMenuItemAdapter;
 import com.example.ordernowandroid.filter.MenuFilter;
 import com.example.ordernowandroid.model.FoodMenuItem;
 
-public class IndividualMenuTabFragment extends Fragment implements TabListener {
+public class IndividualMenuTabFragment extends Fragment  {
 
 	private static final String TAB_TITLE = "tabTitle";
 	private static final String TAB_ITEM_LIST = "tabItemList";
-    private static final String VEG = FoodType.Veg.toString();
-    private static final String NON_VEG = FoodType.NonVeg.toString();
-    private static final String ALL_FOOD = "ALL";
     
 	private String tabTitle;
 	private ArrayList<FoodMenuItem> foodMenuItemList;
@@ -82,14 +73,6 @@ public class IndividualMenuTabFragment extends Fragment implements TabListener {
 		
         tabTitle = getArguments().getString(TAB_TITLE);
         foodMenuItemList = (ArrayList<FoodMenuItem>) getArguments().getSerializable(TAB_ITEM_LIST);
-        ActionBar actionBar = getActivity().getActionBar();
-        
-        //delete all because this listener is this particular instance
-        actionBar.removeAllTabs();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        actionBar.addTab(actionBar.newTab().setTag(ALL_FOOD).setText(R.string.all).setTabListener(this));
-        actionBar.addTab(actionBar.newTab().setTag(VEG).setText(R.string.veg).setTabListener(this));
-        actionBar.addTab(actionBar.newTab().setTag(NON_VEG).setText(R.string.nonveg).setTabListener(this));
 
 	}
 
@@ -110,24 +93,5 @@ public class IndividualMenuTabFragment extends Fragment implements TabListener {
 		return foodCategoryView;
 	}
 
-	@Override
-	public void onTabReselected(Tab arg0, FragmentTransaction arg1) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onTabSelected(Tab tab, FragmentTransaction arg1) {
-		if(foodMenuItemAdapter != null) {
-		    foodMenuItemAdapter.getFilter().filter(tab.getTag().toString());
-		}
-		
-	}
-
-	@Override
-	public void onTabUnselected(Tab arg0, FragmentTransaction arg1) {
-		// TODO Auto-generated method stub
-		
-	}
 
 }
