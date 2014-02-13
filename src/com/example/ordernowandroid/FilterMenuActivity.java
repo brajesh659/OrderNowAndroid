@@ -61,6 +61,10 @@ public class FilterMenuActivity extends Activity {
                     for (final MenuPropertyValue filterValue : filterKeyValues) {
                         final CheckBox ch = new CheckBox(this);
                         ch.setText(filterValue.toString());
+                        if (selectedFilters.get(filterKey) != null
+                                && selectedFilters.get(filterKey).contains(filterValue)) {
+                            ch.setChecked(true);
+                        }
                         ch.setOnClickListener(new View.OnClickListener() {
 
                             @Override
@@ -82,7 +86,7 @@ public class FilterMenuActivity extends Activity {
                                     filterValuesForFilterKey.remove(filterValue);
                                     selectedFilters.put(filterKey, filterValuesForFilterKey);
                                 }
-                                
+
                             }
                         });
                         ll.addView(ch);
@@ -98,10 +102,10 @@ public class FilterMenuActivity extends Activity {
             @Override
             public void onClick(View v) {
                 menuFilter.addFilter(selectedFilters);
-                Toast.makeText(getApplicationContext(), "apply " + menuFilter.getFilterProperties().toString(), Toast.LENGTH_LONG)
-                        .show();
+                Toast.makeText(getApplicationContext(), "apply " + menuFilter.getFilterProperties().toString(),
+                        Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(getApplicationContext(), FoodMenuActivity.class);
-                startActivity(intent); 
+                startActivity(intent);
                 finish();
             }
         });

@@ -104,9 +104,9 @@ public class IndividualMenuTabFragment extends Fragment implements TabListener {
 		lv.setOnCreateContextMenuListener(getActivity());
 		//check if filter is present
 		this.menuFilter = ApplicationState.getMenuFilter((ApplicationState)getActivity().getApplicationContext());
-		if(menuFilter.getFilterProperties() != null && !menuFilter.getFilterProperties().isEmpty()) {
-		this.foodMenuItemAdapter.getFilter().filter("");
-		}
+        if (menuFilter.getFilterProperties() != null && !menuFilter.getFilterProperties().isEmpty()) {
+            this.foodMenuItemAdapter.getFilter().filter("");
+        }
 		return foodCategoryView;
 	}
 

@@ -117,6 +117,8 @@ public class FoodMenuItem implements Serializable {
 	    dishProperties.put(MenuPropertyKey.FoodType, MenuPropertyValue.valueOf(getFoodType().toString()));
 	    if(dish.getPrice() < 110f) {
 	        dishProperties.put(MenuPropertyKey.CousineType, MenuPropertyValue.NorthIndian);
+	    } else {
+	        dishProperties.put(MenuPropertyKey.CousineType, MenuPropertyValue.SouthIndian);
 	    }
 	    Utilities.info("getDishFilterProperties " + dishProperties);
 	    return dishProperties;
