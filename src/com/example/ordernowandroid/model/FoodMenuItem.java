@@ -114,10 +114,11 @@ public class FoodMenuItem implements Serializable {
 
     public Map<MenuPropertyKey, MenuPropertyValue> getDishFilterProperties() {
         Map<MenuPropertyKey, MenuPropertyValue> dishProperties = dish.getDishProperties();
+        int i = 0;
         if (dishProperties == null) {
             dishProperties = new HashMap<MenuPropertyKey, MenuPropertyValue>();
             
-            if (dish.getPrice() < 110f) {
+            if (dish.getPrice() % 25 == 0) {
                 dishProperties.put(MenuPropertyKey.CousineType, MenuPropertyValue.NorthIndian);
             } else {
                 dishProperties.put(MenuPropertyKey.CousineType, MenuPropertyValue.SouthIndian);

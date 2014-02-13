@@ -75,7 +75,7 @@ public class MyOrderActivity extends Activity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {                                                
                         Toast.makeText(getApplicationContext(), "Order has been canceled.", Toast.LENGTH_LONG).show();
-
+                        ApplicationState.setFoodMenuItemQuantityMap((ApplicationState)getApplicationContext(), new HashMap<String, MyOrderItem>());
                         //Clear the Selected Quantities and Start the Food Menu Activity again
                         Intent intent = new Intent(getApplicationContext(), FoodMenuActivity.class);
                         intent.putExtra(SUB_ORDER_LIST, subOrdersFromDB);
@@ -104,6 +104,7 @@ public class MyOrderActivity extends Activity {
 		totalAmount.setText(OrderNowConstants.INDIAN_RUPEE_UNICODE + " " + Float.toString(totalOrderAmount)); 
 
 		ListView myOrderListView = (ListView) findViewById(R.id.listMyOrder);
+		
 		MyOrderAdapter myOrderAdapter = new MyOrderAdapter(MyOrderActivity.this, myOrderItemList);
 		myOrderListView.setAdapter(myOrderAdapter);
 	}
@@ -164,7 +165,9 @@ public class MyOrderActivity extends Activity {
 
 		//Un-commenting it till we have Push Notifications in place 
 		Toast.makeText(getApplicationContext(), "Order has been confirmed.", Toast.LENGTH_LONG).show();
-
+		
+		ApplicationState.setFoodMenuItemQuantityMap((ApplicationState)getApplicationContext(), new HashMap<String, MyOrderItem>());
+		
 		Intent intent = new Intent(getApplicationContext(), MyParentOrderActivity.class);
 		intent.putExtra(MyParentOrderActivity.CUSTOMER_ORDER_WRAPPER, customerOrderWrapper);
 		intent.putExtra(SUB_ORDER_LIST, subOrdersFromDB);

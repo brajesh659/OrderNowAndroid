@@ -73,7 +73,7 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 	private NavDrawerListAdapter adapter;
 	private Restaurant restaurant;
 	private DishHelper dh;
-	private HashMap<String, MyOrderItem> foodMenuItemQuantityMap = new HashMap<String, MyOrderItem>();
+	//private HashMap<String, MyOrderItem> foodMenuItemQuantityMap = new HashMap<String, MyOrderItem>();
 	protected static final String SUB_ORDER_LIST = "SubOrderList";
 	private ArrayList<CustomerOrderWrapper> subOrdersFromDB;
 	private static Map<String, Boolean> restaurantLoadedInDb = new HashMap<String, Boolean>();
@@ -208,15 +208,16 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 
 		RelativeLayout food_cart_layout = (RelativeLayout)menu.findItem(R.id.action_cart).getActionView();
 		TextView food_item_notification = (TextView)food_cart_layout.findViewById(R.id.food_cart_notifcation_textview);
+		
+	    HashMap<String, MyOrderItem> foodMenuItemQuantityMap = ApplicationState.getFoodMenuItemQuantityMap((ApplicationState) getApplicationContext());
 		food_item_notification.setText(Integer.toString(foodMenuItemQuantityMap.keySet().size()));
 		ImageView cart_image = (ImageView)food_cart_layout.findViewById(R.id.action_cart_image);
 
 		final Context context = this;
-		if (foodMenuItemQuantityMap != null) {
-		    ArrayList<MyOrderItem> myOrder = new ArrayList<MyOrderItem>();
-		    myOrder.addAll(foodMenuItemQuantityMap.values());
-		    ApplicationState.setMyOrderItems((ApplicationState) getApplicationContext(), myOrder);
-		} 
+//		if (foodMenuItemQuantityMap != null) {
+//		    ArrayList<MyOrderItem> myOrder = new ArrayList<MyOrderItem>();
+//		    myOrder.addAll(foodMenuItemQuantityMap.values());
+//		} 
 		
 
 		cart_image.setOnClickListener(new View.OnClickListener() {
@@ -241,16 +242,20 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 	}
 
 	private void startMyOrderActivity(final Context context) {
-		ArrayList<MyOrderItem> myOrderItems = ApplicationState.getMyOrderItems((ApplicationState)getApplicationContext());
-		if (myOrderItems !=null && myOrderItems.size() >= 1) {
+		HashMap<String, MyOrderItem> foodMenuItemQuantityMap = ApplicationState
+				.getFoodMenuItemQuantityMap((ApplicationState) getApplicationContext());
+		ArrayList<MyOrderItem> myOrderItems = new ArrayList<MyOrderItem>();
+		myOrderItems.addAll(foodMenuItemQuantityMap.values());
+		if (myOrderItems != null && myOrderItems.size() >= 1) {
 			Intent intent = new Intent(context, MyOrderActivity.class);
 			intent.putExtra(SUB_ORDER_LIST, subOrdersFromDB);
 			startActivityForResult(intent, MY_ORDER_REQUEST_CODE);
 		} else {
-			Toast.makeText(getApplicationContext(), "Hey wait!! Let's add some items to the order first.", Toast.LENGTH_LONG).show();
+			Toast.makeText(getApplicationContext(),
+					"Hey wait!! Let's add some items to the order first.",
+					Toast.LENGTH_LONG).show();
 		}
 	}
-
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -286,13 +291,13 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 		case MY_ORDER_REQUEST_CODE:
 			if (resultCode == RESULT_OK) {            	    	
 				final ApplicationState applicationContext = (ApplicationState)getApplicationContext();
-                ArrayList<MyOrderItem> myOrders = ApplicationState.getMyOrderItems(applicationContext);
-				if(myOrders!=null){
-					foodMenuItemQuantityMap = new HashMap<String, MyOrderItem>();
-					for (MyOrderItem myOrderItem : myOrders) {
-						foodMenuItemQuantityMap.put(myOrderItem.getFoodMenuItem().getItemName(), myOrderItem);
-					}
-				}
+//                ArrayList<MyOrderItem> myOrders = ApplicationState.getMyOrderItems(applicationContext);
+//				if(myOrders!=null){
+//					foodMenuItemQuantityMap = new HashMap<String, MyOrderItem>();
+//					for (MyOrderItem myOrderItem : myOrders) {
+//						foodMenuItemQuantityMap.put(myOrderItem.getFoodMenuItem().getItemName(), myOrderItem);
+//					}
+//				}
 
 				displayView(ApplicationState.getCategoryId(applicationContext));
 			} else if(resultCode == RESULT_CANCELED && data != null) {
@@ -388,6 +393,7 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 	@Override
 	public float getQuantity(FoodMenuItem foodMenuItem) {
 		final String itemName = foodMenuItem.getItemName();
+		HashMap<String, MyOrderItem> foodMenuItemQuantityMap = ApplicationState.getFoodMenuItemQuantityMap((ApplicationState)getApplicationContext());
 		if (foodMenuItemQuantityMap.get(itemName) != null) {
 			return foodMenuItemQuantityMap.get(itemName).getQuantity();
 		}
@@ -398,6 +404,8 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 	public void incrementQuantity(FoodMenuItem foodMenuItem) {
 		final String itemName = foodMenuItem.getItemName();
 
+		ApplicationState applicationContext = (ApplicationState)getApplicationContext();
+		HashMap<String, MyOrderItem> foodMenuItemQuantityMap = ApplicationState.getFoodMenuItemQuantityMap(applicationContext);
 		if (foodMenuItemQuantityMap.get(itemName) == null) {
 			MyOrderItem myOrderItem = new MyOrderItem(foodMenuItem, 1);
 			foodMenuItemQuantityMap.put(itemName, myOrderItem);
@@ -413,6 +421,8 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 	public void decrementQuantity(FoodMenuItem foodMenuItem) {
 		float quantity = 0;
 		final String itemName = foodMenuItem.getItemName();
+		ApplicationState applicationContext = (ApplicationState)getApplicationContext();
+		HashMap<String, MyOrderItem> foodMenuItemQuantityMap = ApplicationState.getFoodMenuItemQuantityMap(applicationContext);
 		if (foodMenuItemQuantityMap.get(itemName) != null) {
 			quantity = foodMenuItemQuantityMap.get(itemName).getQuantity();
 			quantity--;
@@ -422,7 +432,6 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 				foodMenuItemQuantityMap.get(itemName).setQuantity(quantity);
 			}
 		}
-
 		// updateFoodCartNotificationText();
 		invalidateOptionsMenu();
 	}
@@ -569,6 +578,7 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 
 	@Override
 	public void showNote(FoodMenuItem foodMenuItem) {
+		HashMap<String, MyOrderItem> foodMenuItemQuantityMap = ApplicationState.getFoodMenuItemQuantityMap((ApplicationState)getApplicationContext());
 		AddNoteDialogFragment noteFragment = AddNoteDialogFragment.newInstance(foodMenuItem,
 				foodMenuItemQuantityMap.get(foodMenuItem.getItemName()));
 		noteFragment.show(getSupportFragmentManager(), "notes");
@@ -577,6 +587,7 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 
 	@Override
 	public void saveNote(FoodMenuItem foodMenuItem, HashMap<String, String> metaData) {
+		HashMap<String, MyOrderItem> foodMenuItemQuantityMap = ApplicationState.getFoodMenuItemQuantityMap((ApplicationState)getApplicationContext());
 		foodMenuItemQuantityMap.get(foodMenuItem.getItemName()).setNotes("");
 		foodMenuItemQuantityMap.get(foodMenuItem.getItemName()).setMetaData(metaData);
 		invalidateOptionsMenu();

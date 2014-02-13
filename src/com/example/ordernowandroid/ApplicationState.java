@@ -1,6 +1,7 @@
 package com.example.ordernowandroid;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import android.app.Application;
 
@@ -12,6 +13,7 @@ public class ApplicationState extends Application {
     private ArrayList<MyOrderItem> myOrderItems;
     private int categoryId;
     private MenuFilter menuFilter;
+    private HashMap<String, MyOrderItem> foodMenuItemQuantityMap;
     
     public ApplicationState() {
         myOrderItems = new ArrayList<MyOrderItem>();
@@ -52,11 +54,10 @@ public class ApplicationState extends Application {
     }
 
     public static ArrayList<MyOrderItem> getMyOrderItems(ApplicationState applicationContext) {
-        return applicationContext.getMyOrderItems();
-    }
-
-    public static void setMyOrderItems(ApplicationState applicationContext, ArrayList<MyOrderItem> myOrderItemList) {
-        applicationContext.setMyOrderItems(myOrderItemList);
+        HashMap<String, MyOrderItem> foodMenuItemQuantityMap = applicationContext.getFoodMenuItemQuantityMap();
+        ArrayList<MyOrderItem> myOrderItems = new ArrayList<MyOrderItem>();
+        myOrderItems.addAll(foodMenuItemQuantityMap.values());
+        return myOrderItems;
     }
 
     public MenuFilter getMenuFilter() {
@@ -66,5 +67,22 @@ public class ApplicationState extends Application {
     public static MenuFilter getMenuFilter(ApplicationState applicationContext) {
         return applicationContext.getMenuFilter();
     }
+
+    public HashMap<String, MyOrderItem> getFoodMenuItemQuantityMap() {
+        if (foodMenuItemQuantityMap == null)
+            foodMenuItemQuantityMap = new HashMap<String, MyOrderItem>();
+        return foodMenuItemQuantityMap;
+    }
+
+	public static HashMap<String, MyOrderItem> getFoodMenuItemQuantityMap(ApplicationState applicationContext) {
+        return applicationContext.getFoodMenuItemQuantityMap();
+    }
+	
+	public void setFoodMenuItemQuantityMap(HashMap<String, MyOrderItem> foodMenuItemQuantityMap) {
+		this.foodMenuItemQuantityMap = foodMenuItemQuantityMap;
+	}
     
+	public static void setFoodMenuItemQuantityMap(ApplicationState applicationContext, HashMap<String, MyOrderItem> foodMenuItemQuantityMap) {
+        applicationContext.setFoodMenuItemQuantityMap(foodMenuItemQuantityMap);
+    }
 }

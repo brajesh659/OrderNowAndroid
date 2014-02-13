@@ -1,5 +1,6 @@
 package com.example.ordernowandroid.adapter;
 
+import java.util.HashMap;
 import java.util.List;
 
 import android.app.AlertDialog;
@@ -15,6 +16,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.ordernowandroid.ApplicationState;
 import com.example.ordernowandroid.R;
 import com.example.ordernowandroid.model.MyOrderItem;
 import com.example.ordernowandroid.model.OrderNowConstants;
@@ -27,11 +29,13 @@ import com.example.ordernowandroid.model.OrderNowConstants;
 
 public class MyOrderAdapter extends ArrayAdapter<MyOrderItem> {
 
-	private List<MyOrderItem> myOrderItemList;
-
+    private ApplicationState applicationState;
+    List<MyOrderItem> myOrderItemList ; 
 	public MyOrderAdapter(Context context, List<MyOrderItem> myOrderItemList) {
-		super(context, R.layout.my_order, myOrderItemList);
+	    super(context, R.layout.my_order, myOrderItemList);
+		applicationState = (ApplicationState) context.getApplicationContext();
 		this.myOrderItemList = myOrderItemList;
+		
 	}
 
 	@Override
@@ -59,6 +63,7 @@ public class MyOrderAdapter extends ArrayAdapter<MyOrderItem> {
 		decrementQtyBtn.setOnClickListener(new OnClickListener() { 
 			@Override
 			public void onClick(View v) {
+			    HashMap<String, MyOrderItem> foodMenuItemQuantityMap = ApplicationState.getFoodMenuItemQuantityMap(applicationState);
 				Float qty = Float.parseFloat((String) quantity.getText());
 				String orderItemPriceStr = (String) itemTotalPrice.getText();				
 
@@ -80,7 +85,9 @@ public class MyOrderAdapter extends ArrayAdapter<MyOrderItem> {
 					}
 					Float newOrderTotalPrice = Float.parseFloat(orderTotalPriceStr) - (orderItemPrice/qty);					
 					orderTotalPriceView.setText(OrderNowConstants.INDIAN_RUPEE_UNICODE + " " + Float.toString(newOrderTotalPrice));					
-					myOrderItemList.get(position).setQuantity(qty - 1);				
+					myOrderItemList.get(position).setQuantity(qty - 1);	
+					foodMenuItemQuantityMap.get(myOrderItemList.get(position).getFoodMenuItem().getItemName()).setQuantity(qty-1);
+					
 				} else if (qty == 1){
 					//Show Dialog and Remove Item from ListView on Positive Button Action
 					AlertDialog.Builder builder = new AlertDialog.Builder(getContext());            
@@ -89,6 +96,8 @@ public class MyOrderAdapter extends ArrayAdapter<MyOrderItem> {
 					builder.setPositiveButton(R.string.ok, new AlertDialog.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
+			                HashMap<String, MyOrderItem> foodMenuItemQuantityMap = ApplicationState.getFoodMenuItemQuantityMap(applicationState);
+						    foodMenuItemQuantityMap.remove(getItem(position).getFoodMenuItem().getItemName());
 							remove(getItem(position));
 							notifyDataSetChanged();
 							String orderTotalPriceStr = (String) orderTotalPriceView.getText();
@@ -98,7 +107,9 @@ public class MyOrderAdapter extends ArrayAdapter<MyOrderItem> {
 							Float newOrderTotalPrice = Float.parseFloat(orderTotalPriceStr) - (orderItemPrice);					
 							orderTotalPriceView.setText(OrderNowConstants.INDIAN_RUPEE_UNICODE + " " + Float.toString(newOrderTotalPrice));
 						}
-					});
+					}
+					
+					);
 
 					builder.setNegativeButton(R.string.cancel, null);	            	            
 					AlertDialog alert = builder.create();
@@ -106,6 +117,7 @@ public class MyOrderAdapter extends ArrayAdapter<MyOrderItem> {
 				} else {
 					Toast.makeText(getContext(), "Quantity cannnot be decreased below zero", Toast.LENGTH_SHORT).show();
 				}
+				
 			}
 		});
 

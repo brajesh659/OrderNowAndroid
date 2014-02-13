@@ -112,9 +112,9 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
                 holder.txt_itemQuantity.setText(quantity.intValue() + "");
             else
                 holder.txt_itemQuantity.setText(quantity + "");
-            
-                holder.subItem.setVisibility(View.VISIBLE);
-                holder.addNote.setVisibility(View.VISIBLE);
+
+            holder.subItem.setVisibility(View.VISIBLE);
+            holder.addNote.setVisibility(View.VISIBLE);
             holder.itemImage.setAlpha(0.3f);
         }
 
