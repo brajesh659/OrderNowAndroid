@@ -9,9 +9,9 @@ import android.os.AsyncTask;
 
 import com.data.menu.Dish;
 import com.data.menu.FoodType;
+import com.data.menu.filter.MenuPropertyKey;
+import com.data.menu.filter.MenuPropertyValue;
 import com.example.ordernowandroid.adapter.ImageService;
-import com.example.ordernowandroid.filter.MenuPropertyKey;
-import com.example.ordernowandroid.filter.MenuPropertyValue;
 import com.util.Utilities;
 
 /**

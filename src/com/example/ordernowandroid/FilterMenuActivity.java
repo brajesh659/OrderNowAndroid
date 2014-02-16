@@ -16,9 +16,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.data.menu.filter.MenuPropertyKey;
+import com.data.menu.filter.MenuPropertyValue;
 import com.example.ordernowandroid.filter.MenuFilter;
-import com.example.ordernowandroid.filter.MenuPropertyKey;
-import com.example.ordernowandroid.filter.MenuPropertyValue;
 
 public class FilterMenuActivity extends Activity {
 

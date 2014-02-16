@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.data.menu.filter.MenuPropertyKey;
+import com.data.menu.filter.MenuPropertyValue;
 import com.example.ordernowandroid.model.FoodMenuItem;
 import com.util.Utilities;
 
