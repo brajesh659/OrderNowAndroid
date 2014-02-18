@@ -38,6 +38,7 @@ import com.parse.ParseInstallation;
 public class MyOrderActivity extends Activity {
 //    private ArrayList<MyOrderItem> myOrderItemList;
     
+
     protected static final String SUB_ORDER_LIST = "SubOrderList";
     public static ArrayList<CustomerOrderWrapper> subOrdersFromDB;
     private static final String TEXT_COMMENT = "TextComment"; //FIXME: Make the Properties names more readable
@@ -134,6 +135,10 @@ public class MyOrderActivity extends Activity {
 		new ConfirmOrderDialogFragment().show(getFragmentManager(), "confirmOrderEditText");
 	}
 
+	/**
+	 * 
+	 * @param orderNote
+	 */
 	public void doPositiveClick(String orderNote) {
 		OrderDish orderDish;
 		Map<String, OrderDish> dishes = new HashMap<String, OrderDish>();
@@ -148,6 +153,7 @@ public class MyOrderActivity extends Activity {
 		}
 
 		CharSequence text = ParseInstallation.getCurrentInstallation().getObjectId();
+
 		CustomerOrder customerOrder = new CustomerOrder(dishes, "R1", "Temp", text.toString(), "T1", orderNote);
 		CustomerOrderWrapper customerOrderWrapper = new CustomerOrderWrapper(customerOrder, myOrderItemList);
 
