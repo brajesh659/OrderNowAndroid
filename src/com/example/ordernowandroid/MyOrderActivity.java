@@ -1,11 +1,5 @@
 package com.example.ordernowandroid;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.ProtocolException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +10,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,6 +27,7 @@ import com.example.ordernowandroid.model.MyOrderItem;
 import com.example.ordernowandroid.model.OrderNowConstants;
 import com.google.gson.Gson;
 import com.parse.ParseInstallation;
+import com.util.AsyncNetwork;
 
 public class MyOrderActivity extends Activity {
 //    private ArrayList<MyOrderItem> myOrderItemList;
@@ -154,7 +148,9 @@ public class MyOrderActivity extends Activity {
 
 		CharSequence text = ParseInstallation.getCurrentInstallation().getObjectId();
 
-		CustomerOrder customerOrder = new CustomerOrder(dishes, "R1", "Temp", text.toString(), "T1", orderNote);
+
+		CustomerOrder customerOrder = new CustomerOrder(dishes, "R1",
+				text.toString(), "T1", orderNote);
 		CustomerOrderWrapper customerOrderWrapper = new CustomerOrderWrapper(customerOrder, myOrderItemList);
 
 		Gson gs = new Gson();
@@ -162,7 +158,7 @@ public class MyOrderActivity extends Activity {
 				+ gs.toJson(customerOrder);
 		String response = "";
 		try {
-			response = new asyncNetwork().execute(url).get();
+			response = new AsyncNetwork().execute(url).get();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		} catch (ExecutionException e) {
@@ -186,29 +182,6 @@ public class MyOrderActivity extends Activity {
 	}
 }
 
-class asyncNetwork extends AsyncTask<String, Void, String> {
 
-	@Override
-	protected String doInBackground(String... params) {
-		String response = "";
-		try {
-			URL url = new URL(params[0]);
-			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-			conn.setRequestMethod("GET");
-			BufferedReader br = new BufferedReader(new InputStreamReader(
-					(conn.getInputStream())));
-			String line = null;
-			while ((line = br.readLine()) != null) {
-				response += line;
-			}
-		} catch (ProtocolException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return response;
-	}
-
-}
 
 
