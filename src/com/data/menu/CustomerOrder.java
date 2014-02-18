@@ -15,18 +15,11 @@ public class CustomerOrder implements Serializable {
 	private Map<String, OrderDish> dishes;
 	private String restaurantId;	
 
-	private int subOrderId;
+
 	private String customerId; //Customer ID same as parse object id.
 	private String tableId;
 	private String orderNote;
 	
-	public int getSubOrderId() {
-		return subOrderId;
-	}
-
-	public void setSubOrderId(int subOrderId) {
-		this.subOrderId = subOrderId;
-	}
 
 	public CustomerOrder(Map<String, OrderDish> dishes, String restaurantId,
 			String customerId, String tableId, String orderNote) {
