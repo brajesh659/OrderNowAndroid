@@ -45,7 +45,6 @@ public class LoginFragment extends Fragment {
 
 	private void onSessionStateChange(Session session, SessionState state, Exception exception) {
 		if (state.isOpened()) {
-			Toast.makeText(getActivity(), "Logged in successfully", Toast.LENGTH_SHORT).show();
 			Intent intent = new Intent(getActivity(), QRCodeScannerActivity.class);
 			startActivity(intent);
 			getActivity().finish();

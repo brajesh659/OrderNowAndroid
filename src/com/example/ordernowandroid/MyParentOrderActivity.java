@@ -15,7 +15,6 @@ import com.example.ordernowandroid.model.MyOrderItem;
 import com.example.ordernowandroid.model.OrderNowConstants;
 
 public class MyParentOrderActivity extends Activity {
-
 	private ArrayList<MyOrderItem> myOrderItemList = new ArrayList<MyOrderItem>();
 
 	@Override
@@ -25,17 +24,12 @@ public class MyParentOrderActivity extends Activity {
 		setTitle("Confirmed Order");
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 
-		/**
-		 * Fetch Sub Orders from Database //FIXME
-		 * Add Current Order to SubOrder List
-		 * Calculate Order Total and Display List of Sub-Orders 
-		 */
 		ApplicationState applicationContext = (ApplicationState)getApplicationContext();
 		ArrayList<CustomerOrderWrapper> subOrdersFromDB = ApplicationState.getSubOrdersFromDB(applicationContext);
-		
+
 		TextView totalAmount = (TextView) findViewById(R.id.parentTotalAmount);
 		Float totalOrderAmount = (float) 0.00;
-		
+
 		CustomerOrderWrapper customerOrderWrapper = ApplicationState.getCustomerOrderWrapper((ApplicationState)getApplicationContext());
 		if(customerOrderWrapper !=null) {
 			subOrdersFromDB.add(customerOrderWrapper);
@@ -54,7 +48,6 @@ public class MyParentOrderActivity extends Activity {
 		ListView myOrderListView = (ListView) findViewById(R.id.parentListMyOrder);
 		MyParentOrderAdapter myParentOrderAdapter = new MyParentOrderAdapter(this, myOrderItemList);
 		myOrderListView.setAdapter(myParentOrderAdapter);
-
 	}
 
 	@Override
@@ -70,9 +63,7 @@ public class MyParentOrderActivity extends Activity {
 	@Override
 	public void onBackPressed() {
 		Intent intent = new Intent(getApplicationContext(), FoodMenuActivity.class);
-		//intent.putExtra(SUB_ORDER_LIST, subOrdersFromDB);
 		startActivity(intent);
-
 		finish();		
 	}
 

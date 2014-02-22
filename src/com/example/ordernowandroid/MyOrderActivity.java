@@ -30,57 +30,54 @@ import com.parse.ParseInstallation;
 import com.util.AsyncNetwork;
 
 public class MyOrderActivity extends Activity {
+	private static final String TEXT_COMMENT = "TextComment"; //FIXME: Make the Properties names more readable
+	public static final String SPICE_LEVEL = "SpiceLevel";
 
-    private static final String TEXT_COMMENT = "TextComment"; //FIXME: Make the Properties names more readable
-    public static final String SPICE_LEVEL = "SpiceLevel";
-    
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setTitle("My Order");
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        ApplicationState applicationContext = (ApplicationState) getApplicationContext();
-        ArrayList<MyOrderItem> myOrderItemList = ApplicationState.getMyOrderItems(applicationContext);
-        setContentView(R.layout.my_order_summary);
-        
-        Button addMoreItemsBtn = (Button) findViewById(R.id.addMoreItemsButton);
-        Button cancelOrderBtn = (Button) findViewById(R.id.cancelOrderButton);
-        Button confirmOrderBtn = (Button) findViewById(R.id.confirmOrderButton);        
-        final TextView totalAmount = (TextView) findViewById(R.id.totalAmount);
-        
-        addMoreItemsBtn.setOnClickListener(new Button.OnClickListener() {           
-            @Override
-            public void onClick(View v) {
-            	onBackPressed();
-            }
-        });
-		
-        cancelOrderBtn.setOnClickListener(new Button.OnClickListener() {            
-            public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(MyOrderActivity.this);            
-                builder.setTitle("Cancel Order");
-                builder.setMessage("Are you sure you want to cancel the order ?");
-                builder.setPositiveButton(R.string.ok, new OnClickListener() {                  
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {                                                
-                        Toast.makeText(getApplicationContext(), "Order has been canceled.", Toast.LENGTH_LONG).show();
-                        ApplicationState.setFoodMenuItemQuantityMap((ApplicationState)getApplicationContext(), new HashMap<String, MyOrderItem>());
-                        //Clear the Selected Quantities and Start the Food Menu Activity again
-                        Intent intent = new Intent(getApplicationContext(), FoodMenuActivity.class);
-                        startActivity(intent);
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setTitle("My Order");
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+		ApplicationState applicationContext = (ApplicationState) getApplicationContext();
+		ArrayList<MyOrderItem> myOrderItemList = ApplicationState.getMyOrderItems(applicationContext);
+		setContentView(R.layout.my_order_summary);
 
-                        finish();
-                    }
-                });
-                builder.setNegativeButton(R.string.cancel, null);                           
-                AlertDialog alert = builder.create();
-                alert.show();
-            }
-        });
-        
-        confirmOrderBtn.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v) {
-                showConfirmOrderDialog();
+		Button addMoreItemsBtn = (Button) findViewById(R.id.addMoreItemsButton);
+		Button cancelOrderBtn = (Button) findViewById(R.id.cancelOrderButton);
+		Button confirmOrderBtn = (Button) findViewById(R.id.confirmOrderButton);        
+		final TextView totalAmount = (TextView) findViewById(R.id.totalAmount);
+
+		addMoreItemsBtn.setOnClickListener(new Button.OnClickListener() {           
+			@Override
+			public void onClick(View v) {
+				onBackPressed();
+			}
+		});
+
+		cancelOrderBtn.setOnClickListener(new Button.OnClickListener() {            
+			public void onClick(View v) {
+				AlertDialog.Builder builder = new AlertDialog.Builder(MyOrderActivity.this);            
+				builder.setTitle("Cancel Order");
+				builder.setMessage("Are you sure you want to cancel the order ?");
+				builder.setPositiveButton(R.string.ok, new OnClickListener() {                  
+					@Override
+					public void onClick(DialogInterface dialog, int which) {                                                
+						Toast.makeText(getApplicationContext(), "Order has been canceled.", Toast.LENGTH_LONG).show();
+						ApplicationState.setFoodMenuItemQuantityMap((ApplicationState)getApplicationContext(), new HashMap<String, MyOrderItem>());
+						Intent intent = new Intent(getApplicationContext(), FoodMenuActivity.class);
+						startActivity(intent);
+						finish();
+					}
+				});
+				builder.setNegativeButton(R.string.cancel, null);                           
+				AlertDialog alert = builder.create();
+				alert.show();
+			}
+		});
+
+		confirmOrderBtn.setOnClickListener(new Button.OnClickListener() {
+			public void onClick(View v) {
+				showConfirmOrderDialog();
 			}
 		}); 
 
@@ -88,11 +85,11 @@ public class MyOrderActivity extends Activity {
 		for (MyOrderItem myOrderItem: myOrderItemList) {
 			totalOrderAmount = totalOrderAmount + (myOrderItem.getQuantity() * myOrderItem.getFoodMenuItem().getItemPrice()); 
 		}
-		
+
 		totalAmount.setText(OrderNowConstants.INDIAN_RUPEE_UNICODE + " " + Float.toString(totalOrderAmount)); 
 
 		ListView myOrderListView = (ListView) findViewById(R.id.listMyOrder);
-		
+
 		MyOrderAdapter myOrderAdapter = new MyOrderAdapter(MyOrderActivity.this, myOrderItemList);
 		myOrderListView.setAdapter(myOrderAdapter);
 	}
@@ -116,15 +113,11 @@ public class MyOrderActivity extends Activity {
 		setResult(RESULT_OK, intent); // Activity finished ok, return the data
 		finish();
 	}
-	
+
 	void showConfirmOrderDialog() {
 		new ConfirmOrderDialogFragment().show(getFragmentManager(), "confirmOrderEditText");
 	}
 
-	/**
-	 * 
-	 * @param orderNote
-	 */
 	public void doPositiveClick(String orderNote) {
 		OrderDish orderDish;
 		Map<String, OrderDish> dishes = new HashMap<String, OrderDish>();
@@ -144,7 +137,7 @@ public class MyOrderActivity extends Activity {
 		CustomerOrder customerOrder = new CustomerOrder(dishes, "R1",
 				text.toString(), "T1", orderNote);
 		CustomerOrderWrapper customerOrderWrapper = new CustomerOrderWrapper(customerOrder, myOrderItemList);
-		
+
 		ApplicationState applicationContext = (ApplicationState)getApplicationContext();
 		ApplicationState.setCustomerOrderWrapper(applicationContext, customerOrderWrapper);
 
@@ -159,19 +152,15 @@ public class MyOrderActivity extends Activity {
 			e.printStackTrace();
 		}
 
-		//Un-commenting it till we have Push Notifications in place 
-		Toast.makeText(getApplicationContext(), "Order has been confirmed.", Toast.LENGTH_LONG).show();
-		
 		ApplicationState.setFoodMenuItemQuantityMap(applicationContext, new HashMap<String, MyOrderItem>());
-		
 		Intent intent = new Intent(getApplicationContext(), MyParentOrderActivity.class);
 		startActivity(intent);
-
 		finish();
-
 	}
+
 	public void doNegativeClick() {
 	}
+
 }
 
 

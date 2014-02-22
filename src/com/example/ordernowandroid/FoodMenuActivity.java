@@ -60,10 +60,9 @@ import com.example.ordernowandroid.model.MyOrderItem;
 import com.util.Utilities;
 
 public class FoodMenuActivity extends FragmentActivity implements numListener, AddNoteListener,
-        SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
+SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 
 	private static final int MY_ORDER_REQUEST_CODE = 1;
-	//private static final int CONFIRMED_ORDER_REQUEST_CODE = 2;
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
 	private ActionBarDrawerToggle mDrawerToggle;
@@ -120,20 +119,16 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 
 		restaurant = getResturant(applicationContext.getTableId());
 		if (restaurant == null){
-			Toast.makeText(this, "null resturant ", Toast
-					.LENGTH_SHORT).show();
 			AlertDialog.Builder builder = new AlertDialog.Builder(FoodMenuActivity.this);            
 			builder.setTitle("Invalid QR code");
 			builder.setMessage("Please scan a valid QR code");
 			builder.setPositiveButton(R.string.ok, new OnClickListener() {                  
 				@Override
 				public void onClick(DialogInterface dialog, int which) {                                                
-					//Clear the Selected Quantities and Start the Food Menu Activity again
 					Intent intent = new Intent(getApplicationContext(), MainActivity.class);
 					startActivity(intent);                                              
 				}
 			});
-			// builder.setNegativeButton(R.string.cancel, null);
 			AlertDialog alert = builder.create();
 			alert.show();
 			return ;
@@ -161,19 +156,19 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 
 		getOverflowMenu();
 	}
-	
+
 	private void getOverflowMenu() {
 
-	     try {
-	        ViewConfiguration config = ViewConfiguration.get(this);
-	        Field menuKeyField = ViewConfiguration.class.getDeclaredField("sHasPermanentMenuKey");
-	        if(menuKeyField != null) {
-	            menuKeyField.setAccessible(true);
-	            menuKeyField.setBoolean(config, false);
-	        }
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
+		try {
+			ViewConfiguration config = ViewConfiguration.get(this);
+			Field menuKeyField = ViewConfiguration.class.getDeclaredField("sHasPermanentMenuKey");
+			if(menuKeyField != null) {
+				menuKeyField.setAccessible(true);
+				menuKeyField.setBoolean(config, false);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	private List<Category> getCategories() {
@@ -185,45 +180,41 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 
 		getMenuInflater().inflate(R.menu.main, menu);
 
-
-        // Associate searchable configuration with the SearchView
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        MenuItem searchMenuItem = menu.findItem(R.id.search);
-        searchView = (SearchView) searchMenuItem.getActionView();
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        searchView.setOnQueryTextListener(this);
-        searchView.setOnSuggestionListener(this);
-        suggestionAdapter = searchView.getSuggestionsAdapter();
-        // searchMenuItem.collapseActionView();
-        // searchView.setIconifiedByDefault(false);
+		// Associate searchable configuration with the SearchView
+		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+		MenuItem searchMenuItem = menu.findItem(R.id.search);
+		searchView = (SearchView) searchMenuItem.getActionView();
+		searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+		searchView.setOnQueryTextListener(this);
+		searchView.setOnSuggestionListener(this);
+		suggestionAdapter = searchView.getSuggestionsAdapter();
+		// searchMenuItem.collapseActionView();
+		// searchView.setIconifiedByDefault(false);
 
 		RelativeLayout food_cart_layout = (RelativeLayout)menu.findItem(R.id.action_cart).getActionView();
 		TextView food_item_notification = (TextView)food_cart_layout.findViewById(R.id.food_cart_notifcation_textview);
-		
-	    HashMap<String, MyOrderItem> foodMenuItemQuantityMap = ApplicationState.getFoodMenuItemQuantityMap((ApplicationState) getApplicationContext());
+
+		HashMap<String, MyOrderItem> foodMenuItemQuantityMap = ApplicationState.getFoodMenuItemQuantityMap((ApplicationState) getApplicationContext());
 		food_item_notification.setText(Integer.toString(foodMenuItemQuantityMap.keySet().size()));
 		ImageView cart_image = (ImageView)food_cart_layout.findViewById(R.id.action_cart_image);
 
 		final Context context = this;
-//		if (foodMenuItemQuantityMap != null) {
-//		    ArrayList<MyOrderItem> myOrder = new ArrayList<MyOrderItem>();
-//		    myOrder.addAll(foodMenuItemQuantityMap.values());
-//		} 
-		
+		//		if (foodMenuItemQuantityMap != null) {
+		//		    ArrayList<MyOrderItem> myOrder = new ArrayList<MyOrderItem>();
+		//		    myOrder.addAll(foodMenuItemQuantityMap.values());
+		//		} 
 
 		cart_image.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-			    startMyOrderActivity(context);
+				startMyOrderActivity(context);
 			}
 		});
-		
 		return super.onCreateOptionsMenu(menu);
-
 	}
 
 	private void startPartentOrderActivity(final Context context) {
-	    ArrayList<CustomerOrderWrapper> subOrdersFromDB = ApplicationState.getSubOrdersFromDB((ApplicationState)getApplicationContext());
+		ArrayList<CustomerOrderWrapper> subOrdersFromDB = ApplicationState.getSubOrdersFromDB((ApplicationState)getApplicationContext());
 		if (subOrdersFromDB !=null && subOrdersFromDB.size() >= 1) {
 			Intent intent = new Intent(context, MyParentOrderActivity.class);
 			startActivity(intent);
@@ -250,8 +241,8 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// toggle nav drawer on selecting action bar app icon/title
-	    searchView.setQuery("", true);
-	    mDrawerLayout.closeDrawer(Gravity.LEFT);
+		searchView.setQuery("", true);
+		mDrawerLayout.closeDrawer(Gravity.LEFT);
 		if (mDrawerToggle.onOptionsItemSelected(item)) {
 			return true;
 		}
@@ -262,13 +253,13 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 			return true;
 		case R.id.confirmed_order :
 			startPartentOrderActivity(getApplicationContext());
-		    return true;
+			return true;
 		case R.id.search:
 			onSearchRequested();
 			return true;
 		case R.id.filter_menu:
-		    Intent intent = new Intent(this, FilterMenuActivity.class);
-		    startActivity(intent);
+			Intent intent = new Intent(this, FilterMenuActivity.class);
+			startActivity(intent);
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -281,13 +272,13 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 		case MY_ORDER_REQUEST_CODE:
 			if (resultCode == RESULT_OK) {            	    	
 				final ApplicationState applicationContext = (ApplicationState)getApplicationContext();
-//                ArrayList<MyOrderItem> myOrders = ApplicationState.getMyOrderItems(applicationContext);
-//				if(myOrders!=null){
-//					foodMenuItemQuantityMap = new HashMap<String, MyOrderItem>();
-//					for (MyOrderItem myOrderItem : myOrders) {
-//						foodMenuItemQuantityMap.put(myOrderItem.getFoodMenuItem().getItemName(), myOrderItem);
-//					}
-//				}
+				//                ArrayList<MyOrderItem> myOrders = ApplicationState.getMyOrderItems(applicationContext);
+				//				if(myOrders!=null){
+				//					foodMenuItemQuantityMap = new HashMap<String, MyOrderItem>();
+				//					for (MyOrderItem myOrderItem : myOrders) {
+				//						foodMenuItemQuantityMap.put(myOrderItem.getFoodMenuItem().getItemName(), myOrderItem);
+				//					}
+				//				}
 
 				displayView(ApplicationState.getCategoryId(applicationContext));
 			} else if(resultCode == RESULT_CANCELED && data != null) {
@@ -299,11 +290,11 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 				startActivity(intent);
 			}
 			break;
-		  }
+		}
 		invalidateOptionsMenu();
 	}
 
-    /***
+	/***
 	 * Called when invalidateOptionsMenu() is triggered
 	 */
 	@Override
@@ -434,22 +425,23 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 		Restaurant restaurant = null;
 		try {
 			restaurant =  new DownloadRestaurantTask().execute("http://ordernow.herokuapp.com/serveTable",tableId).get();
-			loadRestaurantDishes(restaurant);
-			} catch (InterruptedException e) {
-			e.printStackTrace();
-		} catch (ExecutionException e) {
+			if (restaurant != null) {
+				loadRestaurantDishes(restaurant);
+			} else {
+				throw new Exception("Server failed to load Menu for Table Id: " + tableId);
+			}
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return restaurant;
 	}
 
 	private void loadRestaurantDishes(final Restaurant restaurant) {
 		Utilities.info("restaurant load " + restaurant.getName() + restaurantLoadedInDb);
 		if (!restaurantLoadedInDb.containsKey(restaurant.getName())) {
-		    //load filter first time
-		    MenuFilter menuFilter = ApplicationState.getMenuFilter((ApplicationState) getApplicationContext());
-		    menuFilter.setAvailableFilters(restaurant.getAvailableFilters());
+			//load filter first time
+			MenuFilter menuFilter = ApplicationState.getMenuFilter((ApplicationState) getApplicationContext());
+			menuFilter.setAvailableFilters(restaurant.getAvailableFilters());
 			new Thread(new Runnable() {
 				public void run() {
 					try {
@@ -620,16 +612,16 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 		//Do Nothing as of now
 	}
 
-    @Override
-    public boolean onSuggestionClick(int position) {
-        String suggestion = (String) suggestionAdapter.convertToString((Cursor) suggestionAdapter.getItem(position));
-        searchView.setQuery(suggestion, false);
-        return false;
-    }
+	@Override
+	public boolean onSuggestionClick(int position) {
+		String suggestion = (String) suggestionAdapter.convertToString((Cursor) suggestionAdapter.getItem(position));
+		searchView.setQuery(suggestion, false);
+		return false;
+	}
 
-    @Override
-    public boolean onSuggestionSelect(int position) {
-        return false;
-    }
+	@Override
+	public boolean onSuggestionSelect(int position) {
+		return false;
+	}
 
 }
