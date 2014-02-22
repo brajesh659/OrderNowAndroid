@@ -30,23 +30,17 @@ import com.parse.ParseInstallation;
 import com.util.AsyncNetwork;
 
 public class MyOrderActivity extends Activity {
-//    private ArrayList<MyOrderItem> myOrderItemList;
-    
 
-    protected static final String SUB_ORDER_LIST = "SubOrderList";
-    public static ArrayList<CustomerOrderWrapper> subOrdersFromDB;
     private static final String TEXT_COMMENT = "TextComment"; //FIXME: Make the Properties names more readable
     public static final String SPICE_LEVEL = "SpiceLevel";
     
-    @SuppressWarnings("unchecked")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTitle("My Order");
         getActionBar().setDisplayHomeAsUpEnabled(true);
-        final Bundle b = getIntent().getExtras();
-        ArrayList<MyOrderItem> myOrderItemList = ApplicationState.getMyOrderItems((ApplicationState) getApplicationContext());
-        subOrdersFromDB = (ArrayList<CustomerOrderWrapper>) b.getSerializable(SUB_ORDER_LIST);
+        ApplicationState applicationContext = (ApplicationState) getApplicationContext();
+        ArrayList<MyOrderItem> myOrderItemList = ApplicationState.getMyOrderItems(applicationContext);
         setContentView(R.layout.my_order_summary);
         
         Button addMoreItemsBtn = (Button) findViewById(R.id.addMoreItemsButton);
@@ -73,7 +67,6 @@ public class MyOrderActivity extends Activity {
                         ApplicationState.setFoodMenuItemQuantityMap((ApplicationState)getApplicationContext(), new HashMap<String, MyOrderItem>());
                         //Clear the Selected Quantities and Start the Food Menu Activity again
                         Intent intent = new Intent(getApplicationContext(), FoodMenuActivity.class);
-                        intent.putExtra(SUB_ORDER_LIST, subOrdersFromDB);
                         startActivity(intent);
 
                         finish();
@@ -120,7 +113,6 @@ public class MyOrderActivity extends Activity {
 	public void onBackPressed() {
 		//Start the FoodMenuActivity with updated MyOrderItem List
 		Intent intent = new Intent();
-		intent.putExtra(SUB_ORDER_LIST, subOrdersFromDB);
 		setResult(RESULT_OK, intent); // Activity finished ok, return the data
 		finish();
 	}
@@ -152,13 +144,15 @@ public class MyOrderActivity extends Activity {
 		CustomerOrder customerOrder = new CustomerOrder(dishes, "R1",
 				text.toString(), "T1", orderNote);
 		CustomerOrderWrapper customerOrderWrapper = new CustomerOrderWrapper(customerOrder, myOrderItemList);
+		
+		ApplicationState applicationContext = (ApplicationState)getApplicationContext();
+		ApplicationState.setCustomerOrderWrapper(applicationContext, customerOrderWrapper);
 
 		Gson gs = new Gson();
 		String url = "http://ordernow.herokuapp.com/order?order="
 				+ gs.toJson(customerOrder);
-		String response = "";
 		try {
-			response = new AsyncNetwork().execute(url).get();
+			new AsyncNetwork().execute(url).get();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		} catch (ExecutionException e) {
@@ -168,11 +162,9 @@ public class MyOrderActivity extends Activity {
 		//Un-commenting it till we have Push Notifications in place 
 		Toast.makeText(getApplicationContext(), "Order has been confirmed.", Toast.LENGTH_LONG).show();
 		
-		ApplicationState.setFoodMenuItemQuantityMap((ApplicationState)getApplicationContext(), new HashMap<String, MyOrderItem>());
+		ApplicationState.setFoodMenuItemQuantityMap(applicationContext, new HashMap<String, MyOrderItem>());
 		
 		Intent intent = new Intent(getApplicationContext(), MyParentOrderActivity.class);
-		intent.putExtra(MyParentOrderActivity.CUSTOMER_ORDER_WRAPPER, customerOrderWrapper);
-		intent.putExtra(SUB_ORDER_LIST, subOrdersFromDB);
 		startActivity(intent);
 
 		finish();

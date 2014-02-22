@@ -17,20 +17,20 @@ import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
 public class MyCustomReceiver extends BroadcastReceiver {
-    private static final String TAG = "MyCustomReceiver";
+   // private static final String TAG = "MyCustomReceiver";
 
     @Override
     public void onReceive(Context context, Intent intent) {
         try {
             int duration = Toast.LENGTH_LONG;
-            Toast toast = Toast.makeText(context, "Here in custom handler", duration);
+           // Toast toast = Toast.makeText(context, "Here in custom handler", duration);
 
             String action = intent.getAction();
             String channel = intent.getExtras().getString("com.parse.Channel");
             JSONObject json = new JSONObject(intent.getExtras().getString("com.parse.Data"));
 
             Iterator itr = json.keys();
-            Toast.makeText(context, "MyCustomerReciver", duration).show();
+           // Toast.makeText(context, "MyCustomerReciver", duration).show();
 
             while (itr.hasNext()) {
                 String key = (String) itr.next();
@@ -38,13 +38,13 @@ public class MyCustomReceiver extends BroadcastReceiver {
                 String subject = "";
                 if (key.equals("message")) {
                     message = json.getString(key);
-                    toast = Toast.makeText(context, message, duration);
-                    toast.show();
+                    //toast = Toast.makeText(context, message, duration);
+                    //toast.show();
                 }
                 if (key.equals("dishIds")) {
                     subject = json.getString(key);
-                    toast = Toast.makeText(context, subject, duration);
-                    toast.show();
+                    //toast = Toast.makeText(context, subject, duration);
+                    //toast.show();
                 }
 
                 notification(context, message, subject);
@@ -55,7 +55,7 @@ public class MyCustomReceiver extends BroadcastReceiver {
     
     
     public void notification(Context context, String message, String subject) {
-        Intent intent = new Intent(context, MainActivity.class);
+        Intent intent = new Intent(context, MyParentOrderActivity.class);
         PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent, 0);
         Notification noti = new NotificationCompat.Builder(context)
         .setContentTitle(message)

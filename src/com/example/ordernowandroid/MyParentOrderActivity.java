@@ -16,15 +16,8 @@ import com.example.ordernowandroid.model.OrderNowConstants;
 
 public class MyParentOrderActivity extends Activity {
 
-	public static final String CUSTOMER_ORDER_WRAPPER = "customerOrderList";
-	protected static final String SUB_ORDER_LIST = "SubOrderList";
-
-
-	public static CustomerOrderWrapper customerOrderWrapper;
 	private ArrayList<MyOrderItem> myOrderItemList = new ArrayList<MyOrderItem>();
-	public static ArrayList<CustomerOrderWrapper> subOrdersFromDB;
 
-	@SuppressWarnings("unchecked")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -32,27 +25,21 @@ public class MyParentOrderActivity extends Activity {
 		setTitle("Confirmed Order");
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 
-		Bundle b = getIntent().getExtras();
-		customerOrderWrapper = (CustomerOrderWrapper) b.getSerializable(CUSTOMER_ORDER_WRAPPER);
-
 		/**
 		 * Fetch Sub Orders from Database //FIXME
 		 * Add Current Order to SubOrder List
 		 * Calculate Order Total and Display List of Sub-Orders 
 		 */
-
-		if (subOrdersFromDB == null) {
-			subOrdersFromDB = new ArrayList<CustomerOrderWrapper>();
-		} else {
-			subOrdersFromDB = new ArrayList<CustomerOrderWrapper>();
-			subOrdersFromDB.addAll((ArrayList<CustomerOrderWrapper>) b.getSerializable(SUB_ORDER_LIST));
-		}
-
+		ApplicationState applicationContext = (ApplicationState)getApplicationContext();
+		ArrayList<CustomerOrderWrapper> subOrdersFromDB = ApplicationState.getSubOrdersFromDB(applicationContext);
+		
 		TextView totalAmount = (TextView) findViewById(R.id.parentTotalAmount);
 		Float totalOrderAmount = (float) 0.00;
-
+		
+		CustomerOrderWrapper customerOrderWrapper = ApplicationState.getCustomerOrderWrapper((ApplicationState)getApplicationContext());
 		if(customerOrderWrapper !=null) {
 			subOrdersFromDB.add(customerOrderWrapper);
+			ApplicationState.setCustomerOrderWrapper(applicationContext, null);
 		}
 
 		for (CustomerOrderWrapper subOrder: subOrdersFromDB){			
@@ -83,7 +70,7 @@ public class MyParentOrderActivity extends Activity {
 	@Override
 	public void onBackPressed() {
 		Intent intent = new Intent(getApplicationContext(), FoodMenuActivity.class);
-		intent.putExtra(SUB_ORDER_LIST, subOrdersFromDB);
+		//intent.putExtra(SUB_ORDER_LIST, subOrdersFromDB);
 		startActivity(intent);
 
 		finish();		

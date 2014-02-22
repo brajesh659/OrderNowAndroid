@@ -73,26 +73,17 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 	private NavDrawerListAdapter adapter;
 	private Restaurant restaurant;
 	private DishHelper dh;
-	//private HashMap<String, MyOrderItem> foodMenuItemQuantityMap = new HashMap<String, MyOrderItem>();
-	protected static final String SUB_ORDER_LIST = "SubOrderList";
-	private ArrayList<CustomerOrderWrapper> subOrdersFromDB;
 	private static Map<String, Boolean> restaurantLoadedInDb = new HashMap<String, Boolean>();
 	private SearchRecentSuggestions suggestionProvider;
 	private CursorAdapter suggestionAdapter;
 	private SearchView searchView;
 
-	@SuppressWarnings("unchecked")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.food_menu);
 
 		ApplicationState applicationContext = (ApplicationState) getApplicationContext();
-
-		Bundle b = getIntent().getExtras();
-		if (b != null) {
-			subOrdersFromDB = (ArrayList<CustomerOrderWrapper>) b.getSerializable(SUB_ORDER_LIST);
-		}
 
 		mTitle = getTitle();
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -232,9 +223,9 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 	}
 
 	private void startPartentOrderActivity(final Context context) {
+	    ArrayList<CustomerOrderWrapper> subOrdersFromDB = ApplicationState.getSubOrdersFromDB((ApplicationState)getApplicationContext());
 		if (subOrdersFromDB !=null && subOrdersFromDB.size() >= 1) {
 			Intent intent = new Intent(context, MyParentOrderActivity.class);
-			intent.putExtra(SUB_ORDER_LIST, subOrdersFromDB);
 			startActivity(intent);
 		}  else {
 			Toast.makeText(getApplicationContext(), "You currently have no confirmed orders to view.", Toast.LENGTH_LONG).show();
@@ -248,7 +239,6 @@ public class FoodMenuActivity extends FragmentActivity implements numListener, A
 		myOrderItems.addAll(foodMenuItemQuantityMap.values());
 		if (myOrderItems != null && myOrderItems.size() >= 1) {
 			Intent intent = new Intent(context, MyOrderActivity.class);
-			intent.putExtra(SUB_ORDER_LIST, subOrdersFromDB);
 			startActivityForResult(intent, MY_ORDER_REQUEST_CODE);
 		} else {
 			Toast.makeText(getApplicationContext(),
