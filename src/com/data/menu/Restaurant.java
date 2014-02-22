@@ -1,5 +1,6 @@
 package com.data.menu;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,16 @@ public class Restaurant {
 	private Map<String, Integer> tableInformation;
 	private Map<MenuPropertyKey, List<MenuPropertyValue>> availableFilters;
 
+	private Timestamp lastUpdatedAt;
+
+
+	public Timestamp getLastUpdatedAt() {
+		return lastUpdatedAt;
+	}
+
+	public void setLastUpdatedAt(Timestamp lastUpdatedAt) {
+		this.lastUpdatedAt = lastUpdatedAt;
+	}
 
 	public static HashMap<String, Restaurant> _cache = new HashMap<String, Restaurant>();
 
