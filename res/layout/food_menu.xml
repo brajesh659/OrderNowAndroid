@@ -7,10 +7,48 @@
 
     <!-- Framelayout to display Fragments -->
 
-    <FrameLayout
-        android:id="@+id/frame_container"
+    <RelativeLayout
+        android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content" >
+
+        <FrameLayout
+            android:id="@+id/frame_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/bottombuttonlayout" >
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/bottombuttonlayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/white"
+            android:weightSum="1" >
+
+            <ImageButton
+                android:id="@+id/myorderbutton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".33"
+                android:src="@drawable/ic_cart_icon" />
+
+            <ImageButton
+                android:id="@+id/conirmedorderbutton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".33"
+                android:src="@drawable/confirmed_order_icon" />
+
+            <ImageButton
+                android:id="@+id/historybutton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".34"
+                android:src="@drawable/history_icon" />
+        </LinearLayout>
+    </RelativeLayout>
 
     <!-- Listview to display slider menu -->
 
@@ -18,6 +56,7 @@
         android:id="@+id/list_slidermenu"
         android:layout_width="240dp"
         android:layout_height="match_parent"
+        android:layout_above="@+id/bottombuttonlayout"
         android:layout_gravity="start"
         android:choiceMode="singleChoice"
         android:divider="@color/list_divider"

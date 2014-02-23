@@ -32,7 +32,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.CursorAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -90,6 +92,34 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 		mTitle = getTitle();
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
+		
+        ImageButton myOrder = (ImageButton) mDrawerLayout.findViewById(R.id.myorderbutton);
+        ImageButton confirmedOrder = (ImageButton) mDrawerLayout.findViewById(R.id.conirmedorderbutton);
+        ImageButton history = (ImageButton) mDrawerLayout.findViewById(R.id.historybutton);
+        
+        myOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                startMyOrderActivity(getApplicationContext());
+            }
+        });
+
+        confirmedOrder.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                startPartentOrderActivity(getApplicationContext());
+
+            }
+        });
+
+        history.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                Toast.makeText(getApplicationContext(), "Not implemeted yet", Toast.LENGTH_SHORT).show();
+            }
+        });
+
 
 		navDrawerItems = new ArrayList<CategoryNavDrawerItem>();
 
