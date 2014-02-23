@@ -7,19 +7,34 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dm.zbar.android.scanner.ZBarConstants;
 import com.dm.zbar.android.scanner.ZBarScannerActivity;
+import com.facebook.widget.ProfilePictureView;
 
 public class QRCodeScannerActivity extends Activity {
 
 	private static final int ZBAR_QR_SCANNER_REQUEST = 1;
+	private ProfilePictureView profilePictureView;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_qr_code_scanner);
+
+		ApplicationState applicationContext = (ApplicationState) getApplicationContext();
+
+		if(applicationContext.getUserName() != null || applicationContext.getUserName().trim() != "") {		
+			TextView welcome = (TextView) findViewById(R.id.welcome_text);
+			welcome.setText("Hello " + applicationContext.getUserName() + "! " + welcome.getText());
+		}
+
+		if(applicationContext.getProfilePictureId() != null) {
+			profilePictureView = (ProfilePictureView) findViewById(R.id.selection_profile_pic);
+			profilePictureView.setProfileId(applicationContext.getProfilePictureId());
+		}
 	}
 
 	public void launchQRScanner(View v) {        

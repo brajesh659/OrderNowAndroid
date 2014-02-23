@@ -11,6 +11,8 @@ import com.example.ordernowandroid.model.MyOrderItem;
 
 public class ApplicationState extends Application {
 	private String tableId;
+	private String userName;
+	private String profilePictureId;
 	private ArrayList<MyOrderItem> myOrderItems;
 	private int categoryId;
 	private MenuFilter menuFilter;
@@ -137,6 +139,22 @@ public class ApplicationState extends Application {
 	public static void setSubOrdersFromDB(ApplicationState applicationContext,
 			ArrayList<CustomerOrderWrapper> subOrdersFromDB) {
 		applicationContext.setSubOrdersFromDB(subOrdersFromDB);
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getProfilePictureId() {
+		return profilePictureId;
+	}
+
+	public void setProfilePictureId(String profilePictureId) {
+		this.profilePictureId = profilePictureId;
 	}
 
 }
