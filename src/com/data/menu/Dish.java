@@ -1,6 +1,7 @@
 package com.data.menu;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Map;
 
 import com.example.ordernowandroid.filter.MenuPropertyKey;
@@ -32,6 +33,8 @@ public class Dish implements Serializable {
     private Float price;
     private FoodType type; // Veg or non-veg
     private Map<MenuPropertyKey, MenuPropertyValue> dishProperties;
+    private ArrayList<Ingredient> ingredients;
+    private boolean isIngredientCustomizable = false;
     
 	public Map<MenuPropertyKey, MenuPropertyValue> getDishProperties() {
         return dishProperties;
@@ -111,6 +114,22 @@ public class Dish implements Serializable {
     public int hashCode() {
         return this.toString().hashCode();
     }
+
+	public ArrayList<Ingredient> getIngredients() {
+		return ingredients;
+	}
+
+	public void setIngredients(ArrayList<Ingredient> ingredients) {
+		this.ingredients = ingredients;
+	}
+
+	public boolean isIngredientCustomizable() {
+		return isIngredientCustomizable;
+	}
+
+	public void setIngredientCustomizable(boolean isIngredientCustomizable) {
+		this.isIngredientCustomizable = isIngredientCustomizable;
+	}
 
 
 }

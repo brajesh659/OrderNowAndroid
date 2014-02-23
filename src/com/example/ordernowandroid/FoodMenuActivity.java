@@ -2,7 +2,9 @@ package com.example.ordernowandroid;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -44,6 +46,8 @@ import com.data.database.DishHelper;
 import com.data.menu.Category;
 import com.data.menu.CustomerOrderWrapper;
 import com.data.menu.Dish;
+import com.data.menu.FoodType;
+import com.data.menu.Ingredient;
 import com.data.menu.Restaurant;
 import com.dm.zbar.android.scanner.ZBarConstants;
 import com.example.ordernowandroid.adapter.DownloadResturantMenu;
@@ -55,6 +59,7 @@ import com.example.ordernowandroid.fragments.AddNoteListener;
 import com.example.ordernowandroid.fragments.IndividualMenuTabFragment;
 import com.example.ordernowandroid.fragments.IndividualMenuTabFragment.numListener;
 import com.example.ordernowandroid.model.CategoryNavDrawerItem;
+import com.example.ordernowandroid.model.FoodIngredient;
 import com.example.ordernowandroid.model.FoodMenuItem;
 import com.example.ordernowandroid.model.MyOrderItem;
 import com.util.Utilities;
@@ -117,7 +122,8 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 		};
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-		restaurant = getResturant(applicationContext.getTableId());
+		//restaurant = getResturant(applicationContext.getTableId());
+		restaurant = getResturantLocaly();
 		if (restaurant == null){
 			AlertDialog.Builder builder = new AlertDialog.Builder(FoodMenuActivity.this);            
 			builder.setTitle("Invalid QR code");
@@ -471,13 +477,14 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 		}
 	}
 
-	/*private Restaurant getResturantLocaly() {
+	private Restaurant getResturantLocaly() {
         List<Integer> categoryItemName = new LinkedList<Integer>();
         categoryItemName.add(R.array.soups);
         categoryItemName.add(R.array.starters);
         categoryItemName.add(R.array.salads);
         categoryItemName.add(R.array.sizzlers);
         categoryItemName.add(R.array.favourites);
+        categoryItemName.add(R.array.frybowl);       
 
         List<Integer> categoryItemPrice = new LinkedList<Integer>();
         categoryItemPrice.add(R.array.soups_prices);
@@ -485,6 +492,7 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
         categoryItemPrice.add(R.array.salads_prices);
         categoryItemPrice.add(R.array.sizzlers_prices);
         categoryItemPrice.add(R.array.favourites_prices);
+        categoryItemPrice.add(R.array.frybowl_prices);
 
 		List<Integer> categoryItemID = new LinkedList<Integer>();
 		categoryItemID.add(R.array.soups_ids);
@@ -492,6 +500,7 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 		categoryItemID.add(R.array.salads_ids);
 		categoryItemID.add(R.array.sizzlers_ids);
 		categoryItemID.add(R.array.favourites_ids);
+		categoryItemID.add(R.array.frybowl_ids);
 
 		List<Integer> imageId = new LinkedList<Integer>();
 		imageId.add(R.array.soups_icons);
@@ -499,21 +508,27 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 		imageId.add(R.array.salads_icons);
 		imageId.add(R.array.sizzlers_icons);
 		imageId.add(R.array.favourites_icons);
+		imageId.add(R.array.frybowl_icons);
 
         String[] categoryNames = getResources().getStringArray(R.array.nav_drawer_items);
         List<Category> categories = new LinkedList<Category>();
-        for (int i = 0; i < categoryNames.length; i++) {
+        for (int i = 0; i < categoryNames.length-1; i++) {
             Category category = new Category();
 			getCategory(categoryNames[i], categoryItemName.get(i),
 					categoryItemPrice.get(i), categoryItemID.get(i), imageId.get(i), category);
             categories.add(category);
         }
-
+        Category category = new Category();
+        int i = categoryNames.length-1;
+        getLastCategory(categoryNames[i], categoryItemName.get(i),
+				categoryItemPrice.get(i), categoryItemID.get(i), imageId.get(i), category);
+        categories.add(category);
         com.data.menu.Menu menu = new com.data.menu.Menu();
 		menu.setCategories(categories);
         Restaurant restaurant = new Restaurant();
         restaurant.setName("Eat 3");
         restaurant.setMenu(menu);
+        loadRestaurantDishes(restaurant);
         return restaurant;
     }
 
@@ -522,6 +537,14 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
         soupCategory.setName(categoryName);
         List<Dish> dishes = new LinkedList<Dish>();
 		getDishes(dishes, itemNameResource, itemPriceResource, itemDishIds, itemImage);
+        soupCategory.setDishes(dishes);
+    }
+	
+	private void getLastCategory(String categoryName, int itemNameResource,
+			int itemPriceResource, int itemDishIds, int itemImage , Category soupCategory) {
+        soupCategory.setName(categoryName);
+        List<Dish> dishes = new LinkedList<Dish>();
+        getLastCategoryDishes(dishes, itemNameResource, itemPriceResource, itemDishIds, itemImage);
         soupCategory.setDishes(dishes);
     }
 
@@ -548,7 +571,61 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
             dishes.add(dish);
 
         }
-    }*/
+    }
+	
+	private void getLastCategoryDishes(List<Dish> dishes, int itemNameResource, int itemPriceResource,
+			int itemDishIds, int itemImage) {
+        String[] itemNames = getResources().getStringArray(itemNameResource);
+        int[] itemPrices = getResources().getIntArray(itemPriceResource);
+		String[] itemids = getResources().getStringArray(itemDishIds);
+		String[] itemImages = getResources().getStringArray(itemImage);
+
+        for (int i = 0; itemNames != null && i < itemNames.length; i++) {
+            Dish dish = new Dish();
+            dish.setName(itemNames[i]);
+            dish.setPrice(itemPrices[i]);
+            //dish.setImg(itemImages[i]);
+            dish.setImg("");
+            if (i % 2 == 0) {
+                dish.setType(FoodType.Veg);
+            } else {
+                dish.setType(FoodType.NonVeg);
+            }
+            dish.setDescription("item description comes here");
+			dish.setDishId(itemids[i]);
+			dish.setIngredients(getFoodIngredientsLocaly());
+			dish.setIngredientCustomizable(true);
+            dishes.add(dish);
+
+        }
+    }
+	
+	private ArrayList<Ingredient> getFoodIngredientsLocaly() {
+		ArrayList<Ingredient> ingList = new ArrayList<Ingredient>();
+		String[] ingTitle = getResources().getStringArray(
+				R.array.ingredients_title);
+
+		Ingredient ing = new Ingredient(ingTitle[0],
+				Arrays.asList(getResources().getStringArray(R.array.ing0)));
+		//FoodIngredient fi = new FoodIngredient(ing);
+		ingList.add(ing);
+
+		Ingredient ing1 = new Ingredient(ingTitle[1],
+				Arrays.asList(getResources().getStringArray(R.array.ing1)));
+		//FoodIngredient fi1 = new FoodIngredient(ing1);
+		ingList.add(ing1);
+
+		Ingredient ing2 = new Ingredient(ingTitle[2],
+				Arrays.asList(getResources().getStringArray(R.array.ing2)));
+		//FoodIngredient fi2 = new FoodIngredient(ing2);
+		ingList.add(ing2);
+
+		Ingredient ing3 = new Ingredient(ingTitle[3],
+				Arrays.asList(getResources().getStringArray(R.array.ing3)));
+		//FoodIngredient fi3 = new FoodIngredient(ing3);
+		ingList.add(ing3);
+		return ingList;
+	}
 
 	private class DownloadRestaurantTask extends AsyncTask<String, Integer, Restaurant> {
 		@Override

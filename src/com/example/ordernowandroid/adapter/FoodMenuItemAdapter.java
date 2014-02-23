@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,15 +16,14 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.data.menu.FoodType;
 import com.example.ordernowandroid.ApplicationState;
+import com.example.ordernowandroid.IngredientsActivity;
 import com.example.ordernowandroid.R;
 import com.example.ordernowandroid.filter.MenuFilter;
 import com.example.ordernowandroid.fragments.AddNoteListener;
 import com.example.ordernowandroid.fragments.IndividualMenuTabFragment.numListener;
 import com.example.ordernowandroid.model.FoodMenuItem;
 import com.example.ordernowandroid.model.OrderNowConstants;
-import com.util.Utilities;
 
 /**
  * 
@@ -41,9 +41,11 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
     private ModelFilter filter;
     
     private MenuFilter menuFilter;
+    private Context context;
 
     public FoodMenuItemAdapter(Context context, ArrayList<FoodMenuItem> foodMenuItems, numListener numCallBack, AddNoteListener addNoteListener) {
         super(context, R.layout.food_menu_item, foodMenuItems);
+        this.context = context;
         this.addNoteListener = addNoteListener;
         allfoodMenuItems = new ArrayList<FoodMenuItem>();
         allfoodMenuItems.addAll(foodMenuItems);
@@ -168,6 +170,26 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
         // imageLoader.DisplayImage("http://192.168.1.28:8082/ANDROID/images/BEVE.jpeg",
         // holder.itemImage);
 
+        if(foodItem.isItemCustomizable()) {
+        	holder.addItem.setVisibility(View.INVISIBLE);
+        	holder.subItem.setVisibility(View.INVISIBLE);
+        	holder.addNote.setVisibility(View.INVISIBLE);
+        	View.OnClickListener ingredientOnClickListener = new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View arg0) {
+					Intent intent = new Intent(context, IngredientsActivity.class);
+					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+					intent.putExtra(IngredientsActivity.DISH_NAME, holder.txt_itemName.getText());
+					context.startActivity(intent);				
+					
+				}
+			};
+			holder.itemImage.setOnClickListener(ingredientOnClickListener);
+			holder.txt_itemDescription.setOnClickListener(ingredientOnClickListener);
+			holder.txt_itemName.setOnClickListener(ingredientOnClickListener);
+			holder.txt_itemPrice.setOnClickListener(ingredientOnClickListener);
+        }
         return convertView;
     }
 

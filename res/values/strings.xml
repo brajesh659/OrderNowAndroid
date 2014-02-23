@@ -28,6 +28,44 @@
     <string name="confirm_order_comment_hint_text">"Enter additional comments for this order!!"</string>   
     <string name="filter_menu">"Filter Menu"</string>
     
+    
+    <string-array name="ingredients_title">
+        <item>Choice of Vegetables</item>
+        <item>Choice of Proteins</item>
+        <item>Condiments</item>
+        <item>Starch</item>
+    </string-array>
+    
+    <string-array name="ing0">
+        <item>Fresh Malineinse</item>
+        <item>Palk Choi</item>
+        <item>Baby Corn</item>
+        <item>Corn Kernel</item>
+        <item>Green Beans</item>
+    </string-array>
+    
+    <string-array name="ing1">
+        <item>Egg</item>
+        <item>Chicken</item>
+        <item>Fish</item>
+        <item>Pork</item>
+        <item>Lamb</item>
+    </string-array>
+    
+    <string-array name="ing2">
+        <item>Ginger</item>
+        <item>Garlic</item>
+        <item>Red Chilli</item>
+        <item>Sliced Onion</item>
+    </string-array>
+    
+    <string-array name="ing3">
+        <item>Rice</item>
+        <item>Noodles</item>
+    </string-array>
+    
+    
+    
     <!-- Nav Drawer Menu Items -->
     <string-array name="nav_drawer_items">
         <item>Soups</item>
@@ -35,6 +73,7 @@
         <item>Salads</item>
         <item>Sizzlers</item>
         <item>Favourites</item>
+        <item>Stir Fry Bowl</item>
     </string-array>
 
     <!-- Nav Drawer List Item Icons -->
@@ -208,6 +247,32 @@
         <item>345</item>
         <item>345</item>
     </integer-array>
+    
+    <string-array name="frybowl">
+        <item>Spicy Bowl</item>
+        <item>Medium Spicy Bowl</item>
+        <item>Very Spicy Bowl</item>
+    </string-array>
+
+    <string-array name="frybowl_ids">
+        <item>d26</item>
+        <item>d27</item>
+        <item>d28</item>
+    </string-array>
+    
+    <string-array name="frybowl_icons">
+        <item>http://files.softicons.com/download/food-drinks-icons/free-food-icons-by-daily-overview/png/48x48/chicken.png</item>
+        <item>http://files.softicons.com/download/food-drinks-icons/free-food-icons-by-daily-overview/png/48x48/chicken.png</item>
+        <item>http://files.softicons.com/download/food-drinks-icons/free-food-icons-by-daily-overview/png/48x48/chicken.png</item>
+    </string-array>
+    
+    
+    <integer-array name="frybowl_prices">
+        <item>375</item>
+        <item>375</item>
+        <item>375</item>
+    </integer-array>
+    
 
     <!-- Content Description -->
     <string name="desc_list_item_icon">Item Icon</string>

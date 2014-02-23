@@ -1,6 +1,7 @@
 package com.example.ordernowandroid.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,6 +10,7 @@ import android.os.AsyncTask;
 
 import com.data.menu.Dish;
 import com.data.menu.FoodType;
+import com.data.menu.Ingredient;
 import com.example.ordernowandroid.adapter.ImageService;
 import com.example.ordernowandroid.filter.MenuPropertyKey;
 import com.example.ordernowandroid.filter.MenuPropertyValue;
@@ -24,7 +26,8 @@ public class FoodMenuItem implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private Dish dish;
-
+    private ArrayList<FoodIngredient> ingredients;
+    
     public FoodMenuItem(Dish dish) {
         this.dish = dish;
         populateImageCache(); // To populate image cache.
@@ -45,6 +48,22 @@ public class FoodMenuItem implements Serializable {
     public String getDescription() {
     	return dish.getDescription();
     }
+    
+	public ArrayList<FoodIngredient> getIngredients() {
+		if (ingredients == null) {
+			ingredients = new ArrayList<FoodIngredient>();
+			ArrayList<Ingredient> dishIngredients = dish.getIngredients();
+			for (Ingredient ing : dishIngredients) {
+				FoodIngredient fi = new FoodIngredient(ing);
+				ingredients.add(fi);
+			}
+		}
+		return ingredients;
+	}
+	
+	public boolean isItemCustomizable() {
+		return dish.isIngredientCustomizable();
+	}
 
     @Override
     public String toString() {

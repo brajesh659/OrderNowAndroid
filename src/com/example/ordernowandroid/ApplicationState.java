@@ -18,6 +18,7 @@ public class ApplicationState extends Application {
 	private CustomerOrderWrapper customerOrderWrapper;
 	private ArrayList<CustomerOrderWrapper> subOrdersFromDB;
 
+
 	public ApplicationState() {
 		myOrderItems = new ArrayList<MyOrderItem>();
 		menuFilter = new MenuFilter();
