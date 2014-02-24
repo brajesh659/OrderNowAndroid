@@ -32,7 +32,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -150,8 +149,8 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 		};
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-		//restaurant = getResturant(applicationContext.getTableId());
-		restaurant = getResturantLocaly();
+		restaurant = getResturant(applicationContext.getTableId());
+		//restaurant = getResturantLocaly();
 		if (restaurant == null){
 			AlertDialog.Builder builder = new AlertDialog.Builder(FoodMenuActivity.this);            
 			builder.setTitle("Invalid QR code");

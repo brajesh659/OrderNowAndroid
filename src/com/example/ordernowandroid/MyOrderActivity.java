@@ -135,7 +135,7 @@ public class MyOrderActivity extends Activity {
 
 
 		CustomerOrder customerOrder = new CustomerOrder(dishes, "R1",
-				text.toString(), "T1", orderNote);
+				text.toString(), ApplicationState.getTableId((ApplicationState)getApplicationContext()), orderNote);
 		CustomerOrderWrapper customerOrderWrapper = new CustomerOrderWrapper(customerOrder, myOrderItemList);
 
 		ApplicationState applicationContext = (ApplicationState)getApplicationContext();

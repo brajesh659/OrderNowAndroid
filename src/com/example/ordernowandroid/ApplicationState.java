@@ -36,6 +36,15 @@ public class ApplicationState extends Application {
 	public String getTableId() {
 		return tableId;
 	}
+	
+	public static String getTableId(ApplicationState applicationContext) {
+		return applicationContext.getTableId();
+	}
+	
+	public static void setTableId(ApplicationState applicationContext, String tableId) {
+		applicationContext.setTableId(tableId);
+	}
+	
 
 	public void setTableId(String tableId) {
 		this.tableId = tableId;

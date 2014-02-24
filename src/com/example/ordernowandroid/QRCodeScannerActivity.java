@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -13,6 +12,7 @@ import android.widget.Toast;
 import com.dm.zbar.android.scanner.ZBarConstants;
 import com.dm.zbar.android.scanner.ZBarScannerActivity;
 import com.facebook.widget.ProfilePictureView;
+import com.util.Utilities;
 
 public class QRCodeScannerActivity extends Activity {
 
@@ -61,27 +61,16 @@ public class QRCodeScannerActivity extends Activity {
 				String tableId = data.getStringExtra(ZBarConstants.SCAN_RESULT);
 				Toast.makeText(this, "Table Id = " + tableId, Toast.LENGTH_SHORT).show();
 
-				//FIXME: Validate QR Code with Backend Server before calling FoodMenuActivity Class
-				if (tableId.equalsIgnoreCase("T1")) {
-					applicationContext.setTableId(tableId);
-					Intent intent = new Intent(this, FoodMenuActivity.class);
-					startActivity(intent);				
-					finish();	
-				} else {
-					Toast.makeText(this, "This QR Code is not a valid code as per our database. Please contact the Restaurant Staff if the issue persists.", Toast.LENGTH_LONG).show();
-					Intent intent = new Intent(this, QRCodeScannerActivity.class);
-					startActivity(intent);				
-					finish();				
-				}
-			} else if(resultCode == RESULT_CANCELED && data != null) {
-				String error = data.getStringExtra(ZBarConstants.ERROR_INFO);
-				if(!TextUtils.isEmpty(error)) {
-					Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
-				}
-				applicationContext.setTableId("T1");
+				ApplicationState.setTableId(applicationContext, tableId);
 				Intent intent = new Intent(this, FoodMenuActivity.class);
 				startActivity(intent);				
-				finish();
+				finish();	
+			} else if(resultCode == RESULT_CANCELED && data != null) {
+				String error = data.getStringExtra(ZBarConstants.ERROR_INFO);
+				Utilities.error("Error Message: " + error);
+
+				//TODO
+				Toast.makeText(this, "To be implemented", Toast.LENGTH_SHORT).show();
 			}
 			break;
 		}
