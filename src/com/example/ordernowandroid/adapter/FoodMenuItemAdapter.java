@@ -1,6 +1,7 @@
 package com.example.ordernowandroid.adapter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import android.content.Context;
@@ -16,12 +17,14 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.data.menu.Ingredient;
 import com.example.ordernowandroid.ApplicationState;
 import com.example.ordernowandroid.IngredientsActivity;
 import com.example.ordernowandroid.R;
 import com.example.ordernowandroid.filter.MenuFilter;
 import com.example.ordernowandroid.fragments.AddNoteListener;
 import com.example.ordernowandroid.fragments.IndividualMenuTabFragment.numListener;
+import com.example.ordernowandroid.model.FoodIngredient;
 import com.example.ordernowandroid.model.FoodMenuItem;
 import com.example.ordernowandroid.model.OrderNowConstants;
 
@@ -181,6 +184,7 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
 					Intent intent = new Intent(context, IngredientsActivity.class);
 					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 					intent.putExtra(IngredientsActivity.DISH_NAME, holder.txt_itemName.getText());
+					intent.putExtra(IngredientsActivity.INGREDIENTS_LIST, getFoodIngredientsLocaly());
 					context.startActivity(intent);				
 					
 				}
@@ -192,6 +196,28 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
         }
         return convertView;
     }
+    
+	private ArrayList<FoodIngredient> getFoodIngredientsLocaly() {
+		ArrayList<FoodIngredient> ingList = new ArrayList<FoodIngredient>();
+		String[] ingTitle = context.getResources().getStringArray(R.array.ingredients_title);
+		
+		Ingredient ing = new Ingredient(ingTitle[0], Arrays.asList(context.getResources().getStringArray(R.array.ing0)));
+		FoodIngredient fi = new FoodIngredient(ing);
+		ingList.add(fi);
+		
+		Ingredient ing1 = new Ingredient(ingTitle[1], Arrays.asList(context.getResources().getStringArray(R.array.ing1)));
+		FoodIngredient fi1 = new FoodIngredient(ing1);
+		ingList.add(fi1);
+		
+		Ingredient ing2 = new Ingredient(ingTitle[2], Arrays.asList(context.getResources().getStringArray(R.array.ing2)));
+		FoodIngredient fi2 = new FoodIngredient(ing2);
+		ingList.add(fi2);
+		
+		Ingredient ing3 = new Ingredient(ingTitle[3], Arrays.asList(context.getResources().getStringArray(R.array.ing3)));
+		FoodIngredient fi3 = new FoodIngredient(ing3);
+		ingList.add(fi3);
+		return ingList;
+	}
 
     static class ViewHolder {
         TextView txt_itemName;

@@ -52,7 +52,7 @@ public class StaggeredIngredientAdapter extends ArrayAdapter<FoodIngredient> {
 		//AutoResizeTextView tv = new AutoResizeTextView(context);
     	//tv.setText(getItem(position).getBitMapText());
     	holder.textView.setText(getItem(position).getBitMapText());
-    	holder.textView.setHeight(100);
+    	//holder.textView.setHeight(100);
     	holder.textView.resizeText();
     	/*
     	tv.setTextSize(20);

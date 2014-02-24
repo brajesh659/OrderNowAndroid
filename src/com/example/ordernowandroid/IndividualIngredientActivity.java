@@ -1,51 +1,71 @@
 package com.example.ordernowandroid;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-
-import com.aphidmobile.flip.FlipViewController;
-import com.data.menu.Ingredient;
-import com.example.ordernowandroid.adapter.IndividualIngredientsAdapter;
-import com.example.ordernowandroid.model.FoodIngredient;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 
-public class IndividualIngredientActivity extends Activity {
+import com.aphidmobile.flip.FlipViewController;
+import com.example.ordernowandroid.adapter.IndividualIngredientsAdapter;
+import com.example.ordernowandroid.adapter.IngredientListener;
+import com.example.ordernowandroid.model.FoodIngredient;
+import com.example.ordernowandroid.model.OptionView;
+import com.util.Utilities;
+
+public class IndividualIngredientActivity extends Activity implements IngredientListener {
 
 	private FlipViewController flipView;
+	private IndividualIngredientsAdapter adapter;
 	ArrayList<FoodIngredient> ingList;
 	public static final String OPTION_PAGE = "PageNumber";
 	int page = 0;
 	private String dishname;
+	//Map<String,OptionView> selectedOptions = new HashMap<String,OptionView>();
+	private List<OptionView> selectedOptions;
 
 	/**
 	 * Called when the activity is first created.
 	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		
 		super.onCreate(savedInstanceState);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		Bundle b = getIntent().getExtras();
 		if (b != null) {
 			page = b.getInt(OPTION_PAGE);
 			dishname = b.getString(IngredientsActivity.DISH_NAME);
+			ingList = (ArrayList<FoodIngredient>) b.getSerializable(IngredientsActivity.INGREDIENTS_LIST);
+			Utilities.info("ing inside " + ingList.toString());
 		}
-		ingList = (ArrayList<FoodIngredient>) getFoodIngredientsLocaly();
 
-		setTitle(dishname);
+		selectedOptions = ApplicationState.getDishSelectedIngredientList((ApplicationState)getApplicationContext(),dishname);
+		if(selectedOptions == null) {
+			selectedOptions = new ArrayList<OptionView>();
+		}
+		setTitle(ingList.get(page).getTitle());
 
 		flipView = new FlipViewController(this, FlipViewController.HORIZONTAL);
 
-		IndividualIngredientsAdapter adapter = new IndividualIngredientsAdapter(
-				this, ingList);
+		adapter = new IndividualIngredientsAdapter(this, ingList, this);
 		flipView.setAdapter(adapter);
 		flipView.setSelection(page);
+
+		flipView.setOnViewFlipListener(new FlipViewController.ViewFlipListener() {
+			@Override
+			public void onViewFlipped(View view, int position) {
+				setTitle(ingList.get(position).getTitle());
+				page = position;
+
+			}
+		});
+
 		setContentView(flipView);
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -70,31 +90,27 @@ public class IndividualIngredientActivity extends Activity {
 		flipView.onPause();
 	}
 
-	private List<FoodIngredient> getFoodIngredientsLocaly() {
-		List<FoodIngredient> ingList = new ArrayList<FoodIngredient>();
-		String[] ingTitle = getResources().getStringArray(
-				R.array.ingredients_title);
+	@Override
+	public boolean isSelected(OptionView optionView) {
+		if(selectedOptions.contains(optionView)) {
+			return true;
+		}
+		return false;
+	}
+	
 
-		Ingredient ing = new Ingredient(ingTitle[0],
-				Arrays.asList(getResources().getStringArray(R.array.ing0)));
-		FoodIngredient fi = new FoodIngredient(ing);
-		ingList.add(fi);
-
-		Ingredient ing1 = new Ingredient(ingTitle[1],
-				Arrays.asList(getResources().getStringArray(R.array.ing1)));
-		FoodIngredient fi1 = new FoodIngredient(ing1);
-		ingList.add(fi1);
-
-		Ingredient ing2 = new Ingredient(ingTitle[2],
-				Arrays.asList(getResources().getStringArray(R.array.ing2)));
-		FoodIngredient fi2 = new FoodIngredient(ing2);
-		ingList.add(fi2);
-
-		Ingredient ing3 = new Ingredient(ingTitle[3],
-				Arrays.asList(getResources().getStringArray(R.array.ing3)));
-		FoodIngredient fi3 = new FoodIngredient(ing3);
-		ingList.add(fi3);
-		return ingList;
+	@Override
+	public void updateIngredient(OptionView optionView, boolean checked) {
+		if(checked) {
+			selectedOptions.add(optionView);
+			ApplicationState.addDishSelectedIngredient((ApplicationState)getApplicationContext(), dishname, optionView);
+		} else {
+			if(selectedOptions.contains(optionView)) {
+				selectedOptions.remove(optionView);
+			}
+			ApplicationState.removeDishSelectedIngredient((ApplicationState)getApplicationContext(), dishname, optionView);
+		}
+		
 	}
 
 }

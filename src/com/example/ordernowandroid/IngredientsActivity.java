@@ -1,32 +1,31 @@
 package com.example.ordernowandroid;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.data.menu.Ingredient;
 import com.example.ordernowandroid.adapter.StaggeredIngredientAdapter;
 import com.example.ordernowandroid.fragments.StaggeredGridView;
 import com.example.ordernowandroid.model.FoodIngredient;
+import com.example.ordernowandroid.model.OptionView;
 import com.util.Utilities;
 
-
 public class IngredientsActivity extends Activity {
-	
+
 	private ArrayList<FoodIngredient> ingList;
 	private String dishName;
 	public static final String DISH_NAME = "dishname";
-	
-	private String urls[] = { 
+	public static final String INGREDIENTS_LIST = "ingredientsList";
+	private List<OptionView> selectedOptions;
+	private StaggeredIngredientAdapter adapter;
+
+	private String urls[] = {
 			"http://farm7.staticflickr.com/6101/6853156632_6374976d38_c.jpg",
 			"http://farm8.staticflickr.com/7232/6913504132_a0fce67a0e_c.jpg",
 			"http://farm5.staticflickr.com/4133/5096108108_df62764fcc_b.jpg",
@@ -52,54 +51,70 @@ public class IngredientsActivity extends Activity {
 			"http://farm8.staticflickr.com/7086/7238812536_1334d78c05.jpg",
 			"http://farm8.staticflickr.com/7243/7193236466_33a37765a4.jpg",
 			"http://farm8.staticflickr.com/7251/7059629417_e0e96a4c46.jpg",
-			"http://farm8.staticflickr.com/7084/6885444694_6272874cfc.jpg"
-	};
+			"http://farm8.staticflickr.com/7084/6885444694_6272874cfc.jpg" };
 	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
-		
+
 		Bundle b = getIntent().getExtras();
 		if (b != null) {
 			dishName = b.getString(DISH_NAME);
+			ingList = (ArrayList<FoodIngredient>) b
+					.getSerializable(IngredientsActivity.INGREDIENTS_LIST);
 		}
 		setTitle(dishName);
-		
-		ingList = (ArrayList<FoodIngredient>) getFoodIngredientsLocaly();
+
+		selectedOptions = ApplicationState.getDishSelectedIngredientList(
+				(ApplicationState) getApplicationContext(), dishName);
+		if (selectedOptions != null) {
+			for (FoodIngredient ing : ingList) {
+				ing.prepareSelectedOptions(selectedOptions);
+			}
+		}
+
+		// ingList = getFoodIngredientsLocaly();
 		setContentView(R.layout.ingredeints_view);
-		StaggeredGridView gridView = (StaggeredGridView) this.findViewById(R.id.staggeredGridView1);
-        int margin = getResources().getDimensionPixelSize(R.dimen.margin);
-		
+		StaggeredGridView gridView = (StaggeredGridView) this
+				.findViewById(R.id.staggeredGridView1);
+		int margin = getResources().getDimensionPixelSize(R.dimen.margin);
 		gridView.setItemMargin(margin); // set the GridView margin
-		
-		gridView.setPadding(margin, 0, margin, 0); // have the margin on the sides as well 
-		
-		
-		
-		Utilities.info("Ingredient list " + ingList);
-		//StaggeredAdapter adapter = new StaggeredAdapter(IngredientsActivity.this, R.id.scaleImageView, urls);
-		
-		StaggeredIngredientAdapter adapter = new StaggeredIngredientAdapter(IngredientsActivity.this, ingList);
-		
+
+		gridView.setPadding(margin, 0, margin, 0); // have the margin on the
+													// sides as well
+
+		// StaggeredAdapter adapter = new
+		// StaggeredAdapter(IngredientsActivity.this, R.id.scaleImageView,
+		// urls);
+
+		adapter = new StaggeredIngredientAdapter(
+				IngredientsActivity.this, ingList);
+
 		gridView.setAdapter(adapter);
 		gridView.setOnItemClickListener(new StaggeredGridView.OnItemClickListener() {
-			
+
 			@Override
-			public void onItemClick(StaggeredGridView parent, View view, int position,
-					long id) {
-				Toast.makeText(
-						   getApplicationContext(),"Swipe Left/Right For Other Options", Toast.LENGTH_LONG).show();
-				Intent intent = new Intent(getApplicationContext(), IndividualIngredientActivity.class);
-				intent.putExtra(IndividualIngredientActivity.OPTION_PAGE, position);
+			public void onItemClick(StaggeredGridView parent, View view,
+					int position, long id) {
+				Toast.makeText(getApplicationContext(),
+						"Swipe Left/Right For Other Options", Toast.LENGTH_LONG)
+						.show();
+				Intent intent = new Intent(getApplicationContext(),
+						IndividualIngredientActivity.class);
+				intent.putExtra(IndividualIngredientActivity.OPTION_PAGE,
+						position);
 				intent.putExtra(IngredientsActivity.DISH_NAME, dishName);
+				intent.putExtra(IngredientsActivity.INGREDIENTS_LIST, ingList);
+				Utilities.info("ing main " + ingList.toString());
 				startActivity(intent);
-				
+
 			}
 		});
 		adapter.notifyDataSetChanged();
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -112,27 +127,19 @@ public class IngredientsActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 	
-	
-	private List<FoodIngredient> getFoodIngredientsLocaly() {
-		List<FoodIngredient> ingList = new ArrayList<FoodIngredient>();
-		String[] ingTitle = getResources().getStringArray(R.array.ingredients_title);
-		
-		Ingredient ing = new Ingredient(ingTitle[0], Arrays.asList(getResources().getStringArray(R.array.ing0)));
-		FoodIngredient fi = new FoodIngredient(ing);
-		ingList.add(fi);
-		
-		Ingredient ing1 = new Ingredient(ingTitle[1], Arrays.asList(getResources().getStringArray(R.array.ing1)));
-		FoodIngredient fi1 = new FoodIngredient(ing1);
-		ingList.add(fi1);
-		
-		Ingredient ing2 = new Ingredient(ingTitle[2], Arrays.asList(getResources().getStringArray(R.array.ing2)));
-		FoodIngredient fi2 = new FoodIngredient(ing2);
-		ingList.add(fi2);
-		
-		Ingredient ing3 = new Ingredient(ingTitle[3], Arrays.asList(getResources().getStringArray(R.array.ing3)));
-		FoodIngredient fi3 = new FoodIngredient(ing3);
-		ingList.add(fi3);
-		return ingList;
+	@Override
+	protected void onResume() {
+		super.onResume();
+		selectedOptions = ApplicationState.getDishSelectedIngredientList(
+				(ApplicationState) getApplicationContext(), dishName);
+		if (selectedOptions != null) {
+			for (FoodIngredient ing : ingList) {
+				ing.prepareSelectedOptions(selectedOptions);
+			}
+		}
+		if(adapter !=null) {
+			adapter.notifyDataSetChanged();
+		}
 	}
 
 }
