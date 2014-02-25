@@ -98,16 +98,27 @@ public class IndividualMenuTabFragment extends Fragment implements TabListener  
         MenuFilter menuFilter = ApplicationState.getMenuFilter((ApplicationState)getActivity().getApplicationContext());
         Map<MenuPropertyKey, List<MenuPropertyValue>> filterProperties = menuFilter.getFilterProperties();
         tabChange = true;
-        if(filterProperties != null) {
-        if(filterProperties.get(MenuPropertyKey.FoodType).contains(MenuPropertyValue.Veg))
-            actionBar.selectTab(actionBar.getTabAt(1));
-        else if (filterProperties.get(MenuPropertyKey.FoodType).contains(MenuPropertyValue.NonVeg))
-            actionBar.selectTab(actionBar.getTabAt(2));
-        else if (filterProperties.get(MenuPropertyKey.FoodType).contains(MenuPropertyValue.All))
-            actionBar.selectTab(actionBar.getTabAt(0));
+        int index = 0;
+        
+        // TODO HACK HACK HACK. refactor it. 
+        if (filterProperties != null) {
+            List<MenuPropertyValue> filterPropertiesValue = filterProperties.get(MenuPropertyKey.FoodType);
+            if (filterPropertiesValue != null) {
+                if (filterPropertiesValue.contains(MenuPropertyValue.All))
+                    index = 0;
+                else if (filterPropertiesValue.contains(MenuPropertyValue.Veg) && filterPropertiesValue.contains(MenuPropertyValue.NonVeg))
+                    index = 0;
+                else if (filterPropertiesValue.contains(MenuPropertyValue.Veg))
+                    index = 1;
+                else if (filterPropertiesValue.contains(MenuPropertyValue.NonVeg))
+                    index = 2;
+            } else {
+                index = 0;
+            }
         } else {
-            actionBar.selectTab(actionBar.getTabAt(0));
+            index = 0;
         }
+        actionBar.selectTab(actionBar.getTabAt(index));
         
 
 	}
