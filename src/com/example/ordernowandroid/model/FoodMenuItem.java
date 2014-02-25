@@ -28,7 +28,11 @@ public class FoodMenuItem implements Serializable {
     private Dish dish;
     private ArrayList<FoodIngredient> ingredients;
     
-    public FoodMenuItem(Dish dish) {
+    public void setIngredients(ArrayList<FoodIngredient> ingredients) {
+		this.ingredients = ingredients;
+	}
+
+	public FoodMenuItem(Dish dish) {
         this.dish = dish;
         populateImageCache(); // To populate image cache.
     }

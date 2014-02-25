@@ -5,12 +5,84 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
     
+
     <com.example.ordernowandroid.fragments.StaggeredGridView
         android:id="@+id/staggeredGridView1"
-        staggered:numColumns="2"
-        staggered:drawSelectorOnTop="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-    
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/bottomIngredientAdd"
+        android:layout_below="@+id/ingredient_generic"
+        staggered:drawSelectorOnTop="true"
+        staggered:numColumns="2" >
+
+    </com.example.ordernowandroid.fragments.StaggeredGridView>
+
+    <LinearLayout
+        android:id="@+id/bottomIngredientAdd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:weightSum="1" >
+
+        <ImageButton
+            android:id="@+id/decrementQtyButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.30"
+            android:background="@color/white"
+            android:src="@drawable/sub" />
+
+        <TextView
+            android:id="@+id/quantity"
+            android:layout_width="2dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            android:gravity="center"
+            android:textColor="@color/green"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <ImageButton
+            android:id="@+id/incrementQtyButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.30"
+            android:background="@color/white"
+            android:src="@drawable/add" />
+
+        <View
+            android:id="@+id/margin"
+            android:layout_width="1dip"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="4dip"
+            android:layout_marginTop="4dip"
+            android:background="?android:attr/dividerVertical" />
+
+        <Button
+            android:id="@+id/addIngredientToCart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight=".34"
+            android:background="?android:attr/selectableItemBackground"
+            android:text="@string/add_to_cart" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ingredient_generic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:gravity="center"
+        android:textColor="@color/green"
+        android:textSize="24sp"
+        android:textStyle="bold">
+        <TextView 
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""/>
+    </LinearLayout>
 
 </RelativeLayout>

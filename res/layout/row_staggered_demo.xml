@@ -5,7 +5,6 @@
     <com.example.ordernowandroid.views.AutoResizeTextView
         android:id="@+id/scaleImageView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/yellow"/>
+        android:layout_height="wrap_content"/>
 
 </FrameLayout>

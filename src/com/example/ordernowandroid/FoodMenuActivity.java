@@ -149,8 +149,8 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 		};
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-		restaurant = getResturant(applicationContext.getTableId());
-		//restaurant = getResturantLocaly();
+		//restaurant = getResturant(applicationContext.getTableId());
+		restaurant = getResturantLocaly();
 		if (restaurant == null){
 			AlertDialog.Builder builder = new AlertDialog.Builder(FoodMenuActivity.this);            
 			builder.setTitle("Invalid QR code");
@@ -726,6 +726,16 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 	@Override
 	public boolean onSuggestionSelect(int position) {
 		return false;
+	}
+	
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		int position = ApplicationState.getCategoryId((ApplicationState)getApplicationContext());
+		if(position > 0) {
+			displayView(ApplicationState.getCategoryId((ApplicationState)getApplicationContext()));
+		}
 	}
 
 }

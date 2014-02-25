@@ -51,7 +51,19 @@ public class StaggeredIngredientAdapter extends ArrayAdapter<FoodIngredient> {
 		
 		//AutoResizeTextView tv = new AutoResizeTextView(context);
     	//tv.setText(getItem(position).getBitMapText());
-    	holder.textView.setText(getItem(position).getBitMapText());
+		FoodIngredient ingredient = getItem(position);
+		holder.textView.setText(ingredient.getBitMapText());
+		if(getItem(position).isMinOptionsSelected()) {
+			holder.textView.setBackgroundColor(context.getResources().getColor(
+					R.color.greenyellow));
+		} else if(ingredient.getSelectedOptions().size()!=0) {
+			holder.textView.setBackgroundColor(context.getResources().getColor(
+					R.color.rosybrown));
+		} else {
+			holder.textView.setBackgroundColor(context.getResources().getColor(
+					R.color.mintcream));
+		}
+    	
     	//holder.textView.setHeight(100);
     	holder.textView.resizeText();
     	/*

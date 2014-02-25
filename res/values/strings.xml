@@ -15,6 +15,7 @@
     <string name="cancel_order_btn">"Cancel Order"</string>
     <string name="confirm_order_btn">"Confirm Order"</string>
     <string name="add_more_items_btn">"Add More Items"</string>
+    <string name="add_to_cart">"Add To Cart"</string>
     <string name="total">"Total"</string>
     <string name="ok">"OK"</string>
     <string name="cancel">"Cancel"</string> 
@@ -27,6 +28,7 @@
     <string name="no_dishes">"Sorry No Dishes Found! \nPlease Search Again Or Slide For the Category Drawer"</string>
     <string name="confirm_order_comment_hint_text">"Enter additional comments for this order!!"</string>   
     <string name="filter_menu">"Filter Menu"</string>
+    <string name="modify">"Modify"</string>
     
     
     <string-array name="ingredients_title">
@@ -249,9 +251,8 @@
     </integer-array>
     
     <string-array name="frybowl">
-        <item>Spicy Bowl</item>
-        <item>Medium Spicy Bowl</item>
-        <item>Very Spicy Bowl</item>
+        <item>Make Your Bowl</item>
+        <item>Chef Recommended</item>
     </string-array>
 
     <string-array name="frybowl_ids">

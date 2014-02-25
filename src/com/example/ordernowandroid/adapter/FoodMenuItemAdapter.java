@@ -74,7 +74,7 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
      */
 
     public View getView(int position, View convertView, ViewGroup parent) {
-        FoodMenuItem foodItem = foodMenuItems.get(position);
+        final FoodMenuItem foodItem = foodMenuItems.get(position);
         LayoutInflater l_Inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final ViewHolder holder;
         if (convertView == null) {
@@ -174,6 +174,7 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
         // holder.itemImage);
 
         if(foodItem.isItemCustomizable()) {
+        	holder.itemImage.setImageResource(R.drawable.ic_category);
         	holder.addItem.setVisibility(View.INVISIBLE);
         	holder.subItem.setVisibility(View.INVISIBLE);
         	holder.addNote.setVisibility(View.INVISIBLE);
@@ -184,7 +185,9 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
 					Intent intent = new Intent(context, IngredientsActivity.class);
 					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 					intent.putExtra(IngredientsActivity.DISH_NAME, holder.txt_itemName.getText());
-					intent.putExtra(IngredientsActivity.INGREDIENTS_LIST, getFoodIngredientsLocaly());
+					//intent.putExtra(IngredientsActivity.INGREDIENTS_LIST, getFoodIngredientsLocaly());
+					foodItem.setIngredients(getFoodIngredientsLocaly());
+					intent.putExtra(IngredientsActivity.FOOD_ITEM, foodItem);
 					context.startActivity(intent);				
 					
 				}
@@ -203,6 +206,7 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
 		
 		Ingredient ing = new Ingredient(ingTitle[0], Arrays.asList(context.getResources().getStringArray(R.array.ing0)));
 		FoodIngredient fi = new FoodIngredient(ing);
+		fi.setMinOptionSelection(2);
 		ingList.add(fi);
 		
 		Ingredient ing1 = new Ingredient(ingTitle[1], Arrays.asList(context.getResources().getStringArray(R.array.ing1)));

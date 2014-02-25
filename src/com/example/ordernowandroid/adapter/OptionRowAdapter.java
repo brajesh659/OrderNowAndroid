@@ -8,8 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.data.menu.RecommendationType;
 import com.example.ordernowandroid.R;
 import com.example.ordernowandroid.model.OptionView;
 
@@ -37,9 +39,31 @@ public class OptionRowAdapter extends ArrayAdapter<OptionView> {
 		final OptionView option = optionList.get(position);
 		TextView optionName = (TextView) convertView
 				.findViewById(R.id.optionName);
+		optionName.setText(option.getOptionName());
+		
 		TextView optionDescription = (TextView) convertView
 				.findViewById(R.id.optionDescription);
-		optionName.setText(option.getOptionName());
+		optionDescription.setText(option.getDescription());
+		
+		TextView recommended = (TextView)convertView.findViewById(R.id.optionRecommend);
+		String recommendationText = "";
+		RecommendationType recommendationtype = option.getRecommendation();
+		if(recommendationtype.equals(RecommendationType.None)) {
+			 recommendationText = "";
+		} else {
+			recommendationText= recommendationtype.toString();
+		}
+		recommended.setText(recommendationText);
+		
+		ImageView helpView = (ImageView)convertView.findViewById(R.id.helpicon);
+		if(recommendationText.equals("")) {
+			helpView.setVisibility(View.INVISIBLE);
+		} else {
+			helpView.setVisibility(View.VISIBLE);
+		}
+
+		
+		
 		final CheckBox ch = (CheckBox) convertView.findViewById(R.id.optionCheck);
 		ch.setChecked(ingredientListener.isSelected(option));
 		ch.setOnClickListener(new View.OnClickListener() {

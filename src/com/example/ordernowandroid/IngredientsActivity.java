@@ -1,27 +1,39 @@
 package com.example.ordernowandroid;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ordernowandroid.adapter.StaggeredIngredientAdapter;
 import com.example.ordernowandroid.fragments.StaggeredGridView;
 import com.example.ordernowandroid.model.FoodIngredient;
+import com.example.ordernowandroid.model.FoodMenuItem;
+import com.example.ordernowandroid.model.MyOrderItem;
 import com.example.ordernowandroid.model.OptionView;
 import com.util.Utilities;
 
 public class IngredientsActivity extends Activity {
 
+	private FoodMenuItem foodItem;
 	private ArrayList<FoodIngredient> ingList;
 	private String dishName;
+	private int itemQuantity = 1;
 	public static final String DISH_NAME = "dishname";
 	public static final String INGREDIENTS_LIST = "ingredientsList";
+	public static final String FOOD_ITEM = "foodItem";
 	private List<OptionView> selectedOptions;
 	private StaggeredIngredientAdapter adapter;
 
@@ -52,7 +64,6 @@ public class IngredientsActivity extends Activity {
 			"http://farm8.staticflickr.com/7243/7193236466_33a37765a4.jpg",
 			"http://farm8.staticflickr.com/7251/7059629417_e0e96a4c46.jpg",
 			"http://farm8.staticflickr.com/7084/6885444694_6272874cfc.jpg" };
-	
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -62,21 +73,42 @@ public class IngredientsActivity extends Activity {
 		Bundle b = getIntent().getExtras();
 		if (b != null) {
 			dishName = b.getString(DISH_NAME);
-			ingList = (ArrayList<FoodIngredient>) b
-					.getSerializable(IngredientsActivity.INGREDIENTS_LIST);
+			foodItem = (FoodMenuItem) b
+					.getSerializable(IngredientsActivity.FOOD_ITEM);
+			ingList = foodItem.getIngredients();
+			// ingList = (ArrayList<FoodIngredient>) b
+			// .getSerializable(IngredientsActivity.INGREDIENTS_LIST);
 		}
 		setTitle(dishName);
+		
+		// ingList = getFoodIngredientsLocaly();
+		setContentView(R.layout.ingredeints_view);
 
+		final ImageButton decrementQtyBtn = (ImageButton) findViewById(R.id.decrementQtyButton);
+		final ImageButton incrementQtyBtn = (ImageButton) findViewById(R.id.incrementQtyButton);
+		final TextView quantity = (TextView)findViewById(R.id.quantity);
+		final Button addToCart = (Button)findViewById(R.id.addIngredientToCart);
+		
+		
 		selectedOptions = ApplicationState.getDishSelectedIngredientList(
 				(ApplicationState) getApplicationContext(), dishName);
+
+		HashMap<String, MyOrderItem> foodMenuItemQuantityMap = ApplicationState
+				.getFoodMenuItemQuantityMap((ApplicationState) getApplicationContext());
+
+		if (foodMenuItemQuantityMap.get(foodItem.getItemName()) != null) {
+			
+			itemQuantity = (int) foodMenuItemQuantityMap.get(
+					foodItem.getItemName()).getQuantity();
+			addToCart.setText(getResources().getString(R.string.modify));
+		}
 		if (selectedOptions != null) {
 			for (FoodIngredient ing : ingList) {
 				ing.prepareSelectedOptions(selectedOptions);
 			}
 		}
 
-		// ingList = getFoodIngredientsLocaly();
-		setContentView(R.layout.ingredeints_view);
+
 		StaggeredGridView gridView = (StaggeredGridView) this
 				.findViewById(R.id.staggeredGridView1);
 		int margin = getResources().getDimensionPixelSize(R.dimen.margin);
@@ -89,8 +121,8 @@ public class IngredientsActivity extends Activity {
 		// StaggeredAdapter(IngredientsActivity.this, R.id.scaleImageView,
 		// urls);
 
-		adapter = new StaggeredIngredientAdapter(
-				IngredientsActivity.this, ingList);
+		adapter = new StaggeredIngredientAdapter(IngredientsActivity.this,
+				ingList);
 
 		gridView.setAdapter(adapter);
 		gridView.setOnItemClickListener(new StaggeredGridView.OnItemClickListener() {
@@ -107,12 +139,114 @@ public class IngredientsActivity extends Activity {
 						position);
 				intent.putExtra(IngredientsActivity.DISH_NAME, dishName);
 				intent.putExtra(IngredientsActivity.INGREDIENTS_LIST, ingList);
-				Utilities.info("ing main " + ingList.toString());
 				startActivity(intent);
 
 			}
 		});
 		adapter.notifyDataSetChanged();
+
+		
+		quantity.setText(itemQuantity + "");
+
+		decrementQtyBtn.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// HashMap<String, MyOrderItem> foodMenuItemQuantityMap =
+				// ApplicationState
+				// .getFoodMenuItemQuantityMap(applicationState);
+				Float qty = Float.parseFloat((String) quantity.getText());
+
+				if (qty > 1) {
+					qty = qty - 1;
+					quantity.setText(qty.intValue() + "");
+					itemQuantity = qty.intValue();
+
+					/*
+					 * foodMenuItemQuantityMap.get(
+					 * myOrderItemList.get(position).getFoodMenuItem()
+					 * .getItemName()).setQuantity(qty - 1);
+					 */
+
+				} else if (qty == 1f) {
+					// Show Dialog and Remove Item from ListView on Positive
+					// Button Action
+					// Show Dialog and Remove Item from ListView on Positive
+					// Button Action
+					AlertDialog.Builder builder = new AlertDialog.Builder(
+							IngredientsActivity.this);
+					builder.setTitle("Remove Item");
+					builder.setMessage("Are you sure you want to remove all the selections for item ?");
+					builder.setPositiveButton(R.string.ok,
+							new AlertDialog.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									ApplicationState
+											.cleanDishSelectedIngredients(
+													(ApplicationState) getApplicationContext(),
+													dishName);
+									finish();
+								}
+							});
+					builder.setNegativeButton(R.string.cancel, null);
+					AlertDialog alert = builder.create();
+					alert.show();
+
+				} else {
+					Toast.makeText(getApplicationContext(),
+							"Quantity cannnot be decreased below zero",
+							Toast.LENGTH_SHORT).show();
+				}
+
+			}
+		});
+
+		incrementQtyBtn.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Float qty = Float.parseFloat((String) quantity.getText());
+				qty = qty + 1;
+				quantity.setText(qty.intValue() + "");
+				itemQuantity = qty.intValue();
+				// myOrderItemList.get(position).setQuantity(qty + 1);
+			}
+		});
+
+		addToCart.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+
+				boolean isMinCriteriaSatisfied = true;
+				for (FoodIngredient ing : ingList) {
+					if (!ing.isMinOptionsSelected()) {
+						isMinCriteriaSatisfied = false;
+						break;
+					}
+				}
+				if (isMinCriteriaSatisfied) {
+					HashMap<String, MyOrderItem> foodMenuItemQuantityMap = ApplicationState
+							.getFoodMenuItemQuantityMap((ApplicationState) getApplicationContext());
+					if (foodMenuItemQuantityMap.get(foodItem.getItemName()) == null) {
+						MyOrderItem myOrderItem = new MyOrderItem(foodItem,
+								itemQuantity);
+						foodMenuItemQuantityMap.put(foodItem.getItemName(),
+								myOrderItem);
+					} else {
+						foodMenuItemQuantityMap.get(foodItem.getItemName())
+								.setQuantity(itemQuantity);
+					}
+					finish();
+				} else {
+					AlertDialog.Builder builder = new AlertDialog.Builder(IngredientsActivity.this);
+					builder.setTitle("Item not added");
+					builder.setMessage("The criteria for minimum selection of options is not satisfied.");
+					builder.setPositiveButton(R.string.ok,null);
+					AlertDialog alert = builder.create();
+					alert.show();
+				}
+			}
+		});
 	}
 
 	@Override
@@ -126,7 +260,12 @@ public class IngredientsActivity extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
+
+	@Override
+	public void onBackPressed() {
+		finish();
+	}
+
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -137,7 +276,7 @@ public class IngredientsActivity extends Activity {
 				ing.prepareSelectedOptions(selectedOptions);
 			}
 		}
-		if(adapter !=null) {
+		if (adapter != null) {
 			adapter.notifyDataSetChanged();
 		}
 	}

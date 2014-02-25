@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import com.data.menu.Option;
 import com.data.menu.RecommendationType;
+import com.util.Utilities;
 
 public class OptionView implements Serializable {
 
@@ -17,7 +18,15 @@ public class OptionView implements Serializable {
 	
 	public OptionView(Option option) {
 		this.option = option;
-		recommendation = RecommendationType.All;
+		
+		int random = Utilities.randInt();
+		if((random % 6) == 0) {
+			recommendation = RecommendationType.NotRecommended;
+		} else if((random % 3) == 0) {
+			recommendation = RecommendationType.Recommended;
+		} else {
+			recommendation = RecommendationType.None;
+		} 
 	}
 	
 	@Override

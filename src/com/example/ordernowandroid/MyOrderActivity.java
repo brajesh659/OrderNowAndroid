@@ -129,6 +129,13 @@ public class MyOrderActivity extends Activity {
 				orderDish = new OrderDish(myOrderItem.getQuantity());
 			}
 			dishes.put(myOrderItem.getFoodMenuItem().getDishId(), orderDish);
+			
+			//Clean Dish Ingredient if present
+			if (myOrderItem.getFoodMenuItem().isItemCustomizable()) {
+				ApplicationState.cleanDishSelectedIngredients(
+						(ApplicationState) getApplicationContext(), myOrderItem
+								.getFoodMenuItem().getItemName());
+			}
 		}
 
 		CharSequence text = ParseInstallation.getCurrentInstallation().getObjectId();

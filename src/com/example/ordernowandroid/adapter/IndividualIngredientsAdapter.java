@@ -72,6 +72,10 @@ public class IndividualIngredientsAdapter extends BaseAdapter {
 		List<OptionView> optionList = new ArrayList<OptionView>();
 		for (String optionString : optionStringList) {
 			Option op = new Option(optionString);
+			int num = Utilities.randInt();
+			if((num % 3) == 0) {
+				op.setDescription("small description comes here");
+			}
 			OptionView opv = new OptionView(op);
 			optionList.add(opv);
 		}

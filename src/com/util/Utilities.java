@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.regex.Pattern;
 
 import android.app.Activity;
@@ -49,6 +50,8 @@ public final class Utilities {
 
 	public static final SimpleDateFormat defaultDateFormat = new SimpleDateFormat(
 			DEFAULT_DATE_FORMAT);
+	private static int MAX = 10;
+	private static int MIN = 1;
 
 	/**
 	 * Utility to convert locale SQLite date format to given date format
@@ -544,6 +547,18 @@ public final class Utilities {
 				progressDialog.dismiss();
 		} catch (Exception e) {
 		}
+	}
+	
+	public static int randInt() {
+
+	    // Usually this can be a field rather than a method variable
+	    Random rand = new Random();
+
+	    // nextInt is normally exclusive of the top value,
+	    // so add 1 to make it inclusive
+	    int randomNum = rand.nextInt((MAX - MIN) + 1) + MIN;
+
+	    return randomNum;
 	}
 
 }

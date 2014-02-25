@@ -9,7 +9,6 @@ import android.app.Application;
 
 import com.data.menu.CustomerOrderWrapper;
 import com.example.ordernowandroid.filter.MenuFilter;
-import com.example.ordernowandroid.model.FoodIngredient;
 import com.example.ordernowandroid.model.MyOrderItem;
 import com.example.ordernowandroid.model.OptionView;
 import com.util.Utilities;
@@ -19,7 +18,7 @@ public class ApplicationState extends Application {
 	private String userName;
 	private String profilePictureId;
 	private ArrayList<MyOrderItem> myOrderItems;
-	private int categoryId;
+	private int categoryId = -1;
 	private MenuFilter menuFilter;
 	private HashMap<String, MyOrderItem> foodMenuItemQuantityMap;
 	private CustomerOrderWrapper customerOrderWrapper;
@@ -220,10 +219,23 @@ public class ApplicationState extends Application {
 		}
 		List<OptionView> optionList = dishIngredientMap.get(dishName);
 		optionList.remove(option);
-		dishIngredientMap.put(dishName, optionList);
+		if (optionList.isEmpty()) {
+			dishIngredientMap.remove(dishName);
+		} else {
+			dishIngredientMap.put(dishName, optionList);
+		}
 		Utilities.info("removeDishSelectedIngredient dishIngredientMap " + dishIngredientMap );
 	}
 	
+	public void cleanDishSelectedIngredients(String dishName) {
+		if(dishIngredientMap.containsKey(dishName)) {
+			dishIngredientMap.remove(dishName);
+		}
+	}
 	
+	public static void cleanDishSelectedIngredients(
+			ApplicationState applicationContext, String dishName) {
+		applicationContext.cleanDishSelectedIngredients(dishName);
+	}
 
 }

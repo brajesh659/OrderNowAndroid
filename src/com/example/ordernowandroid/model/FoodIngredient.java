@@ -6,13 +6,13 @@ import java.util.List;
 
 import com.data.menu.Ingredient;
 import com.data.menu.Option;
-import com.util.Utilities;
 
 public class FoodIngredient implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	private Ingredient ingredient;
 	private List<OptionView> selectedOptions;
+	private int minOptionSelection = 1;
 	
 	public List<OptionView> getSelectedOptions() {
 		return selectedOptions;
@@ -56,12 +56,17 @@ public class FoodIngredient implements Serializable{
 	
 	public String getBitMapText() {
 		String text = getTitle();
+		if(minOptionSelection > 0) {
+			text += "\nMin : " + minOptionSelection;
+		}
 		
 		if(selectedOptions != null && !selectedOptions.isEmpty()) {
-			text += "\nSelected: " ;
+			text += "\n\nSelected:\n" ;
 			for(OptionView option : selectedOptions) {
-				text += option.getOptionName() + ", ";
+				text += option.getOptionName() + "\n";
 			}
+		} else {
+			text += "\n\nSelected: NONE" ;
 		}
 		return text;
 	}
@@ -79,6 +84,24 @@ public class FoodIngredient implements Serializable{
 			}
 		}
 		
+	}
+
+	public int getMinOptionSelection() {
+		return minOptionSelection;
+	}
+
+	public void setMinOptionSelection(int minOptionSelection) {
+		this.minOptionSelection = minOptionSelection;
+	}
+	
+	public boolean isMinOptionsSelected() {
+		if(minOptionSelection ==0 ) {
+			return true;
+		}
+		if(selectedOptions!= null && selectedOptions.size() >= minOptionSelection) {
+			return true;
+		}
+		return false;
 	}
 	
 }
