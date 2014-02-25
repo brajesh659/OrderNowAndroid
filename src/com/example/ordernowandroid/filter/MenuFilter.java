@@ -51,9 +51,10 @@ public class MenuFilter {
         Map<MenuPropertyKey, MenuPropertyValue> dishProperties = item.getDishFilterProperties();
         for (MenuPropertyKey filterKey : filterProperties.keySet()) {
             MenuPropertyValue dishFilterValue = dishProperties.get(filterKey);
-            if (dishFilterValue != null && filterProperties.get(filterKey) != null
+            if ((dishFilterValue != null && filterProperties.get(filterKey) != null
                     && !filterProperties.get(filterKey).isEmpty()
-                    && !filterProperties.get(filterKey).contains(dishFilterValue)) {
+                    && !filterProperties.get(filterKey).contains(dishFilterValue))
+                    && !filterProperties.get(filterKey).contains(MenuPropertyValue.All)) {
                 return false;
             }
         }
