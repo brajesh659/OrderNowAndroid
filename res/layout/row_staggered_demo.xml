@@ -2,7 +2,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
-    <com.example.ordernowandroid.views.AutoResizeTextView
+    <TextView
         android:id="@+id/scaleImageView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>

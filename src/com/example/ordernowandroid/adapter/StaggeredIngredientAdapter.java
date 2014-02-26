@@ -34,6 +34,7 @@ public class StaggeredIngredientAdapter extends ArrayAdapter<FoodIngredient> {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
+		
 
 		ViewHolder holder;
 
@@ -42,7 +43,7 @@ public class StaggeredIngredientAdapter extends ArrayAdapter<FoodIngredient> {
 			convertView = layoutInflator.inflate(R.layout.row_staggered_demo,
 					null);
 			holder = new ViewHolder();
-			holder.textView = (AutoResizeTextView) convertView .findViewById(R.id.scaleImageView);
+			holder.textView = (TextView) convertView .findViewById(R.id.scaleImageView);
 			convertView.setTag(holder);
 		}
 
@@ -53,6 +54,7 @@ public class StaggeredIngredientAdapter extends ArrayAdapter<FoodIngredient> {
     	//tv.setText(getItem(position).getBitMapText());
 		FoodIngredient ingredient = getItem(position);
 		holder.textView.setText(ingredient.getBitMapText());
+		
 		if(getItem(position).isMinOptionsSelected()) {
 			holder.textView.setBackgroundColor(context.getResources().getColor(
 					R.color.greenyellow));
@@ -64,8 +66,9 @@ public class StaggeredIngredientAdapter extends ArrayAdapter<FoodIngredient> {
 					R.color.mintcream));
 		}
     	
+		//Removing AutoResize because it is not working in other phone
     	//holder.textView.setHeight(100);
-    	holder.textView.resizeText();
+    	//holder.textView.resizeText();
     	/*
     	tv.setTextSize(20);
     	tv.setDrawingCacheEnabled(true);
@@ -99,6 +102,6 @@ public class StaggeredIngredientAdapter extends ArrayAdapter<FoodIngredient> {
 
 	static class ViewHolder {
 		//ScaleImageView imageView;
-		AutoResizeTextView textView;
+		TextView textView;
 	}
 }
