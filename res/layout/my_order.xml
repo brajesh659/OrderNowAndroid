@@ -6,13 +6,26 @@
     android:orientation="horizontal"
     android:weightSum="11" >
 
-    <TextView
-        android:id="@+id/itemName"
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="5"
-        android:textColor="@color/red"
-        android:textStyle="bold" />
+        android:gravity="left"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/itemName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/red"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/itemNote"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/red" />
+    </LinearLayout>
 
     <ImageButton
         android:id="@+id/decrementQtyButton"
