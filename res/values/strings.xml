@@ -279,5 +279,8 @@
     <string name="desc_list_item_icon">Item Icon</string>
     <!-- Tab action bar items -->
     <string name="tabActionBarMyOrder">My order</string>
+    <string name="my_order_des">My Order</string>
+    <string name="confirmed_order_des">Confirmed Order</string>
+    <string name="history_des">History</string>
 
 </resources>
