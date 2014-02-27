@@ -72,6 +72,19 @@ public class FoodMenuItem implements Serializable {
 		return currentSelectedOptions;
 	}
 
+    public ArrayList<IngredientOption> getCurrentSelectedIngredients() {
+        ArrayList<IngredientOption> currentSelectedOptions = new ArrayList<IngredientOption>();
+        for (FoodIngredient foodIngredient : getIngredients()) {
+            ArrayList<IngredientOptionView> options = foodIngredient.getSelectedOptions();
+            if (options != null && !options.isEmpty()) {
+                for (IngredientOptionView option : options) {
+                    currentSelectedOptions.add(option.getOption());
+                }
+            }
+        }
+        return currentSelectedOptions;
+    }
+
 	public String getItemName() {
 		return dish.getName();
 	}

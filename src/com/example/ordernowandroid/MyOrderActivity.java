@@ -28,6 +28,7 @@ import com.example.ordernowandroid.model.OrderNowConstants;
 import com.google.gson.Gson;
 import com.parse.ParseInstallation;
 import com.util.AsyncNetwork;
+import com.util.Utilities;
 
 public class MyOrderActivity extends Activity {
 	private static final String TEXT_COMMENT = "TextComment"; //FIXME: Make the Properties names more readable
@@ -128,15 +129,14 @@ public class MyOrderActivity extends Activity {
 			} else {
 				orderDish = new OrderDish(myOrderItem.getQuantity());
 			}
-			dishes.put(myOrderItem.getFoodMenuItem().getDishId(), orderDish);
-			
-			//Clean Dish Ingredient if present
-			if (myOrderItem.getFoodMenuItem().isItemCustomizable()) {
-				ApplicationState.cleanDishSelectedIngredients(
-						(ApplicationState) getApplicationContext(), myOrderItem
-								.getFoodMenuItem().getItemName());
-			}
-		}
+            // Clean Dish Ingredient if present
+            if (myOrderItem.getFoodMenuItem().isItemCustomizable()) {
+                orderDish.setSelectedOptions(myOrderItem.getFoodMenuItem().getCurrentSelectedIngredients());
+                ApplicationState.cleanDishSelectedIngredients((ApplicationState) getApplicationContext(), myOrderItem
+                        .getFoodMenuItem().getItemName());
+            }
+            dishes.put(myOrderItem.getFoodMenuItem().getDishId(), orderDish);
+        }
 
 		CharSequence text = ParseInstallation.getCurrentInstallation().getObjectId();
 

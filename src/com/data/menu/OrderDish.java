@@ -1,6 +1,7 @@
 package com.data.menu;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class OrderDish implements Serializable {
 
@@ -8,6 +9,7 @@ public class OrderDish implements Serializable {
 	private Float dishQty;
 	private String dishNote;
 	private String spiceLevel;
+	private List<IngredientOption> selectedOptions;
 	
 	public OrderDish (Float dishQty, String dishNote, String spiceLevel) {
 		this.dishQty = dishQty;
@@ -43,6 +45,14 @@ public class OrderDish implements Serializable {
 
 	public void setSpiceLevel(String spiceLevel) {
 		this.spiceLevel = spiceLevel;
+	}
+
+	public List<IngredientOption> getSelectedOptions() {
+		return selectedOptions;
+	}
+
+	public void setSelectedOptions(List<IngredientOption> selectedOptions) {
+		this.selectedOptions = selectedOptions;
 	}
 	
 }
