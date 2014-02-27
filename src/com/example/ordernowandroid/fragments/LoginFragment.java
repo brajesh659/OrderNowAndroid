@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.ordernowandroid.ApplicationState;
+import com.example.ordernowandroid.FoodMenuActivity;
 import com.example.ordernowandroid.QRCodeScannerActivity;
 import com.example.ordernowandroid.R;
 import com.facebook.Request;
@@ -21,7 +22,9 @@ import com.facebook.widget.LoginButton;
 
 public class LoginFragment extends Fragment {
 
+	private boolean IS_DEBUG_MODE = false;
 	private UiLifecycleHelper uiHelper;
+
 	private Session.StatusCallback callback = new Session.StatusCallback() {
 		@Override
 		public void call(Session session, SessionState state, Exception exception) {
@@ -56,20 +59,27 @@ public class LoginFragment extends Fragment {
 						if (user != null) {
 							applicationContext.setUserName(user.getFirstName());
 							applicationContext.setProfilePictureId(user.getId());
-							
-							Intent intent = new Intent(getActivity(), QRCodeScannerActivity.class);
-							startActivity(intent);
-							getActivity().finish();
+
+							if (!IS_DEBUG_MODE){
+								Intent intent = new Intent(getActivity(), QRCodeScannerActivity.class); //FIXME: Found NPE on a new login
+								startActivity(intent);
+								getActivity().finish();
+							} else {
+								ApplicationState.setTableId(applicationContext, "T1"); //All the Orders would default to Table 1 in Debug Mode
+								Intent intent = new Intent(getActivity(), FoodMenuActivity.class);
+								startActivity(intent);				
+								getActivity().finish();
+							}
 						}
 					}
 					if (response.getError() != null) {
-		                // Handle errors, will do so later.
-		            }
+						// Handle errors, will do so later.
+					}
 				}
 			});
 			//Execute the Request for User Details
 			request.executeAsync();
-			
+
 		} else if (state.isClosed()) {
 			Toast.makeText(getActivity(), "Logged out successfully", Toast.LENGTH_SHORT).show();
 		}
