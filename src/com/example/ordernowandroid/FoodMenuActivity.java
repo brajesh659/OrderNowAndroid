@@ -48,6 +48,7 @@ import com.data.menu.CustomerOrderWrapper;
 import com.data.menu.Dish;
 import com.data.menu.FoodType;
 import com.data.menu.Ingredient;
+import com.data.menu.IngredientOption;
 import com.data.menu.Restaurant;
 import com.dm.zbar.android.scanner.ZBarConstants;
 import com.example.ordernowandroid.adapter.DownloadResturantMenu;
@@ -607,7 +608,8 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 		String[] itemids = getResources().getStringArray(itemDishIds);
 		String[] itemImages = getResources().getStringArray(itemImage);
 
-        for (int i = 0; itemNames != null && i < itemNames.length; i++) {
+		int i = 0;
+        for ( i = 0; itemNames != null && i < itemNames.length - 1; i++) {
             Dish dish = new Dish();
             dish.setName(itemNames[i]);
             dish.setPrice(itemPrices[i]);
@@ -620,38 +622,73 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
             }
             dish.setDescription("item description comes here");
 			dish.setDishId(itemids[i]);
-			dish.setIngredients(getFoodIngredientsLocaly());
+			dish.setIngredients(constructionOptionList());
 			dish.setIngredientCustomizable(true);
             dishes.add(dish);
 
         }
+        
+        Dish dish = new Dish();
+        dish.setName(itemNames[i]);
+        dish.setPrice(itemPrices[i]);
+        //dish.setImg(itemImages[i]);
+        dish.setImg("");
+        if (i % 2 == 0) {
+            dish.setType(FoodType.Veg);
+        } else {
+            dish.setType(FoodType.NonVeg);
+        }
+        dish.setDescription("item description comes here");
+		dish.setDishId(itemids[i]);
+		dish.setIngredients(constructionOptionList());
+		ArrayList<IngredientOption> selectedIngredientOptions = new ArrayList<IngredientOption>();
+		List<String> names = Arrays.asList(getResources().getStringArray(R.array.chef0));
+		for(String optionName : names ) {
+			IngredientOption op = new IngredientOption(optionName);
+			selectedIngredientOptions.add(op);
+		}
+		dish.setSelectedIngredientOptions(selectedIngredientOptions);
+		dish.setIngredientCustomizable(true);
+        dishes.add(dish);
     }
 	
-	private ArrayList<Ingredient> getFoodIngredientsLocaly() {
+	private ArrayList<Ingredient> constructionOptionList() {
 		ArrayList<Ingredient> ingList = new ArrayList<Ingredient>();
 		String[] ingTitle = getResources().getStringArray(
 				R.array.ingredients_title);
 
-		Ingredient ing = new Ingredient(ingTitle[0],
-				Arrays.asList(getResources().getStringArray(R.array.ing0)));
+
+		Ingredient ing = new Ingredient(ingTitle[0],constuctionOptions(Arrays.asList(getResources().getStringArray(R.array.ing0))));
+		ing.setMinOptionSelection(2);
 		//FoodIngredient fi = new FoodIngredient(ing);
 		ingList.add(ing);
 
-		Ingredient ing1 = new Ingredient(ingTitle[1],
-				Arrays.asList(getResources().getStringArray(R.array.ing1)));
+		Ingredient ing1 = new Ingredient(ingTitle[1],constuctionOptions(Arrays.asList(getResources().getStringArray(R.array.ing1))));
 		//FoodIngredient fi1 = new FoodIngredient(ing1);
 		ingList.add(ing1);
 
-		Ingredient ing2 = new Ingredient(ingTitle[2],
-				Arrays.asList(getResources().getStringArray(R.array.ing2)));
+		Ingredient ing2 = new Ingredient(ingTitle[2],constuctionOptions(Arrays.asList(getResources().getStringArray(R.array.ing2))));
 		//FoodIngredient fi2 = new FoodIngredient(ing2);
 		ingList.add(ing2);
 
-		Ingredient ing3 = new Ingredient(ingTitle[3],
-				Arrays.asList(getResources().getStringArray(R.array.ing3)));
+		Ingredient ing3 = new Ingredient(ingTitle[3],constuctionOptions(Arrays.asList(getResources().getStringArray(R.array.ing3))));
 		//FoodIngredient fi3 = new FoodIngredient(ing3);
 		ingList.add(ing3);
 		return ingList;
+	}
+	
+	private ArrayList<IngredientOption> constuctionOptions(List<String> names) {
+		//List<String> optionNames = Arrays.asList(getResources().getStringArray(R.array.ing0));
+		ArrayList<IngredientOption> optionList =  new ArrayList<IngredientOption>();
+		for(String optionName : names) {
+			IngredientOption op = new IngredientOption(optionName);
+			int random = Utilities.randInt();
+			if((random % 7) == 0) {
+			op.setDescription("small description comes here");
+			}
+			optionList.add(op);
+		}
+		return optionList;
 	}
 
 	private class DownloadRestaurantTask extends AsyncTask<String, Integer, Restaurant> {

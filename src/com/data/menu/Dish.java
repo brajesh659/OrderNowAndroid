@@ -34,6 +34,7 @@ public class Dish implements Serializable {
     private FoodType type; // Veg or non-veg
     private Map<MenuPropertyKey, MenuPropertyValue> dishProperties;
     private ArrayList<Ingredient> ingredients;
+    private ArrayList<IngredientOption> selectedIngredientOptions;
     private boolean isIngredientCustomizable = false;
     
 	public Map<MenuPropertyKey, MenuPropertyValue> getDishProperties() {
@@ -129,6 +130,15 @@ public class Dish implements Serializable {
 
 	public void setIngredientCustomizable(boolean isIngredientCustomizable) {
 		this.isIngredientCustomizable = isIngredientCustomizable;
+	}
+
+	public ArrayList<IngredientOption> getSelectedIngredientOptions() {
+		return selectedIngredientOptions;
+	}
+
+	public void setSelectedIngredientOptions(
+			ArrayList<IngredientOption> selectedIngredientOptions) {
+		this.selectedIngredientOptions = selectedIngredientOptions;
 	}
 
 

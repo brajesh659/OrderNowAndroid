@@ -2,11 +2,11 @@ package com.example.ordernowandroid.model;
 
 import java.io.Serializable;
 
-import com.data.menu.Option;
+import com.data.menu.IngredientOption;
 import com.data.menu.RecommendationType;
 import com.util.Utilities;
 
-public class OptionView implements Serializable {
+public class IngredientOptionView implements Serializable {
 
 	@Override
 	public String toString() {
@@ -14,37 +14,43 @@ public class OptionView implements Serializable {
 	}
 
 	private static final long serialVersionUID = 1L;
-	private Option option;
-	
-	public OptionView(Option option) {
+	private IngredientOption option;
+
+	public IngredientOption getOption() {
+		return option;
+	}
+
+	public IngredientOptionView(IngredientOption option) {
 		this.option = option;
-		
+
 		int random = Utilities.randInt();
-		if((random % 6) == 0) {
+		if ((random % 7) == 0) {
 			recommendation = RecommendationType.NotRecommended;
-		} else if((random % 3) == 0) {
+			recommendationString = "Not Recommended based on selections";
+		} else if ((random % 3) == 0) {
 			recommendation = RecommendationType.Recommended;
+			recommendationString = "Recommended based on selections";
 		} else {
 			recommendation = RecommendationType.None;
-		} 
+		}
 	}
-	
+
 	@Override
 	public boolean equals(Object o) {
-		if (o instanceof OptionView) {
-			OptionView option = (OptionView) o;
+		if (o instanceof IngredientOptionView) {
+			IngredientOptionView option = (IngredientOptionView) o;
 
 			return this.getOptionName().equals(option.getOptionName());
 
 		}
 		return false;
 	}
-	
+
 	private boolean isSelected;
 	private RecommendationType recommendation;
 	private String recommendationString;
 
-	public String getWhyRecommended() {
+	public String getRecommendationString() {
 		return recommendationString;
 	}
 
@@ -74,6 +80,10 @@ public class OptionView implements Serializable {
 
 	public void setRecommendation(RecommendationType recommendation) {
 		this.recommendation = recommendation;
+	}
+
+	public void setDescription(String description) {
+		this.option.setDescription(description);
 	}
 
 }

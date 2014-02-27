@@ -37,6 +37,16 @@
         <item>Condiments</item>
         <item>Starch</item>
     </string-array>
+
+     <string-array name="chef0">
+        <item>Fresh Malineinse</item>
+        <item>Baby Corn</item>
+        <item>Chicken</item>
+        <item>Lamb</item>
+        <item>Red Chilli</item>
+        <item>Sliced Onion</item>
+        <item>Noodles</item>
+    </string-array>
     
     <string-array name="ing0">
         <item>Fresh Malineinse</item>

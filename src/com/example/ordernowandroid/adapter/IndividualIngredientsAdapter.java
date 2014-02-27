@@ -13,10 +13,10 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.data.menu.Option;
+import com.data.menu.IngredientOption;
 import com.example.ordernowandroid.R;
 import com.example.ordernowandroid.model.FoodIngredient;
-import com.example.ordernowandroid.model.OptionView;
+import com.example.ordernowandroid.model.IngredientOptionView;
 import com.util.Utilities;
 
 public class IndividualIngredientsAdapter extends BaseAdapter {
@@ -68,19 +68,9 @@ public class IndividualIngredientsAdapter extends BaseAdapter {
 		ListView optionsDisplayList = (ListView) convertView
 				.findViewById(R.id.optionsList);
 		FoodIngredient ingredient = (FoodIngredient) getItem(position);
-		List<String> optionStringList = ingredient.getOptions();
-		List<OptionView> optionList = new ArrayList<OptionView>();
-		for (String optionString : optionStringList) {
-			Option op = new Option(optionString);
-			int num = Utilities.randInt();
-			if((num % 3) == 0) {
-				op.setDescription("small description comes here");
-			}
-			OptionView opv = new OptionView(op);
-			optionList.add(opv);
-		}
-		Utilities.info("optionList " + optionList);
-		OptionRowAdapter adapter = new OptionRowAdapter(context, optionList, ingredientListener);
+		List<IngredientOptionView> optionsList = ingredient.getIngredientOptions();
+		Utilities.info("optionList " + optionsList);
+		OptionRowAdapter adapter = new OptionRowAdapter(context, optionsList, ingredientListener);
 		optionsDisplayList.setAdapter(adapter);
 
 		return convertView;

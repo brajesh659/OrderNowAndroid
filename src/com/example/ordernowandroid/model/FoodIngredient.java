@@ -5,103 +5,146 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.data.menu.Ingredient;
-import com.data.menu.Option;
+import com.data.menu.IngredientOption;
 
-public class FoodIngredient implements Serializable{
+public class FoodIngredient implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private Ingredient ingredient;
-	private List<OptionView> selectedOptions;
-	private int minOptionSelection = 1;
-	
-	public List<OptionView> getSelectedOptions() {
+	private ArrayList<IngredientOptionView> options;
+	private ArrayList<IngredientOptionView> selectedOptions;
+
+	public ArrayList<IngredientOptionView> getSelectedOptions() {
 		return selectedOptions;
 	}
 
-	public void setSelectedOptions(List<OptionView> selectedOptions) {
-		this.selectedOptions = selectedOptions;
+	public void setSelectedOptions(List<IngredientOptionView> selectedOptions) {
+		if (selectedOptions != null) {
+			prepareSelectedOptions(selectedOptions);
+		}
 	}
 
-	public FoodIngredient(Ingredient ingredient, List<OptionView> selectedOptions) {
+	public void setPreSelectedOptions(List<IngredientOption> selectedOptions) {
+		if (selectedOptions != null) {
+			List<IngredientOption> options = this.ingredient
+					.getIngredientOptions();
+			for (IngredientOption option : options) {
+				if (selectedOptions.contains(option)) {
+					IngredientOptionView opv = new IngredientOptionView(option);
+					opv.setSelected(true);
+					this.selectedOptions.add(opv);
+				}
+			}
+		}
+	}
+
+	public List<IngredientOptionView> getIngredientOptions() {
+		return options;
+	}
+
+	public void setIngredientOptionsView(List<IngredientOption> selectedOptions) {
+		setIngredientOptionsView();
+		if (selectedOptions != null && !selectedOptions.isEmpty()) {
+			for (IngredientOptionView option : options) {
+				IngredientOption ingOption = option.getOption();
+				if (selectedOptions.contains(ingOption)) {
+					option.setSelected(true);
+					this.selectedOptions.add(option);
+				}
+			}
+		}
+	}
+
+	public void setIngredientOptionsView() {
+		List<IngredientOption> ingoptions = this.ingredient
+				.getIngredientOptions();
+		for (IngredientOption option : ingoptions) {
+			IngredientOptionView opv = new IngredientOptionView(option);
+			this.options.add(opv);
+		}
+	}
+
+	public FoodIngredient(Ingredient ingredient,
+			ArrayList<IngredientOption> selectedOptions) {
 		super();
 		this.ingredient = ingredient;
-		this.selectedOptions = selectedOptions;
+		this.selectedOptions = new ArrayList<IngredientOptionView>();
+		this.options = new ArrayList<IngredientOptionView>();
+		setIngredientOptionsView(selectedOptions);
 	}
 
 	public FoodIngredient(Ingredient ingredient) {
 		super();
 		this.ingredient = ingredient;
-		this.selectedOptions = new ArrayList<OptionView>();
+		this.selectedOptions = new ArrayList<IngredientOptionView>();
+		this.options = new ArrayList<IngredientOptionView>();
+		setIngredientOptionsView();
 	}
-	
+
 	public String getTitle() {
 		return ingredient.getTitle();
 	}
-	
-	public List<String> getOptions() {	
-		return ingredient.getOptions();
+
+	public List<IngredientOption> getOptions() {
+		return ingredient.getIngredientOptions();
 	}
-	
-	public void addOption(OptionView optionview) {
-		if(!selectedOptions.contains(optionview)) {
+
+	public void addOption(IngredientOptionView optionview) {
+		if (!selectedOptions.contains(optionview)) {
 			selectedOptions.add(optionview);
 		}
 	}
-	
-	public void removeOption(OptionView optionview) {
-		if(selectedOptions.contains(optionview)) {
+
+	public void removeOption(IngredientOptionView optionview) {
+		if (selectedOptions.contains(optionview)) {
 			selectedOptions.remove(optionview);
 		}
 	}
-	
+
 	public String getBitMapText() {
 		String text = getTitle();
-		if(minOptionSelection > 0) {
-			text += "\nMin : " + minOptionSelection;
+		if (getMinOptionSelection() > 0) {
+			text += "\nMin : " + getMinOptionSelection();
 		}
-		
-		if(selectedOptions != null && !selectedOptions.isEmpty()) {
-			text += "\n\nSelected:\n" ;
-			for(OptionView option : selectedOptions) {
+
+		if (selectedOptions != null && !selectedOptions.isEmpty()) {
+			text += "\n\nSelected:\n";
+			for (IngredientOptionView option : selectedOptions) {
 				text += option.getOptionName() + "\n";
 			}
 		} else {
-			text += "\n\nSelected: NONE" ;
+			text += "\n\nSelected: NONE";
 		}
 		return text;
 	}
 
-	public void prepareSelectedOptions(List<OptionView> selectedOptions) {
-		this.selectedOptions = new ArrayList<OptionView>();
-		if(selectedOptions != null) {
-			List<String> options = ingredient.getOptions();
-			for(String option : options) {
-				Option op = new Option(option);
-				OptionView opv = new OptionView(op);
-				if(selectedOptions.contains(opv)) {
+	public void prepareSelectedOptions(
+			List<IngredientOptionView> selectedOptions) {
+		this.selectedOptions = new ArrayList<IngredientOptionView>();
+		if (selectedOptions != null) {
+			List<IngredientOption> options = ingredient.getIngredientOptions();
+			for (IngredientOption option : options) {
+				IngredientOptionView opv = new IngredientOptionView(option);
+				if (selectedOptions.contains(opv)) {
 					this.selectedOptions.add(opv);
 				}
 			}
 		}
-		
 	}
 
 	public int getMinOptionSelection() {
-		return minOptionSelection;
+		return ingredient.getMinOptionSelection();
 	}
 
-	public void setMinOptionSelection(int minOptionSelection) {
-		this.minOptionSelection = minOptionSelection;
-	}
-	
 	public boolean isMinOptionsSelected() {
-		if(minOptionSelection ==0 ) {
+		if (getMinOptionSelection() == 0) {
 			return true;
 		}
-		if(selectedOptions!= null && selectedOptions.size() >= minOptionSelection) {
+		if (selectedOptions != null
+				&& selectedOptions.size() >= getMinOptionSelection()) {
 			return true;
 		}
 		return false;
 	}
-	
+
 }

@@ -55,7 +55,7 @@ public class StaggeredIngredientAdapter extends ArrayAdapter<FoodIngredient> {
 		FoodIngredient ingredient = getItem(position);
 		holder.textView.setText(ingredient.getBitMapText());
 		
-		if(getItem(position).isMinOptionsSelected()) {
+		if(ingredient.isMinOptionsSelected()) {
 			holder.textView.setBackgroundColor(context.getResources().getColor(
 					R.color.greenyellow));
 		} else if(ingredient.getSelectedOptions().size()!=0) {

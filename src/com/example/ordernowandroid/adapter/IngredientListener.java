@@ -1,11 +1,11 @@
 package com.example.ordernowandroid.adapter;
 
-import com.example.ordernowandroid.model.OptionView;
+import com.example.ordernowandroid.model.IngredientOptionView;
 
 public interface IngredientListener {
 
-	public boolean isSelected(OptionView optionView);
+	public boolean isSelected(IngredientOptionView optionView);
 
-	public void updateIngredient(OptionView optionView, boolean checked);
+	public void updateIngredient(IngredientOptionView optionView, boolean checked);
 
 }

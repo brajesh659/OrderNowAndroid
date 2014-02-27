@@ -21,9 +21,8 @@ import com.example.ordernowandroid.adapter.StaggeredIngredientAdapter;
 import com.example.ordernowandroid.fragments.StaggeredGridView;
 import com.example.ordernowandroid.model.FoodIngredient;
 import com.example.ordernowandroid.model.FoodMenuItem;
+import com.example.ordernowandroid.model.IngredientOptionView;
 import com.example.ordernowandroid.model.MyOrderItem;
-import com.example.ordernowandroid.model.OptionView;
-import com.util.Utilities;
 
 public class IngredientsActivity extends Activity {
 
@@ -34,7 +33,7 @@ public class IngredientsActivity extends Activity {
 	public static final String DISH_NAME = "dishname";
 	public static final String INGREDIENTS_LIST = "ingredientsList";
 	public static final String FOOD_ITEM = "foodItem";
-	private List<OptionView> selectedOptions;
+	private List<IngredientOptionView> selectedOptions;
 	private StaggeredIngredientAdapter adapter;
 
 	private String urls[] = {
@@ -76,20 +75,27 @@ public class IngredientsActivity extends Activity {
 			foodItem = (FoodMenuItem) b
 					.getSerializable(IngredientsActivity.FOOD_ITEM);
 			ingList = foodItem.getIngredients();
-			// ingList = (ArrayList<FoodIngredient>) b
-			// .getSerializable(IngredientsActivity.INGREDIENTS_LIST);
+		}
+
+		// if first time then selectedOptions will be null, populate it using
+		// preselectedoptions if present
+		if (selectedOptions == null
+				&& foodItem.getCurrentSelectedIngredientOptions() != null
+				&& !foodItem.getCurrentSelectedIngredientOptions().isEmpty()) {
+			ApplicationState.setDishSelectedIngredientList(
+					(ApplicationState) getApplicationContext(), dishName,
+					foodItem.getCurrentSelectedIngredientOptions());
 		}
 		setTitle(dishName);
-		
+
 		// ingList = getFoodIngredientsLocaly();
 		setContentView(R.layout.ingredeints_view);
 
 		final ImageButton decrementQtyBtn = (ImageButton) findViewById(R.id.decrementQtyButton);
 		final ImageButton incrementQtyBtn = (ImageButton) findViewById(R.id.incrementQtyButton);
-		final TextView quantity = (TextView)findViewById(R.id.quantity);
-		final Button addToCart = (Button)findViewById(R.id.addIngredientToCart);
-		
-		
+		final TextView quantity = (TextView) findViewById(R.id.quantity);
+		final Button addToCart = (Button) findViewById(R.id.addIngredientToCart);
+
 		selectedOptions = ApplicationState.getDishSelectedIngredientList(
 				(ApplicationState) getApplicationContext(), dishName);
 
@@ -97,7 +103,7 @@ public class IngredientsActivity extends Activity {
 				.getFoodMenuItemQuantityMap((ApplicationState) getApplicationContext());
 
 		if (foodMenuItemQuantityMap.get(foodItem.getItemName()) != null) {
-			
+
 			itemQuantity = (int) foodMenuItemQuantityMap.get(
 					foodItem.getItemName()).getQuantity();
 			addToCart.setText(getResources().getString(R.string.modify));
@@ -107,7 +113,6 @@ public class IngredientsActivity extends Activity {
 				ing.prepareSelectedOptions(selectedOptions);
 			}
 		}
-
 
 		StaggeredGridView gridView = (StaggeredGridView) this
 				.findViewById(R.id.staggeredGridView1);
@@ -145,7 +150,6 @@ public class IngredientsActivity extends Activity {
 		});
 		adapter.notifyDataSetChanged();
 
-		
 		quantity.setText(itemQuantity + "");
 
 		decrementQtyBtn.setOnClickListener(new OnClickListener() {
@@ -238,10 +242,11 @@ public class IngredientsActivity extends Activity {
 					}
 					finish();
 				} else {
-					AlertDialog.Builder builder = new AlertDialog.Builder(IngredientsActivity.this);
+					AlertDialog.Builder builder = new AlertDialog.Builder(
+							IngredientsActivity.this);
 					builder.setTitle("Item not added");
 					builder.setMessage("The criteria for minimum selection of options is not satisfied.");
-					builder.setPositiveButton(R.string.ok,null);
+					builder.setPositiveButton(R.string.ok, null);
 					AlertDialog alert = builder.create();
 					alert.show();
 				}

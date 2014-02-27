@@ -2,7 +2,7 @@ package com.data.menu;
 
 import java.io.Serializable;
 
-public class Option implements Serializable{
+public class IngredientOption implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
@@ -15,11 +15,11 @@ public class Option implements Serializable{
 
 	private String description;
 	
-	public Option(String optionName) {
+	public IngredientOption(String optionName) {
 		this.optionName = optionName;
 	}
 
-	public Option(String optionName, String description) {
+	public IngredientOption(String optionName, String description) {
 		this.optionName = optionName;
 		this.description = description;
 	}
@@ -42,8 +42,8 @@ public class Option implements Serializable{
 
 	@Override
 	public boolean equals(Object o) {
-		if (o instanceof Option) {
-			Option option = (Option) o;
+		if (o instanceof IngredientOption) {
+			IngredientOption option = (IngredientOption) o;
 
 			return this.optionName.equals(option.getOptionName());
 

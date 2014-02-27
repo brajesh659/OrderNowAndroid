@@ -12,7 +12,7 @@ import com.aphidmobile.flip.FlipViewController;
 import com.example.ordernowandroid.adapter.IndividualIngredientsAdapter;
 import com.example.ordernowandroid.adapter.IngredientListener;
 import com.example.ordernowandroid.model.FoodIngredient;
-import com.example.ordernowandroid.model.OptionView;
+import com.example.ordernowandroid.model.IngredientOptionView;
 import com.util.Utilities;
 
 public class IndividualIngredientActivity extends Activity implements IngredientListener {
@@ -24,7 +24,7 @@ public class IndividualIngredientActivity extends Activity implements Ingredient
 	int page = 0;
 	private String dishname;
 	//Map<String,OptionView> selectedOptions = new HashMap<String,OptionView>();
-	private List<OptionView> selectedOptions;
+	private List<IngredientOptionView> selectedOptions;
 
 	/**
 	 * Called when the activity is first created.
@@ -44,7 +44,7 @@ public class IndividualIngredientActivity extends Activity implements Ingredient
 
 		selectedOptions = ApplicationState.getDishSelectedIngredientList((ApplicationState)getApplicationContext(),dishname);
 		if(selectedOptions == null) {
-			selectedOptions = new ArrayList<OptionView>();
+			selectedOptions = new ArrayList<IngredientOptionView>();
 		}
 		setTitle(ingList.get(page).getTitle());
 
@@ -91,7 +91,7 @@ public class IndividualIngredientActivity extends Activity implements Ingredient
 	}
 
 	@Override
-	public boolean isSelected(OptionView optionView) {
+	public boolean isSelected(IngredientOptionView optionView) {
 		if(selectedOptions.contains(optionView)) {
 			return true;
 		}
@@ -100,7 +100,7 @@ public class IndividualIngredientActivity extends Activity implements Ingredient
 	
 
 	@Override
-	public void updateIngredient(OptionView optionView, boolean checked) {
+	public void updateIngredient(IngredientOptionView optionView, boolean checked) {
 		if(checked) {
 			selectedOptions.add(optionView);
 			ApplicationState.addDishSelectedIngredient((ApplicationState)getApplicationContext(), dishname, optionView);

@@ -10,7 +10,7 @@ import android.app.Application;
 import com.data.menu.CustomerOrderWrapper;
 import com.example.ordernowandroid.filter.MenuFilter;
 import com.example.ordernowandroid.model.MyOrderItem;
-import com.example.ordernowandroid.model.OptionView;
+import com.example.ordernowandroid.model.IngredientOptionView;
 import com.util.Utilities;
 
 public class ApplicationState extends Application {
@@ -23,13 +23,13 @@ public class ApplicationState extends Application {
 	private HashMap<String, MyOrderItem> foodMenuItemQuantityMap;
 	private CustomerOrderWrapper customerOrderWrapper;
 	private ArrayList<CustomerOrderWrapper> subOrdersFromDB;
-	private Map<String, List<OptionView>> dishIngredientMap;
+	private Map<String, List<IngredientOptionView>> dishIngredientMap;
 
 
 	public ApplicationState() {
 		myOrderItems = new ArrayList<MyOrderItem>();
 		menuFilter = new MenuFilter();
-		dishIngredientMap = new HashMap<String, List<OptionView>>();
+		dishIngredientMap = new HashMap<String, List<IngredientOptionView>>();
 	}
 
 	public String getTableId() {
@@ -172,52 +172,52 @@ public class ApplicationState extends Application {
 		this.profilePictureId = profilePictureId;
 	}
 
-	public List<OptionView> getDishSelectedIngredientList(String dishName) {
+	public List<IngredientOptionView> getDishSelectedIngredientList(String dishName) {
 		return dishIngredientMap.get(dishName);
 	}
 	
-	public static List<OptionView> getDishSelectedIngredientList(
+	public static List<IngredientOptionView> getDishSelectedIngredientList(
 			ApplicationState applicationContext, String dishName) {
 		return applicationContext.getDishSelectedIngredientList(dishName);
 	}
 	
-	public void setDishSelectedIngredientList(String dishName, List<OptionView> optionList) {
+	public void setDishSelectedIngredientList(String dishName, List<IngredientOptionView> optionList) {
 		 dishIngredientMap.put(dishName, optionList);
 	}
 	
 	public static void setDishSelectedIngredientList(ApplicationState applicationContext,
-			String dishName, List<OptionView> optionList) {
+			String dishName, List<IngredientOptionView> optionList) {
 		 applicationContext.setDishSelectedIngredientList(dishName, optionList);
 	}
 	
 	public static void addDishSelectedIngredient(ApplicationState applicationContext,
-			String dishName, OptionView option) {
+			String dishName, IngredientOptionView option) {
 		 applicationContext.addDishSelectedIngredient(dishName, option);
 	}
 	
 	public static void removeDishSelectedIngredient(ApplicationState applicationContext,
-			String dishName, OptionView option) {
+			String dishName, IngredientOptionView option) {
 		 applicationContext.removeDishSelectedIngredient(dishName, option);
 	}
 	
 	public void addDishSelectedIngredient(
-			String dishName, OptionView option) {
+			String dishName, IngredientOptionView option) {
 		if(dishIngredientMap.get(dishName)==null) {
-			List<OptionView> optionList = new ArrayList<OptionView>();
+			List<IngredientOptionView> optionList = new ArrayList<IngredientOptionView>();
 			dishIngredientMap.put(dishName, optionList);
 		}
-		List<OptionView> optionList = dishIngredientMap.get(dishName);
+		List<IngredientOptionView> optionList = dishIngredientMap.get(dishName);
 		optionList.add(option);
 		dishIngredientMap.put(dishName, optionList);
 		Utilities.info("addDishSelecteedIng dishIngredientMap " + dishIngredientMap );
 	}
 	
 	public void removeDishSelectedIngredient(
-			String dishName, OptionView option) {
+			String dishName, IngredientOptionView option) {
 		if(dishIngredientMap.get(dishName)==null) {
 			return;
 		}
-		List<OptionView> optionList = dishIngredientMap.get(dishName);
+		List<IngredientOptionView> optionList = dishIngredientMap.get(dishName);
 		optionList.remove(option);
 		if (optionList.isEmpty()) {
 			dishIngredientMap.remove(dishName);

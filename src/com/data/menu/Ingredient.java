@@ -6,12 +6,13 @@ import java.util.List;
 public class Ingredient implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String title;
-	private List<String> options;
+	private List<IngredientOption> ingredientOptions;
+	private int minOptionSelection = 1;
 	
-	public Ingredient(String title, List<String> options) {
+	public Ingredient(String title, List<IngredientOption> options) {
 		super();
 		this.title = title;
-		this.options = options;
+		this.ingredientOptions = options;
 	}
 	
 	public String getTitle() {
@@ -20,11 +21,19 @@ public class Ingredient implements Serializable {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	public List<String> getOptions() {
-		return options;
+	public List<IngredientOption> getIngredientOptions() {
+		return ingredientOptions;
 	}
-	public void setOptions(List<String> options) {
-		this.options = options;
+	public void setIngredientOptions(List<IngredientOption> options) {
+		this.ingredientOptions = options;
+	}
+
+	public int getMinOptionSelection() {
+		return minOptionSelection;
+	}
+
+	public void setMinOptionSelection(int minOptionSelection) {
+		this.minOptionSelection = minOptionSelection;
 	}
 
 }
