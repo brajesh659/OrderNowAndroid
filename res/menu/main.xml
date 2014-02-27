@@ -1,33 +1,38 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
+    <!--
+          <item android:id="@+id/search"
+          android:title="@string/search_title"
+          android:orderInCategory="100"
+          android:icon="@drawable/ic_action_search"
+          android:showAsAction="always"
+          android:actionViewClass="android.widget.SearchView" />
+    -->
+
     <item
         android:id="@+id/action_cart"
         android:actionLayout="@layout/food_cart"
-        android:icon="@drawable/ic_cart_icon"
-        android:orderInCategory="140"
+        android:icon="@drawable/ic_cart_icon_1"
+        android:orderInCategory="110"
         android:showAsAction="ifRoom"
         android:title="@string/myorder"/>
-    
+    <item
+        android:id="@+id/historybutton"
+        android:icon="@drawable/history_icon"
+        android:orderInCategory="140"
+        android:showAsAction="ifRoom"
+        android:title="@string/history_des"/>
     <item
         android:id="@+id/confirmed_order"
         android:icon="@drawable/confirmed_order_icon"
-        android:orderInCategory="150"
+        android:orderInCategory="120"
         android:showAsAction="ifRoom"
         android:title="@string/confirmed_order"/>
-
-    <item android:id="@+id/search"
-          android:title="@string/search_title"
-          android:orderInCategory="120"
-          android:icon="@drawable/ic_action_search"
-          android:showAsAction="collapseActionView|ifRoom"
-          android:actionViewClass="android.widget.SearchView" />
-    
     <item
         android:id="@+id/filter_menu"
         android:icon="@drawable/ic_filter"
-        android:orderInCategory="130"
+        android:orderInCategory="100"
         android:showAsAction="ifRoom"
         android:title="@string/filter_menu"/>
 
 </menu>
-

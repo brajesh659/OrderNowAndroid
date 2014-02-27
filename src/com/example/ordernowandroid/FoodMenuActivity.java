@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.Context;
@@ -33,8 +34,10 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.AdapterView;
 import android.widget.CursorAdapter;
+import android.widget.ExpandableListView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SearchView;
@@ -54,6 +57,7 @@ import com.dm.zbar.android.scanner.ZBarConstants;
 import com.example.ordernowandroid.adapter.DownloadResturantMenu;
 import com.example.ordernowandroid.adapter.ImageService;
 import com.example.ordernowandroid.adapter.NavDrawerListAdapter;
+import com.example.ordernowandroid.adapter.NewNavDrawerListAdapter;
 import com.example.ordernowandroid.filter.MenuFilter;
 import com.example.ordernowandroid.fragments.AddNoteDialogFragment;
 import com.example.ordernowandroid.fragments.AddNoteListener;
@@ -74,6 +78,7 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 	private CharSequence mDrawerTitle; // nav drawer title
 	private CharSequence mTitle; // used to store app title
 	private ArrayList<CategoryNavDrawerItem> navDrawerItems;
+	private ArrayList<ArrayList<CategoryNavDrawerItem>> childDrawerItems;
 	private NavDrawerListAdapter adapter;
 	private Restaurant restaurant;
 	private DishHelper dh;
@@ -92,42 +97,20 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 		mTitle = getTitle();
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
-		
-        ImageButton myOrder = (ImageButton) mDrawerLayout.findViewById(R.id.myorderbutton);
-        ImageButton confirmedOrder = (ImageButton) mDrawerLayout.findViewById(R.id.conirmedorderbutton);
-        ImageButton history = (ImageButton) mDrawerLayout.findViewById(R.id.historybutton);
-        
-        myOrder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
-                startMyOrderActivity(getApplicationContext());
-            }
-        });
-
-        confirmedOrder.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View arg0) {
-                startPartentOrderActivity(getApplicationContext());
-
-            }
-        });
-
-        history.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
-                Toast.makeText(getApplicationContext(), "Not implemeted yet", Toast.LENGTH_SHORT).show();
-            }
-        });
-
 
 		navDrawerItems = new ArrayList<CategoryNavDrawerItem>();
+		childDrawerItems = new ArrayList<ArrayList<CategoryNavDrawerItem>>();
+		
 
 		// setting the nav drawer list adapter
+		//adapter = new NewNavDrawerListAdapter(getApplicationContext(), navDrawerItems, childDrawerItems);
 		adapter = new NavDrawerListAdapter(getApplicationContext(), navDrawerItems);
 		mDrawerList.setAdapter(adapter);
 
 		// enabling action bar app icon and behaving it as toggle button
+		ActionBar actionBar = getActionBar();               
+		actionBar.setCustomView(R.layout.search_layout); //load your layout
+		actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME|ActionBar.DISPLAY_SHOW_CUSTOM); //show it 
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActionBar().setHomeButtonEnabled(true);
 
@@ -177,6 +160,10 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 			for (Category category : getCategories()) {
 				CategoryNavDrawerItem categoryNavDrawerItem = new CategoryNavDrawerItem(category);
 				navDrawerItems.add(categoryNavDrawerItem);
+				ArrayList<CategoryNavDrawerItem> childArrayList = new ArrayList<CategoryNavDrawerItem>();
+				childArrayList.add(categoryNavDrawerItem);
+				childArrayList.add(categoryNavDrawerItem);
+				childDrawerItems.add(childArrayList);
 			}
 		}
 		mDrawerLayout.openDrawer(Gravity.LEFT);
@@ -216,8 +203,11 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 
 		// Associate searchable configuration with the SearchView
 		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-		MenuItem searchMenuItem = menu.findItem(R.id.search);
-		searchView = (SearchView) searchMenuItem.getActionView();
+		//MenuItem searchMenuItem = menu.findItem(R.id.search);
+		//searchView = (SearchView) searchMenuItem.getActionView();
+		ActionBar actionBar = getActionBar();
+        actionBar.setCustomView(R.layout.search_layout);
+        searchView = (SearchView) actionBar.getCustomView().findViewById(R.id.search);
 		searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 		searchView.setOnQueryTextListener(this);
 		searchView.setOnSuggestionListener(this);
@@ -294,6 +284,10 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 		case R.id.filter_menu:
 			Intent intent = new Intent(this, FilterMenuActivity.class);
 			startActivity(intent);
+			return true;
+		case R.id.historybutton:
+		    Toast.makeText(this, "History not implemented yet", Toast.LENGTH_LONG).show();
+		    return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -333,7 +327,6 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 	 */
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		menu.findItem(R.id.search).collapseActionView();
 		return super.onPrepareOptionsMenu(menu);
 	}
 

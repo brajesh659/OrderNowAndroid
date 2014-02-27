@@ -86,6 +86,7 @@
             android:name="com.example.ordernowandroid.FoodMenuActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop"
+            android:uiOptions="splitActionBarWhenNarrow"
             android:parentActivityName="com.example.ordernowandroid.MainActivity"
             android:theme="@android:style/Theme.Holo.Light" >
             <intent-filter>

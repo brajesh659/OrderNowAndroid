@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SearchView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/search"
+    style="?android:attr/actionButtonStyle"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="top|right"
+    android:actionViewClass="android.widget.SearchView"
+    android:gravity="right"
+    android:icon="@drawable/ic_action_search" />
+
