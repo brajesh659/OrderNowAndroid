@@ -15,7 +15,6 @@ import com.example.ordernowandroid.model.MyOrderItem;
 import com.example.ordernowandroid.model.OrderNowConstants;
 
 public class MyParentOrderActivity extends Activity {
-	private ArrayList<MyOrderItem> myOrderItemList = new ArrayList<MyOrderItem>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -35,19 +34,18 @@ public class MyParentOrderActivity extends Activity {
 			subOrdersFromDB.add(customerOrderWrapper);
 			ApplicationState.setCustomerOrderWrapper(applicationContext, null);
 		}
-
-		for (CustomerOrderWrapper subOrder: subOrdersFromDB){			
+		
+		for (CustomerOrderWrapper subOrder:subOrdersFromDB) {			
 			for (MyOrderItem myOrderItem: subOrder.getMyOrderItemList()) {
-				myOrderItemList.add(myOrderItem);
 				totalOrderAmount = totalOrderAmount + (myOrderItem.getQuantity() * myOrderItem.getFoodMenuItem().getItemPrice());
 			}
-		}		
-
+		}
+		
 		totalAmount.setText(OrderNowConstants.INDIAN_RUPEE_UNICODE + " " + Float.toString(totalOrderAmount));
 
-		ListView myOrderListView = (ListView) findViewById(R.id.parentListMyOrder);
-		MyParentOrderAdapter myParentOrderAdapter = new MyParentOrderAdapter(this, myOrderItemList);
-		myOrderListView.setAdapter(myParentOrderAdapter);
+		ListView subOrderListView = (ListView) findViewById(R.id.subOrderList);
+		MyParentOrderAdapter myParentOrderAdapter = new MyParentOrderAdapter(this, subOrdersFromDB);
+		subOrderListView.setAdapter(myParentOrderAdapter);
 	}
 
 	@Override

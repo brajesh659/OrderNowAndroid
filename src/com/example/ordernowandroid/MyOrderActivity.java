@@ -28,7 +28,6 @@ import com.example.ordernowandroid.model.OrderNowConstants;
 import com.google.gson.Gson;
 import com.parse.ParseInstallation;
 import com.util.AsyncNetwork;
-import com.util.Utilities;
 
 public class MyOrderActivity extends Activity {
 	private static final String TEXT_COMMENT = "TextComment"; //FIXME: Make the Properties names more readable
@@ -139,7 +138,6 @@ public class MyOrderActivity extends Activity {
         }
 
 		CharSequence text = ParseInstallation.getCurrentInstallation().getObjectId();
-
 
 		CustomerOrder customerOrder = new CustomerOrder(dishes, "R1",
 				text.toString(), ApplicationState.getTableId((ApplicationState)getApplicationContext()), orderNote);

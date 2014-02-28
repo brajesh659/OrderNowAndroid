@@ -5,18 +5,18 @@
     android:background="@color/white" >
 
     <ListView
-        android:id="@+id/parentListMyOrder"
+        android:id="@+id/subOrderList"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/parentRelativeBtnLayout"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:choiceMode="singleChoice"
-        android:divider="@color/red"
-        android:dividerHeight="1dp" />
+        android:divider="@color/whitesmoke"
+        android:dividerHeight="10dp" />
 
     <RelativeLayout
-        android:id="@+id/parentRelativeBtnLayout"
+        android:id="@id/parentRelativeBtnLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
