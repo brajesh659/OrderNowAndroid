@@ -34,10 +34,7 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.AdapterView;
 import android.widget.CursorAdapter;
-import android.widget.ExpandableListView;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SearchView;
@@ -57,7 +54,6 @@ import com.dm.zbar.android.scanner.ZBarConstants;
 import com.example.ordernowandroid.adapter.DownloadResturantMenu;
 import com.example.ordernowandroid.adapter.ImageService;
 import com.example.ordernowandroid.adapter.NavDrawerListAdapter;
-import com.example.ordernowandroid.adapter.NewNavDrawerListAdapter;
 import com.example.ordernowandroid.filter.MenuFilter;
 import com.example.ordernowandroid.fragments.AddNoteDialogFragment;
 import com.example.ordernowandroid.fragments.AddNoteListener;
@@ -100,7 +96,6 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 
 		navDrawerItems = new ArrayList<CategoryNavDrawerItem>();
 		childDrawerItems = new ArrayList<ArrayList<CategoryNavDrawerItem>>();
-		
 
 		// setting the nav drawer list adapter
 		//adapter = new NewNavDrawerListAdapter(getApplicationContext(), navDrawerItems, childDrawerItems);
@@ -166,7 +161,9 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 				childDrawerItems.add(childArrayList);
 			}
 		}
-		mDrawerLayout.openDrawer(Gravity.LEFT);
+		if (applicationContext.isOpenCategoryDrawer()) {
+			mDrawerLayout.openDrawer(Gravity.LEFT);
+		}
 
 		CustomDbAdapter dbManager = CustomDbAdapter
 				.getInstance(getBaseContext());
@@ -270,7 +267,7 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 		if (mDrawerToggle.onOptionsItemSelected(item)) {
 			return true;
 		}
-		// Handle action bar actions click
+		Intent intent = null;
 		switch (item.getItemId()) {
 		case R.id.action_cart :
 			startMyOrderActivity(getApplicationContext());
@@ -282,11 +279,12 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 			onSearchRequested();
 			return true;
 		case R.id.filter_menu:
-			Intent intent = new Intent(this, FilterMenuActivity.class);
+			intent = new Intent(this, FilterMenuActivity.class);
 			startActivity(intent);
 			return true;
 		case R.id.historybutton:
-		    Toast.makeText(this, "History not implemented yet", Toast.LENGTH_LONG).show();
+			intent = new Intent(this, MyOrderHistoryActivity.class);
+			startActivity(intent);
 		    return true;
 		default:
 			return super.onOptionsItemSelected(item);

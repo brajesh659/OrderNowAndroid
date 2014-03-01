@@ -52,7 +52,7 @@ public class MyParentOrderActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			onBackPressed(); //FIXME: Persist the myOrderItem List Data on FoodMenuActivity Page		
+			onBackPressed();		
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -60,6 +60,7 @@ public class MyParentOrderActivity extends Activity {
 
 	@Override
 	public void onBackPressed() {
+		ApplicationState.setOpenCategoryDrawer((ApplicationState) getApplicationContext(), true); //FIXME: Persist the myOrderItem List Data on FoodMenuActivity Page
 		Intent intent = new Intent(getApplicationContext(), FoodMenuActivity.class);
 		startActivity(intent);
 		finish();		

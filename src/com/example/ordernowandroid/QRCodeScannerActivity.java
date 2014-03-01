@@ -62,6 +62,7 @@ public class QRCodeScannerActivity extends Activity {
 				Toast.makeText(this, "Table Id = " + tableId, Toast.LENGTH_SHORT).show();
 
 				ApplicationState.setTableId(applicationContext, tableId);
+				ApplicationState.setOpenCategoryDrawer((ApplicationState) getApplicationContext(), true);
 				Intent intent = new Intent(this, FoodMenuActivity.class);
 				startActivity(intent);				
 				finish();	

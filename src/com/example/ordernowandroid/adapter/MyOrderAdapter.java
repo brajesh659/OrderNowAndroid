@@ -21,12 +21,7 @@ import com.example.ordernowandroid.ApplicationState;
 import com.example.ordernowandroid.R;
 import com.example.ordernowandroid.model.MyOrderItem;
 import com.example.ordernowandroid.model.OrderNowConstants;
-
-/**
- * 
- * @author Rohit
- *
- */
+import com.util.Utilities;
 
 public class MyOrderAdapter extends ArrayAdapter<MyOrderItem> {
 
@@ -99,9 +94,8 @@ public class MyOrderAdapter extends ArrayAdapter<MyOrderItem> {
 					}
 					Float newOrderTotalPrice = Float.parseFloat(orderTotalPriceStr) - (orderItemPrice/qty);					
 					orderTotalPriceView.setText(OrderNowConstants.INDIAN_RUPEE_UNICODE + " " + Float.toString(newOrderTotalPrice));					
-					myOrderItemList.get(position).setQuantity(qty - 1);	
+					myOrderItemList.get(position).setQuantity(qty - 1);
 					foodMenuItemQuantityMap.get(myOrderItemList.get(position).getFoodMenuItem().getItemName()).setQuantity(qty-1);
-
 				} else if (qty == 1){
 					//Show Dialog and Remove Item from ListView on Positive Button Action
 					AlertDialog.Builder builder = new AlertDialog.Builder(getContext());            
@@ -121,9 +115,7 @@ public class MyOrderAdapter extends ArrayAdapter<MyOrderItem> {
 							Float newOrderTotalPrice = Float.parseFloat(orderTotalPriceStr) - (orderItemPrice);					
 							orderTotalPriceView.setText(OrderNowConstants.INDIAN_RUPEE_UNICODE + " " + Float.toString(newOrderTotalPrice));
 						}
-					}
-
-							);
+					});
 
 					builder.setNegativeButton(R.string.cancel, null);	            	            
 					AlertDialog alert = builder.create();

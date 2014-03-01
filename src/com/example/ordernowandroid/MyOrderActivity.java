@@ -50,7 +50,9 @@ public class MyOrderActivity extends Activity {
 		addMoreItemsBtn.setOnClickListener(new Button.OnClickListener() {           
 			@Override
 			public void onClick(View v) {
-				onBackPressed();
+				ApplicationState.setOpenCategoryDrawer((ApplicationState) v.getContext().getApplicationContext(), false);
+				Intent intent = new Intent(getApplicationContext(), FoodMenuActivity.class);
+				startActivity(intent);
 			}
 		});
 
@@ -163,8 +165,7 @@ public class MyOrderActivity extends Activity {
 		finish();
 	}
 
-	public void doNegativeClick() {
-	}
+	public void doNegativeClick() {}
 
 }
 

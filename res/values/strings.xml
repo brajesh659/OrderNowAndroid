@@ -29,6 +29,7 @@
     <string name="confirm_order_comment_hint_text">"Enter additional comments for this order!!"</string>   
     <string name="filter_menu">"Filter Menu"</string>
     <string name="modify">"Modify"</string>
+    <string name="reordernow">"Reorder Now"</string>
     
     
     <string-array name="ingredients_title">

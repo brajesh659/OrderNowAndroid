@@ -9,8 +9,8 @@ import android.app.Application;
 
 import com.data.menu.CustomerOrderWrapper;
 import com.example.ordernowandroid.filter.MenuFilter;
-import com.example.ordernowandroid.model.MyOrderItem;
 import com.example.ordernowandroid.model.IngredientOptionView;
+import com.example.ordernowandroid.model.MyOrderItem;
 import com.util.Utilities;
 
 public class ApplicationState extends Application {
@@ -24,7 +24,8 @@ public class ApplicationState extends Application {
 	private CustomerOrderWrapper customerOrderWrapper;
 	private ArrayList<CustomerOrderWrapper> subOrdersFromDB;
 	private Map<String, List<IngredientOptionView>> dishIngredientMap;
-
+	private ArrayList<CustomerOrderWrapper> myOrderHistoryList;
+	private boolean openCategoryDrawer = true;
 
 	public ApplicationState() {
 		myOrderItems = new ArrayList<MyOrderItem>();
@@ -49,14 +50,6 @@ public class ApplicationState extends Application {
 		this.tableId = tableId;
 	}
 
-	public ArrayList<MyOrderItem> getMyOrderItems() {
-		return myOrderItems;
-	}
-
-	public void setMyOrderItems(ArrayList<MyOrderItem> myOrderItems) {
-		this.myOrderItems = myOrderItems;
-	}
-
 	public int getCategoryId() {
 		return categoryId;
 	}
@@ -74,16 +67,14 @@ public class ApplicationState extends Application {
 			int categoryId) {
 		applicationContext.setCategoryId(categoryId);
 	}
-
-	public static ArrayList<MyOrderItem> getMyOrderItems(
-			ApplicationState applicationContext) {
-		HashMap<String, MyOrderItem> foodMenuItemQuantityMap = applicationContext
-				.getFoodMenuItemQuantityMap();
+	
+	public static ArrayList<MyOrderItem> getMyOrderItems(ApplicationState applicationContext) {
+		HashMap<String, MyOrderItem> foodMenuItemQuantityMap = applicationContext.getFoodMenuItemQuantityMap();
 		ArrayList<MyOrderItem> myOrderItems = new ArrayList<MyOrderItem>();
 		myOrderItems.addAll(foodMenuItemQuantityMap.values());
 		return myOrderItems;
 	}
-
+	
 	public MenuFilter getMenuFilter() {
 		return menuFilter;
 	}
@@ -236,6 +227,38 @@ public class ApplicationState extends Application {
 	public static void cleanDishSelectedIngredients(
 			ApplicationState applicationContext, String dishName) {
 		applicationContext.cleanDishSelectedIngredients(dishName);
+	}
+	
+	public ArrayList<CustomerOrderWrapper> getMyOrderHistoryList() {
+		return myOrderHistoryList;
+	}
+	
+	public void setMyOrderHistoryList(ArrayList<CustomerOrderWrapper> myOrderHistoryList) {
+		this.myOrderHistoryList = myOrderHistoryList;
+	}
+
+	public static ArrayList<CustomerOrderWrapper> getMyOrderHistoryList(ApplicationState applicationContext) {
+		return applicationContext.getMyOrderHistoryList();
+	}
+	
+	public static void setMyOrderHistoryList(ApplicationState applicationContext, ArrayList<CustomerOrderWrapper> myOrderHistoryList) {
+		applicationContext.setMyOrderHistoryList(myOrderHistoryList);
+	}
+
+	public boolean isOpenCategoryDrawer() {
+		return openCategoryDrawer;
+	}
+
+	public void setOpenCategoryDrawer(boolean openCategoryDrawer) {
+		this.openCategoryDrawer = openCategoryDrawer;
+	}
+	
+	public static boolean isOpenCategoryDrawer(ApplicationState applicationContext) {
+		return applicationContext.isOpenCategoryDrawer();
+	}
+
+	public static void setOpenCategoryDrawer(ApplicationState applicationContext, boolean openCategoryDrawer) {
+		applicationContext.setOpenCategoryDrawer(openCategoryDrawer);
 	}
 
 }
