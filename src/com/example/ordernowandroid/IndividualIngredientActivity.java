@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.aphidmobile.flip.FlipViewController;
+import com.data.menu.Ingredient;
 import com.example.ordernowandroid.adapter.IndividualIngredientsAdapter;
 import com.example.ordernowandroid.adapter.IngredientListener;
 import com.example.ordernowandroid.model.FoodIngredient;
@@ -41,26 +43,40 @@ public class IndividualIngredientActivity extends Activity implements Ingredient
 			ingList = (ArrayList<FoodIngredient>) b.getSerializable(IngredientsActivity.INGREDIENTS_LIST);
 			Utilities.info("ing inside " + ingList.toString());
 		}
+		page++;
 
 		selectedOptions = ApplicationState.getDishSelectedIngredientList((ApplicationState)getApplicationContext(),dishname);
 		if(selectedOptions == null) {
 			selectedOptions = new ArrayList<IngredientOptionView>();
 		}
+		//adding dummay page in start and end to flip to previous activity
+		ingList.add(new FoodIngredient(new Ingredient(dishname, null)));
+        ingList.add(0, new FoodIngredient(new Ingredient(dishname, null)));
+        
 		setTitle(ingList.get(page).getTitle());
 
 		flipView = new FlipViewController(this, FlipViewController.HORIZONTAL);
+		
 
 		adapter = new IndividualIngredientsAdapter(this, ingList, this);
 		flipView.setAdapter(adapter);
+		flipView.setAnimationBitmapFormat(Bitmap.Config.RGB_565);
+		//flipView.setBackgroundColor(getResources().getColor(R.color.chartreuse));
 		flipView.setSelection(page);
 
 		flipView.setOnViewFlipListener(new FlipViewController.ViewFlipListener() {
 			@Override
-			public void onViewFlipped(View view, int position) {
-				setTitle(ingList.get(position).getTitle());
-				page = position;
+            public void onViewFlipped(View view, int position) {
+			    //dummy pages
+                if ((position == adapter.getCount()-1) || (position == 0)) {
+                    onBackPressed();
+                    return;
+                } else {
+                    setTitle(ingList.get(position).getTitle());
+                    page = position;
+                }
 
-			}
+            }
 		});
 
 		setContentView(flipView);
