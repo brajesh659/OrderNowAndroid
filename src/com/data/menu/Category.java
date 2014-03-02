@@ -1,9 +1,14 @@
 package com.data.menu;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Category {
-	private List<Category> categories;
+public class Category implements Serializable{
+	/**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+    private List<Category> categories;
 	private List<Dish> dishes;
 	private String name;
 	

@@ -22,7 +22,7 @@ import com.facebook.widget.LoginButton;
 
 public class LoginFragment extends Fragment {
 
-	private boolean IS_DEBUG_MODE = false;
+	private boolean IS_DEBUG_MODE = true;
 	private UiLifecycleHelper uiHelper;
 
 	private Session.StatusCallback callback = new Session.StatusCallback() {

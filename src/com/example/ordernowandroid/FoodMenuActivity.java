@@ -24,6 +24,7 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.text.TextUtils;
 import android.util.Log;
@@ -54,10 +55,12 @@ import com.dm.zbar.android.scanner.ZBarConstants;
 import com.example.ordernowandroid.adapter.DownloadResturantMenu;
 import com.example.ordernowandroid.adapter.ImageService;
 import com.example.ordernowandroid.adapter.NavDrawerListAdapter;
+import com.example.ordernowandroid.adapter.TabsPagerAdapter;
 import com.example.ordernowandroid.filter.MenuFilter;
 import com.example.ordernowandroid.fragments.AddNoteDialogFragment;
 import com.example.ordernowandroid.fragments.AddNoteListener;
 import com.example.ordernowandroid.fragments.IndividualMenuTabFragment;
+import com.example.ordernowandroid.fragments.MenuFragment;
 import com.example.ordernowandroid.fragments.IndividualMenuTabFragment.numListener;
 import com.example.ordernowandroid.model.CategoryNavDrawerItem;
 import com.example.ordernowandroid.model.FoodMenuItem;
@@ -82,6 +85,8 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 	private SearchRecentSuggestions suggestionProvider;
 	private CursorAdapter suggestionAdapter;
 	private SearchView searchView;
+    private TabsPagerAdapter mTabPagerAdapter;
+    private ViewPager mViewPager;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -105,7 +110,7 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 		// enabling action bar app icon and behaving it as toggle button
 		ActionBar actionBar = getActionBar();               
 		actionBar.setCustomView(R.layout.search_layout); //load your layout
-		actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME|ActionBar.DISPLAY_SHOW_CUSTOM); //show it 
+		actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME|ActionBar.DISPLAY_SHOW_CUSTOM|ActionBar.DISPLAY_SHOW_TITLE); //show it 
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActionBar().setHomeButtonEnabled(true);
 
@@ -148,7 +153,7 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 			mDrawerTitle = restaurant.getName();
 			if (savedInstanceState == null) {
 				// on first time display view for first menu item
-				displayView(0);
+				newdisplayView(0);
 			}
 			mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
 
@@ -306,7 +311,7 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 				//					}
 				//				}
 
-				displayView(ApplicationState.getCategoryId(applicationContext));
+				newdisplayView(ApplicationState.getCategoryId(applicationContext));
 			} else if(resultCode == RESULT_CANCELED && data != null) {
 				String error = data.getStringExtra(ZBarConstants.ERROR_INFO);
 				if(!TextUtils.isEmpty(error)) {
@@ -360,8 +365,25 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 			// display view for selected nav drawer item
-			displayView(position);
+			newdisplayView(position);
 		}
+
+	}
+
+	private void newdisplayView(int position) {
+	    // TODO Auto-generated method stub
+	    Category category = getCategories().get(position);
+	   // Toast.makeText(this, category.toString(), Toast.LENGTH_LONG).show();
+	    Log.i("FoodMenuActiviry.class", category.toString());
+	    Fragment menuFragment = MenuFragment.newInstance(category);
+	    FragmentManager fragmentManager = getSupportFragmentManager();
+	    fragmentManager.beginTransaction().replace(R.id.frame_container, menuFragment).addToBackStack(null).commit();
+	    mDrawerList.setItemChecked(position, true);
+        mDrawerList.setSelection(position);
+        ApplicationState.setCategoryId((ApplicationState)getApplicationContext(), position);
+        setTitle(category.getName());
+        mDrawerLayout.closeDrawer(mDrawerList);
+        
 	}
 
 	/**
@@ -371,7 +393,7 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 		// replacing fragments
 		Fragment fragment = null;
 		Category category = getCategories().get(position);
-		fragment = IndividualMenuTabFragment.newInstance(category.getName(), getFoodMenuItems(category.getDishes()));
+        fragment = IndividualMenuTabFragment.newInstance(category.getName(), getFoodMenuItems(category.getDishes()), null);
 
 		if (fragment != null) {
 			FragmentManager fragmentManager = getSupportFragmentManager();
@@ -723,7 +745,7 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 		if(dh!=null) {
 			ArrayList<FoodMenuItem> searchDishList = (ArrayList<FoodMenuItem>) dh.searchDishes(query);
 			//IndividualMenuTabFragment.newInstance("Search", searchDishList);
-			Fragment fragment = IndividualMenuTabFragment.newInstance("Search", searchDishList);
+			Fragment fragment = IndividualMenuTabFragment.newInstance("Search", searchDishList, null);
 			FragmentManager fragmentManager = getSupportFragmentManager();
 			fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).addToBackStack(null).commit();
 			setTitle(newText);
@@ -762,7 +784,7 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 		super.onResume();
 		int position = ApplicationState.getCategoryId((ApplicationState)getApplicationContext());
 		if(position > 0) {
-			displayView(ApplicationState.getCategoryId((ApplicationState)getApplicationContext()));
+			newdisplayView(ApplicationState.getCategoryId((ApplicationState)getApplicationContext()));
 		}
 	}
 

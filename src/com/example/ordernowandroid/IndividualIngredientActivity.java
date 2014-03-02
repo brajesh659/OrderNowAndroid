@@ -63,6 +63,7 @@ public class IndividualIngredientActivity extends Activity implements Ingredient
 		flipView.setAnimationBitmapFormat(Bitmap.Config.RGB_565);
 		//flipView.setBackgroundColor(getResources().getColor(R.color.chartreuse));
 		flipView.setSelection(page);
+		flipView.setBackgroundColor(getResources().getColor(R.color.blanchedalmond));
 
 		flipView.setOnViewFlipListener(new FlipViewController.ViewFlipListener() {
 			@Override
