@@ -18,7 +18,7 @@
         android:title="@string/myorder"/>
     <item
         android:id="@+id/historybutton"
-        android:icon="@drawable/history_icon"
+        android:icon="@drawable/ic_action_time"
         android:orderInCategory="140"
         android:showAsAction="ifRoom"
         android:title="@string/history_des"/>

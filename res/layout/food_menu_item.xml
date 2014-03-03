@@ -63,7 +63,7 @@
         android:layout_alignParentRight="true"
         android:layout_below="@id/dish_description"
         android:background="@color/white"
-        android:src="@drawable/add" />
+        android:src="@drawable/ic_action_new" />
     
    
 
@@ -75,7 +75,7 @@
         android:layout_marginRight="1sp"
         android:layout_toLeftOf="@id/addbutton"
         android:background="@color/white"
-        android:src="@drawable/sub" />
+        android:src="@drawable/ic_action_remove" />
 
      <ImageButton
          android:id="@+id/addnote"
@@ -84,6 +84,6 @@
          android:layout_alignParentRight="true"
          android:layout_alignParentTop="true"
          android:background="@color/white"
-         android:src="@drawable/addnote" />
+         android:src="@drawable/ic_action_edit" />
 
 </RelativeLayout>
