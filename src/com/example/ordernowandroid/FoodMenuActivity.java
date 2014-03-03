@@ -35,8 +35,6 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.AdapterView;
 import android.widget.CursorAdapter;
-import android.widget.ExpandableListView;
-import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -57,7 +55,6 @@ import com.dm.zbar.android.scanner.ZBarConstants;
 import com.example.ordernowandroid.adapter.DownloadResturantMenu;
 import com.example.ordernowandroid.adapter.ImageService;
 import com.example.ordernowandroid.adapter.NavDrawerListAdapter;
-import com.example.ordernowandroid.adapter.NewNavDrawerListAdapter;
 import com.example.ordernowandroid.adapter.TabsPagerAdapter;
 import com.example.ordernowandroid.filter.MenuFilter;
 import com.example.ordernowandroid.fragments.AddNoteDialogFragment;
@@ -73,17 +70,15 @@ import com.util.Utilities;
 public class FoodMenuActivity extends FragmentActivity implements numListener, AddNoteListener,
 SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 
-	
-
-    private static final int MY_ORDER_REQUEST_CODE = 1;
+	private static final int MY_ORDER_REQUEST_CODE = 1;
 	private DrawerLayout mDrawerLayout;
-	private ExpandableListView mDrawerList;
+	private ListView mDrawerList;
 	private ActionBarDrawerToggle mDrawerToggle;
 	private CharSequence mDrawerTitle; // nav drawer title
 	private CharSequence mTitle; // used to store app title
 	private ArrayList<CategoryNavDrawerItem> navDrawerItems;
-	private HashMap<String, ArrayList<CategoryNavDrawerItem>> childDrawerItems;
-	private NewNavDrawerListAdapter adapter;
+	private ArrayList<ArrayList<CategoryNavDrawerItem>> childDrawerItems;
+	private NavDrawerListAdapter adapter;
 	private Restaurant restaurant;
 	private DishHelper dh;
 	private static Map<String, Boolean> restaurantLoadedInDb = new HashMap<String, Boolean>();
@@ -102,14 +97,14 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 
 		mTitle = getTitle();
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-		mDrawerList = (ExpandableListView) findViewById(R.id.list_slidermenu);
+		mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
 
 		navDrawerItems = new ArrayList<CategoryNavDrawerItem>();
-		childDrawerItems = new HashMap<String, ArrayList<CategoryNavDrawerItem>>();
+		childDrawerItems = new ArrayList<ArrayList<CategoryNavDrawerItem>>();
 
 		// setting the nav drawer list adapter
 		//adapter = new NewNavDrawerListAdapter(getApplicationContext(), navDrawerItems, childDrawerItems);
-		adapter = new NewNavDrawerListAdapter(getApplicationContext(), navDrawerItems,childDrawerItems);
+		adapter = new NavDrawerListAdapter(getApplicationContext(), navDrawerItems);
 		mDrawerList.setAdapter(adapter);
 
 		// enabling action bar app icon and behaving it as toggle button
@@ -161,7 +156,6 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 				newdisplayView(0);
 			}
 			mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
-			mDrawerList.setOnChildClickListener(new SlideMenuChildClickListener());
 
 			for (Category category : getCategories()) {
 				CategoryNavDrawerItem categoryNavDrawerItem = new CategoryNavDrawerItem(category);
@@ -169,7 +163,7 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 				ArrayList<CategoryNavDrawerItem> childArrayList = new ArrayList<CategoryNavDrawerItem>();
 				childArrayList.add(categoryNavDrawerItem);
 				childArrayList.add(categoryNavDrawerItem);
-				childDrawerItems.put(categoryNavDrawerItem.getTitle(), childArrayList);
+				childDrawerItems.add(childArrayList);
 			}
 		}
 		if (applicationContext.isOpenCategoryDrawer()) {
@@ -367,7 +361,7 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 	/**
 	 * Slide menu item click listener
 	 * */
-	private class SlideMenuClickListener implements ExpandableListView.OnItemClickListener {
+	private class SlideMenuClickListener implements ListView.OnItemClickListener {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 			// display view for selected nav drawer item
@@ -375,17 +369,6 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 		}
 
 	}
-	
-	private class SlideMenuChildClickListener implements OnChildClickListener {
-
-        @Override
-        public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-//            Toast.makeText(getApplicationContext(), "child selected" + groupPosition, Toast.LENGTH_LONG).show();
-            newdisplayView(groupPosition);
-            return true;
-        }
-
-    }
 
 	private void newdisplayView(int position) {
 	    // TODO Auto-generated method stub

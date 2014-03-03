@@ -17,7 +17,7 @@
 
     <!-- Listview to display slider menu -->
 
-    <ExpandableListView
+    <ListView
         android:id="@+id/list_slidermenu"
         android:layout_width="240dp"
         android:layout_height="match_parent"

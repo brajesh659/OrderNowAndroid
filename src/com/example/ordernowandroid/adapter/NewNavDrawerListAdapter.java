@@ -1,7 +1,6 @@
 package com.example.ordernowandroid.adapter;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 import com.example.ordernowandroid.R;
 import com.example.ordernowandroid.model.CategoryNavDrawerItem;
@@ -19,11 +18,11 @@ public class NewNavDrawerListAdapter extends BaseExpandableListAdapter {
 
     private Context applicationContext;
     private ArrayList<CategoryNavDrawerItem> navDrawerItems;
-    private Map<String, ArrayList<CategoryNavDrawerItem>> childDrawerItems;
+    private ArrayList<ArrayList<CategoryNavDrawerItem>> childDrawerItems;
     private LayoutInflater minflater;
     private Activity activity;
 
-    public NewNavDrawerListAdapter(Context applicationContext, ArrayList<CategoryNavDrawerItem> navDrawerItems, Map<String, ArrayList<CategoryNavDrawerItem>> childDrawerItems) {
+    public NewNavDrawerListAdapter(Context applicationContext, ArrayList<CategoryNavDrawerItem> navDrawerItems, ArrayList<ArrayList<CategoryNavDrawerItem>> childDrawerItems) {
         this.applicationContext = applicationContext;
         // TODO Auto-generated constructor stub
         this.navDrawerItems = navDrawerItems;
@@ -36,13 +35,13 @@ public class NewNavDrawerListAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public Object getChild(int groupPosition, int childPosititon) {
-    return this.childDrawerItems.get(navDrawerItems.get(groupPosition).getTitle()).get(childPosititon);
+    public Object getChild(int arg0, int arg1) {
+        return null;
     }
 
     @Override
-    public long getChildId(int groupPosition, int childPosititon) {
-        return childPosititon;
+    public long getChildId(int arg0, int arg1) {
+        return 0;
     }
 
     @Override
@@ -52,7 +51,7 @@ public class NewNavDrawerListAdapter extends BaseExpandableListAdapter {
             convertView = minflater.inflate(R.layout.child_drawer_item, null);
         }
 
-        ArrayList<CategoryNavDrawerItem> tempChild = childDrawerItems.get(navDrawerItems.get(groupPosition).getTitle());
+        ArrayList<CategoryNavDrawerItem> tempChild = childDrawerItems.get(groupPosition);
 
         TextView txtTitle = (TextView) convertView.findViewById(R.id.lblListItem);
         txtTitle.setText(tempChild.get(childPosition).getTitle());
@@ -72,13 +71,13 @@ public class NewNavDrawerListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        return childDrawerItems.get(navDrawerItems.get(groupPosition).getTitle()).size();
+        return childDrawerItems.get(groupPosition).size();
     }
 
     @Override
-    public Object getGroup(int groupPosition) {
+    public Object getGroup(int arg0) {
         // TODO Auto-generated method stub
-        return this.navDrawerItems.get(groupPosition);
+        return null;
     }
 
     @Override
@@ -87,8 +86,9 @@ public class NewNavDrawerListAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public long getGroupId(int groupPosition) {
-        return groupPosition;
+    public long getGroupId(int arg0) {
+        // TODO Auto-generated method stub
+        return 0;
     }
 
     @Override
@@ -115,7 +115,7 @@ public class NewNavDrawerListAdapter extends BaseExpandableListAdapter {
     @Override
     public boolean isChildSelectable(int arg0, int arg1) {
         // TODO Auto-generated method stub
-        return true;
+        return false;
     }
 
 }
