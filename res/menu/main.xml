@@ -24,7 +24,7 @@
         android:title="@string/history_des"/>
     <item
         android:id="@+id/confirmed_order"
-        android:icon="@drawable/confirmed_order_icon"
+        android:icon="@drawable/ic_action_accept"
         android:orderInCategory="120"
         android:showAsAction="ifRoom"
         android:title="@string/confirmed_order"/>
