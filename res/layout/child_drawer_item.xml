@@ -2,7 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="55dip"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:divider="@color/white"
+	android:dividerHeight="1dp" >
     
     <TextView
         android:id="@+id/lblListItem"
