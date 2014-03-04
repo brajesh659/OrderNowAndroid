@@ -37,6 +37,12 @@ public class Category implements Serializable{
 	@Override
 	public String toString() {
 	    // TODO Auto-generated method stub
-	    return "Name : " + name + "Categories " + dishes.toString();
+	    if(categories!=null) {
+	        return "Name : " + name + "Categories " + categories.toString();
+	    }
+	    if (dishes!=null) {
+	        return "Name : " + name + "Categories " + dishes.toString();
+	    }
+	    return "Name : " + name + "No sub Categories and no dish available";
 	}
 }

@@ -64,8 +64,10 @@ public class TabsPagerAdapter extends FragmentStatePagerAdapter {
 
     private ArrayList<FoodMenuItem> getFoodMenuItems(List<Dish> dishes) {
         ArrayList<FoodMenuItem> foodMenuItem = new ArrayList<FoodMenuItem>();
-        for (Dish dish : dishes) {
-            foodMenuItem.add(new FoodMenuItem(dish));
+        if (dishes != null) {
+            for (Dish dish : dishes) {
+                foodMenuItem.add(new FoodMenuItem(dish));
+            }
         }
         return foodMenuItem;
     }

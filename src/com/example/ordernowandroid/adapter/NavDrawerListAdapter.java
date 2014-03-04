@@ -49,7 +49,7 @@ public class NavDrawerListAdapter extends BaseAdapter {
           
         TextView txtTitle = (TextView) convertView.findViewById(R.id.title);
         txtTitle.setText(navDrawerItems.get(position).getTitle());
-        ImageView imgView = (ImageView) convertView.findViewById(R.id.icon);
+        ImageView imgView = (ImageView) convertView.findViewById(R.id.icon_parent);
         imgView.setVisibility(View.VISIBLE);
         
         return convertView;
