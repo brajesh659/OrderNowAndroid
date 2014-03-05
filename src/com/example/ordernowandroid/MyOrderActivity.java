@@ -1,5 +1,6 @@
 package com.example.ordernowandroid;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -149,8 +150,11 @@ public class MyOrderActivity extends Activity {
 		ApplicationState.setCustomerOrderWrapper(applicationContext, customerOrderWrapper);
 
 		Gson gs = new Gson();
-		String url = "http://ordernow.herokuapp.com/order?order="
-				+ gs.toJson(customerOrder);
+		String order = gs.toJson(customerOrder);
+		String url = "http://ordernow.herokuapp.com/order?order=";
+		String encoded = URLEncoder.encode(order);
+		url += encoded;
+
 		try {
 			new AsyncNetwork().execute(url).get();
 		} catch (InterruptedException e) {
