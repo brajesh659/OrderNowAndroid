@@ -71,7 +71,6 @@ public class IndividualMenuTabFragment extends Fragment {
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i("IndividualMenu", tabTitle);
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey(FILTER_CONTENT)) {
                 selectedFilters = (HashMap<MenuPropertyKey, List<MenuPropertyValue>>) savedInstanceState.getSerializable(FILTER_CONTENT);

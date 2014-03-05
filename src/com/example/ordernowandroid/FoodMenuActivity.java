@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import android.app.ActionBar;
 import android.app.AlertDialog;
@@ -70,6 +71,7 @@ import com.example.ordernowandroid.model.CategoryNavDrawerItem;
 import com.example.ordernowandroid.model.FoodMenuItem;
 import com.example.ordernowandroid.model.MyOrderItem;
 import com.facebook.LoginActivity;
+import com.util.AsyncNetwork;
 import com.util.Utilities;
 
 public class FoodMenuActivity extends FragmentActivity implements numListener, AddNoteListener,
@@ -233,6 +235,44 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 		suggestionAdapter = searchView.getSuggestionsAdapter();
 		// searchMenuItem.collapseActionView();
 		// searchView.setIconifiedByDefault(false);
+		
+		ImageView call_waiter = (ImageView) actionBar.getCustomView().findViewById(R.id.waiter);
+		call_waiter.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				AlertDialog.Builder builder = new AlertDialog.Builder(
+						FoodMenuActivity.this);
+				builder.setTitle("Call Waiter");
+				builder.setMessage("Are you sure you want to call waiter ?");
+				builder.setPositiveButton(R.string.ok,
+						new AlertDialog.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								ApplicationState applicationContext = (ApplicationState) getApplicationContext();
+								String tableId = applicationContext
+										.getTableId();
+								String url = "http://ordernow.herokuapp.com/call_waiter?tableId="
+										+ tableId;
+								try {
+									new AsyncNetwork().execute(url).get();
+								} catch (InterruptedException e) {
+									e.printStackTrace();
+								} catch (ExecutionException e) {
+									e.printStackTrace();
+								}
+								Toast.makeText(
+										getApplicationContext(),
+										"Soon Waiter will be there to help you",
+										Toast.LENGTH_LONG).show();
+							}
+						});
+				builder.setNegativeButton(R.string.cancel, null);
+				AlertDialog alert = builder.create();
+				alert.show();
+			}
+		});
 
 		RelativeLayout food_cart_layout = (RelativeLayout)menu.findItem(R.id.action_cart).getActionView();
 		TextView food_item_notification = (TextView)food_cart_layout.findViewById(R.id.food_cart_notifcation_textview);

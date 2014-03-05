@@ -28,7 +28,6 @@ public class MenuFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.i("MenuFragment", category.toString());
         View rootView = inflater.inflate(R.layout.filter_tabs, container, false);        
         
         TabsPagerAdapter mTabPagerAdapter = new TabsPagerAdapter(getChildFragmentManager(), category);
@@ -44,10 +43,13 @@ public class MenuFragment extends Fragment {
         // TODO : Remove below three lines. This is just to avoid race condition but it's not full proof solution. 
         // PageAdapter automatically loads next page to current selected page and as filters are defined globally
         // so there is race condition when in ALL filter it does not display ALL items instead it applies Veg 
-        // filter of some of the dishes. 
+        // filter of some of the dishes.
+        //commenting this to work in landscape mode
+        /*
         mTabPagerAdapter.getItem(0);
         mTabPagerAdapter.getItem(1);
         mTabPagerAdapter.getItem(2);
+        */
         return rootView;
     }
 
