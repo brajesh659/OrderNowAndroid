@@ -40,13 +40,24 @@
         android:textColor="#F14F00"
         android:textSize="14sp"
         android:textStyle="bold" />
+    
+    <ImageButton
+         android:id="@+id/addnote"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignParentRight="true"
+         android:layout_alignParentTop="true"
+         android:background="@color/white"
+         android:src="@drawable/ic_action_edit" />
+    
 
     <TextView
         android:id="@+id/dish_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/dish_name"
-        android:layout_toRightOf="@id/dish_photo" />
+        android:layout_toLeftOf="@id/addnote"
+        android:layout_toRightOf="@id/dish_photo"/>
 
     <TextView
         android:id="@+id/dish_price"
@@ -79,13 +90,5 @@
         android:background="@color/white"
         android:src="@drawable/ic_action_remove" />
 
-     <ImageButton
-         android:id="@+id/addnote"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_alignParentRight="true"
-         android:layout_alignParentTop="true"
-         android:background="@color/white"
-         android:src="@drawable/ic_action_edit" />
-
+    
 </RelativeLayout>

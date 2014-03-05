@@ -139,12 +139,12 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 			}
 		};
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
-		/*if(LoginFragment.IS_DEBUG_MODE) {
+		if(LoginFragment.IS_DEBUG_MODE) {
 		    restaurant = getResturant("T1");
 		} else {
 		    restaurant = getResturant(applicationContext.getTableId());
-		}*/
-		restaurant = getResturantLocaly();
+		}
+		//restaurant = getResturantLocaly();
 		if (restaurant == null){
 			AlertDialog.Builder builder = new AlertDialog.Builder(FoodMenuActivity.this);            
 			builder.setTitle("Invalid QR code");
