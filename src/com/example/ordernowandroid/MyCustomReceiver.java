@@ -19,6 +19,35 @@ import android.widget.Toast;
 public class MyCustomReceiver extends BroadcastReceiver {
    // private static final String TAG = "MyCustomReceiver";
 
+	/*
+	 *  There are 5 events a restaurant can send to the Server which has to be communicated to the Client:
+	 *  	ORDER_RECEIVED("orderReceived"),
+	 * 		ORDER_ACCEPTED("orderAccepted"),
+	 *		BILL_GENERATED("generateBill"),
+	 * 		ORDER_COMPLETED("orderCompleted"),
+	 * 		MODIFY_ORDER("modifyOrder");
+	 * 
+	 * The Restaurant will return the following information:
+	 * 1) Client ID
+	 * 2) Table ID
+	 * 3) RestaurantId
+	 * 4) Order ID
+	 * 
+	 * Order Id is the Channel to publish the notification to the client.
+	 * 
+	 * Eg URL:
+	 * ORDER_RECEIVED
+	 *		restOrder?action=orderReceived&orderId=jjoJuiPitd
+	 * ORDER_ACCEPTED
+	 * 		restOrder?action=orderAccepted&orderId=Oid
+	 * BILL_GENERATED
+	 * 		restOrder?action=generateBill&orderId=Oid
+	 * ORDER_COMPLETED
+	 * 		restOrder?action=orderCompleted&orderId=Oid
+	 * MODIFY_ORDER
+	 * 		restOrder?action=modifyOrder&orderId=Oid
+	 */
+	
     @Override
     public void onReceive(Context context, Intent intent) {
         try {
