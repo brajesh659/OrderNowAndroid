@@ -25,7 +25,6 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.text.TextUtils;
 import android.util.Log;
@@ -57,7 +56,6 @@ import com.dm.zbar.android.scanner.ZBarConstants;
 import com.example.ordernowandroid.adapter.DownloadResturantMenu;
 import com.example.ordernowandroid.adapter.ImageService;
 import com.example.ordernowandroid.adapter.NewNavDrawerListAdapter;
-import com.example.ordernowandroid.adapter.TabsPagerAdapter;
 import com.example.ordernowandroid.filter.MenuFilter;
 import com.example.ordernowandroid.fragments.AddNoteDialogFragment;
 import com.example.ordernowandroid.fragments.AddNoteListener;
@@ -91,8 +89,6 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 	private SearchRecentSuggestions suggestionProvider;
 	private CursorAdapter suggestionAdapter;
 	private SearchView searchView;
-    private TabsPagerAdapter mTabPagerAdapter;
-    private ViewPager mViewPager;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -137,12 +133,14 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 				invalidateOptionsMenu();
 			}
 		};
+		
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
 		if(LoginFragment.IS_DEBUG_MODE) {
 		    restaurant = getResturant("T1");
 		} else {
 		    restaurant = getResturant(applicationContext.getTableId());
 		}
+		
 		//restaurant = getResturantLocaly();
 		if (restaurant == null){
 			AlertDialog.Builder builder = new AlertDialog.Builder(FoodMenuActivity.this);            
@@ -238,36 +236,7 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 			
 			@Override
 			public void onClick(View v) {
-				AlertDialog.Builder builder = new AlertDialog.Builder(
-						FoodMenuActivity.this);
-				builder.setTitle("Call Waiter");
-				builder.setMessage("Are you sure you want to call waiter ?");
-				builder.setPositiveButton(R.string.ok,
-						new AlertDialog.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								ApplicationState applicationContext = (ApplicationState) getApplicationContext();
-								String tableId = applicationContext
-										.getTableId();
-								String url = "http://ordernow.herokuapp.com/call_waiter?tableId="
-										+ tableId;
-								try {
-									new AsyncNetwork().execute(url).get();
-								} catch (InterruptedException e) {
-									e.printStackTrace();
-								} catch (ExecutionException e) {
-									e.printStackTrace();
-								}
-								Toast.makeText(
-										getApplicationContext(),
-										"Soon Waiter will be there to help you",
-										Toast.LENGTH_LONG).show();
-							}
-						});
-				builder.setNegativeButton(R.string.cancel, null);
-				AlertDialog alert = builder.create();
-				alert.show();
+				callWaiterFunction(FoodMenuActivity.this);
 			}
 		});
 
@@ -291,6 +260,39 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 			}
 		});
 		return super.onCreateOptionsMenu(menu);
+	}
+	
+	public static void callWaiterFunction(final Context context) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(
+				context);
+		builder.setTitle("Call Waiter");
+		builder.setMessage("Are you sure you want to call waiter ?");
+		builder.setPositiveButton(R.string.ok,
+				new AlertDialog.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog,
+							int which) {
+						ApplicationState applicationContext = (ApplicationState) context.getApplicationContext();
+						String tableId = applicationContext
+								.getTableId();
+						String url = "http://ordernow.herokuapp.com/serveTable?action=callWaiter&tableId="
+								+ tableId;
+						try {
+							new AsyncNetwork().execute(url).get();
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						} catch (ExecutionException e) {
+							e.printStackTrace();
+						}
+						Toast.makeText(
+								context.getApplicationContext(),
+								"Soon Waiter will be there to help you",
+								Toast.LENGTH_LONG).show();
+					}
+				});
+		builder.setNegativeButton(R.string.cancel, null);
+		AlertDialog alert = builder.create();
+		alert.show();
 	}
 
 	private void startPartentOrderActivity(final Context context) {
