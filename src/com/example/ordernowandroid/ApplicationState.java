@@ -16,6 +16,7 @@ import com.util.Utilities;
 
 public class ApplicationState extends Application {
     private String tableId;
+    private String restaurantName;
     private String userName;
     private String profilePictureId;
     private int categoryId = -1;
@@ -32,6 +33,7 @@ public class ApplicationState extends Application {
     public ApplicationState() {
         menuFilter = new MenuFilter();
         dishIngredientMap = new HashMap<String, List<IngredientOptionView>>();
+        restaurantName = "";
     }
 
     public String getTableId() {
@@ -162,6 +164,15 @@ public class ApplicationState extends Application {
             ArrayList<CustomerOrderWrapper> subOrdersFromDB) {
         applicationContext.setSubOrdersFromDB(subOrdersFromDB);
     }
+    
+    public static void cleanSubOrdersFromDB(ApplicationState applicationContext) {
+    	applicationContext.setSubOrdersFromDB(new ArrayList<CustomerOrderWrapper>());
+    }
+    
+    public static void cleanFoodMenuItemQuantityMap(ApplicationState applicationContext) {
+    	applicationContext.setFoodMenuItemQuantityMap(new HashMap<String, MyOrderItem>());
+    }
+
 
     public String getUserName() {
         return userName;
@@ -237,7 +248,7 @@ public class ApplicationState extends Application {
             dishIngredientMap.remove(dishName);
         }
     }
-
+    
     public static void cleanDishSelectedIngredients(ApplicationState applicationContext, String dishName) {
         applicationContext.cleanDishSelectedIngredients(dishName);
     }
@@ -283,5 +294,21 @@ public class ApplicationState extends Application {
     public static void setChildCategoryId(ApplicationState applicationContext, int childCategoryId) {
         applicationContext.setChildCategoryId(childCategoryId);
     }
+
+    public static String getRestaurantName(ApplicationState applicationContext) {
+        return applicationContext.getRestaurantName();
+    }
+
+    public static void setRestaurantName(ApplicationState applicationContext, String restName) {
+        applicationContext.setRestaurantName(restName);
+    }
+
+	public String getRestaurantName() {
+		return restaurantName;
+	}
+
+	public void setRestaurantName(String restaurantName) {
+		this.restaurantName = restaurantName;
+	}
 
 }

@@ -26,7 +26,7 @@ public class QRCodeScannerActivity extends Activity {
 
 		ApplicationState applicationContext = (ApplicationState) getApplicationContext();
 
-		if(applicationContext.getUserName() != null || applicationContext.getUserName().trim() != "") {		
+		if(applicationContext.getUserName() != null && applicationContext.getUserName().trim() != "") {		
 			TextView welcome = (TextView) findViewById(R.id.welcome_text);
 			welcome.setText("Hello " + applicationContext.getUserName() + "! " + welcome.getText());
 		}
@@ -62,7 +62,11 @@ public class QRCodeScannerActivity extends Activity {
 				Toast.makeText(this, "Table Id = " + tableId, Toast.LENGTH_SHORT).show();
 
 				ApplicationState.setTableId(applicationContext, tableId);
-				ApplicationState.setOpenCategoryDrawer((ApplicationState) getApplicationContext(), true);
+				ApplicationState.setOpenCategoryDrawer(applicationContext, true);
+				//clean order stuff if present
+				ApplicationState.cleanSubOrdersFromDB(applicationContext);
+				ApplicationState.cleanFoodMenuItemQuantityMap(applicationContext);
+				//start new intent
 				Intent intent = new Intent(this, FoodMenuActivity.class);
 				startActivity(intent);				
 				finish();	
@@ -75,6 +79,11 @@ public class QRCodeScannerActivity extends Activity {
 			}
 			break;
 		}
+	}
+	
+	@Override
+	public void onBackPressed() {
+		finish();
 	}
 
 }

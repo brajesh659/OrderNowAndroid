@@ -29,11 +29,14 @@
     <string name="search_hint">"Search Dishes Here"</string> 
     <string name="no_dishes">"Sorry No Dishes Found! \nPlease Search Again Or Slide For the Category Drawer"</string>
     <string name="confirm_order_comment_hint_text">"Enter additional comments for this order!!"</string>   
+    <string name="rest_feedback_comment_hint_text">"Your feedback is valuable to us. Enter additional comments here!"</string>
     <string name="filter_menu">"Filter Menu"</string>
     <string name="modify">"Modify"</string>
     <string name="reordernow">"Reorder Now"</string>
     <string name="requestbill">"Request Bill"</string>
     <string name="callWaiter">"Call Waiter"</string>
+    <string name="rateUs">"Rate Us"</string>
+    <string name="submit">"Submit"</string>
     
     
     <string-array name="ingredients_title">

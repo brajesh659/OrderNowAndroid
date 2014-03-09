@@ -164,7 +164,9 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 			alert.show();
 			return ;
 		} else {
-			mDrawerTitle = restaurant.getName();
+			String resName = restaurant.getName();
+			mDrawerTitle = resName;
+			ApplicationState.setRestaurantName(applicationContext, resName);
 			if (savedInstanceState == null) {
 				// on first time display view for first menu item
 			    Log.e("on resume ","in saved instance check ");

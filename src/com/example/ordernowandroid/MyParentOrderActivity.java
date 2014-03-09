@@ -85,9 +85,13 @@ public class MyParentOrderActivity extends Activity {
 								} catch (ExecutionException e) {
 									e.printStackTrace();
 								}
+								
 								Toast.makeText(getApplicationContext(),
 										"Your bill is getting ready",
 										Toast.LENGTH_LONG).show();
+								Intent intent = new Intent(getApplicationContext(),
+										RestFeedbackActivity.class);
+								startActivity(intent);
 							}
 						});
 				builder.setNegativeButton(R.string.no, null);

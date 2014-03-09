@@ -164,7 +164,7 @@ public class MyOrderActivity extends Activity {
 			e.printStackTrace();
 		}
 
-		ApplicationState.setFoodMenuItemQuantityMap(applicationContext, new HashMap<String, MyOrderItem>());
+		ApplicationState.cleanFoodMenuItemQuantityMap(applicationContext);
 		Intent intent = new Intent(getApplicationContext(), MyParentOrderActivity.class);
 		startActivity(intent);
 		finish();

@@ -10,11 +10,11 @@ public class URLBuilder {
 	}
 	
 	public enum URLParam {
-		tableId, order
+		tableId, order, feedback
 	}
 	
 	public enum URLAction {
-		callWaiter, requestBill
+		callWaiter, requestBill, feedbackSubmit
 	}
 	
 	private String url = new String();
