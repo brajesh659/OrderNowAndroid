@@ -33,7 +33,9 @@ public class Dish implements Serializable {
     private Float price;
     private FoodType type; // Veg or non-veg
     private Map<MenuPropertyKey, MenuPropertyValue> dishProperties;
-    private ArrayList<Ingredient> ingredients;
+	private DishIngredients ingredients;
+	private String dishIngredientId;
+
     private ArrayList<IngredientOption> selectedIngredientOptions;
     private boolean isIngredientCustomizable = false;
     
@@ -116,12 +118,12 @@ public class Dish implements Serializable {
         return this.toString().hashCode();
     }
 
-	public ArrayList<Ingredient> getIngredients() {
+	public DishIngredients getDishIngredients() {
 		return ingredients;
 	}
 
-	public void setIngredients(ArrayList<Ingredient> ingredients) {
-		this.ingredients = ingredients;
+	public void setDishIngredients(DishIngredients dishIngredients) {
+		this.ingredients = dishIngredients;
 	}
 
 	public boolean isIngredientCustomizable() {

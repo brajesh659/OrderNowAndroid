@@ -36,7 +36,8 @@ public class FoodMenuItem implements Serializable {
 		// prepare ingredients if any
 		if (isItemCustomizable()) {
 			ingredients = new ArrayList<FoodIngredient>();
-			ArrayList<Ingredient> dishIngredients = dish.getIngredients();
+			ArrayList<Ingredient> dishIngredients = dish.getDishIngredients()
+					.getIngredients();
 			if (dishIngredients != null && !dishIngredients.isEmpty()) {
 				for (Ingredient ing : dishIngredients) {
 					FoodIngredient fi = new FoodIngredient(ing,
@@ -104,7 +105,8 @@ public class FoodMenuItem implements Serializable {
 	public ArrayList<FoodIngredient> getIngredients() {
 		if (ingredients == null) {
 			ingredients = new ArrayList<FoodIngredient>();
-			ArrayList<Ingredient> dishIngredients = dish.getIngredients();
+			ArrayList<Ingredient> dishIngredients = dish.getDishIngredients()
+					.getIngredients();
 			for (Ingredient ing : dishIngredients) {
 				FoodIngredient fi = new FoodIngredient(ing);
 				ingredients.add(fi);

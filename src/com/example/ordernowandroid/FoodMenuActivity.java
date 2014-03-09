@@ -34,12 +34,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewConfiguration;
-import android.widget.AdapterView;
 import android.widget.CursorAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -50,6 +48,7 @@ import com.data.database.DishHelper;
 import com.data.menu.Category;
 import com.data.menu.CustomerOrderWrapper;
 import com.data.menu.Dish;
+import com.data.menu.DishIngredients;
 import com.data.menu.FoodType;
 import com.data.menu.Ingredient;
 import com.data.menu.IngredientOption;
@@ -57,20 +56,18 @@ import com.data.menu.Restaurant;
 import com.dm.zbar.android.scanner.ZBarConstants;
 import com.example.ordernowandroid.adapter.DownloadResturantMenu;
 import com.example.ordernowandroid.adapter.ImageService;
-import com.example.ordernowandroid.adapter.NavDrawerListAdapter;
 import com.example.ordernowandroid.adapter.NewNavDrawerListAdapter;
 import com.example.ordernowandroid.adapter.TabsPagerAdapter;
 import com.example.ordernowandroid.filter.MenuFilter;
 import com.example.ordernowandroid.fragments.AddNoteDialogFragment;
 import com.example.ordernowandroid.fragments.AddNoteListener;
 import com.example.ordernowandroid.fragments.IndividualMenuTabFragment;
+import com.example.ordernowandroid.fragments.IndividualMenuTabFragment.numListener;
 import com.example.ordernowandroid.fragments.LoginFragment;
 import com.example.ordernowandroid.fragments.MenuFragment;
-import com.example.ordernowandroid.fragments.IndividualMenuTabFragment.numListener;
 import com.example.ordernowandroid.model.CategoryNavDrawerItem;
 import com.example.ordernowandroid.model.FoodMenuItem;
 import com.example.ordernowandroid.model.MyOrderItem;
-import com.facebook.LoginActivity;
 import com.util.AsyncNetwork;
 import com.util.Utilities;
 
@@ -732,7 +729,7 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
             }
             dish.setDescription("item description comes here");
 			dish.setDishId(itemids[i]);
-			dish.setIngredients(constructionOptionList());
+			dish.setDishIngredients(constructDishIngredients());
 			dish.setIngredientCustomizable(true);
             dishes.add(dish);
 
@@ -750,7 +747,7 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
         }
         dish.setDescription("item description comes here");
 		dish.setDishId(itemids[i]);
-		dish.setIngredients(constructionOptionList());
+		dish.setDishIngredients(constructDishIngredients());
 		ArrayList<IngredientOption> selectedIngredientOptions = new ArrayList<IngredientOption>();
 		List<String> names = Arrays.asList(getResources().getStringArray(R.array.chef0));
 		for(String optionName : names ) {
@@ -762,7 +759,8 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
         dishes.add(dish);
     }
 	
-	private ArrayList<Ingredient> constructionOptionList() {
+	private DishIngredients constructDishIngredients() {
+		DishIngredients di = new DishIngredients();
 		ArrayList<Ingredient> ingList = new ArrayList<Ingredient>();
 		String[] ingTitle = getResources().getStringArray(
 				R.array.ingredients_title);
@@ -784,7 +782,8 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 		Ingredient ing3 = new Ingredient(ingTitle[3],constuctionOptions(Arrays.asList(getResources().getStringArray(R.array.ing3))));
 		//FoodIngredient fi3 = new FoodIngredient(ing3);
 		ingList.add(ing3);
-		return ingList;
+		di.setIngredients(ingList);
+		return di;
 	}
 	
 	private ArrayList<IngredientOption> constuctionOptions(List<String> names) {
