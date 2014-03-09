@@ -1,18 +1,26 @@
 package com.example.ordernowandroid;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.data.menu.CustomerOrderWrapper;
 import com.example.ordernowandroid.adapter.MyParentOrderAdapter;
 import com.example.ordernowandroid.model.MyOrderItem;
 import com.example.ordernowandroid.model.OrderNowConstants;
+import com.util.AsyncNetwork;
 
 public class MyParentOrderActivity extends Activity {
 
@@ -27,6 +35,7 @@ public class MyParentOrderActivity extends Activity {
 		ArrayList<CustomerOrderWrapper> subOrdersFromDB = ApplicationState.getSubOrdersFromDB(applicationContext);
 
 		TextView totalAmount = (TextView) findViewById(R.id.parentTotalAmount);
+		Button requestBillButton = (Button) findViewById(R.id.requestBillButton);
 		Float totalOrderAmount = (float) 0.00;
 
 		CustomerOrderWrapper customerOrderWrapper = ApplicationState.getCustomerOrderWrapper((ApplicationState)getApplicationContext());
@@ -46,6 +55,43 @@ public class MyParentOrderActivity extends Activity {
 		ListView subOrderListView = (ListView) findViewById(R.id.subOrderList);
 		MyParentOrderAdapter myParentOrderAdapter = new MyParentOrderAdapter(this, subOrdersFromDB);
 		subOrderListView.setAdapter(myParentOrderAdapter);
+		
+		requestBillButton.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				AlertDialog.Builder builder = new AlertDialog.Builder(
+						MyParentOrderActivity.this);
+				builder.setTitle("Request Bill");
+				builder.setMessage("Are you done with your order ?");
+				builder.setPositiveButton(R.string.yes,
+						new AlertDialog.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								ApplicationState applicationContext = (ApplicationState) getApplicationContext();
+								String tableId = applicationContext
+										.getTableId();
+								String url = "http://ordernow.herokuapp.com/serveTable?action=requestBill&tableId="
+										+ tableId;
+								try {
+									new AsyncNetwork().execute(url).get();
+								} catch (InterruptedException e) {
+									e.printStackTrace();
+								} catch (ExecutionException e) {
+									e.printStackTrace();
+								}
+								Toast.makeText(
+										getApplicationContext(),
+										"Your bill is getting ready",
+										Toast.LENGTH_LONG).show();
+							}
+						});
+				builder.setNegativeButton(R.string.no, null);
+				AlertDialog alert = builder.create();
+				alert.show();
+			}
+		});
 	}
 
 	@Override
@@ -54,10 +100,20 @@ public class MyParentOrderActivity extends Activity {
 		case android.R.id.home:
 			onBackPressed();		
 			return true;
+		case R.id.waiter:
+			FoodMenuActivity.callWaiterFunction(MyParentOrderActivity.this);			
 		}
 		return super.onOptionsItemSelected(item);
 	}
-
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// TODO Auto-generated method stub
+		getMenuInflater().inflate(R.menu.confirmed_page_menu, menu);
+		return super.onCreateOptionsMenu(menu);
+		
+	}
+	
 	@Override
 	public void onBackPressed() {
 		ApplicationState.setOpenCategoryDrawer((ApplicationState) getApplicationContext(), true); //FIXME: Persist the myOrderItem List Data on FoodMenuActivity Page

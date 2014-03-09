@@ -19,6 +19,8 @@
     <string name="total">"Total"</string>
     <string name="ok">"OK"</string>
     <string name="cancel">"Cancel"</string> 
+    <string name="yes">"Yes"</string>
+    <string name="no">"No"</string>
     <string name="myorder">"My Order"</string> 
     <string name="addnotes">"Add Notes"</string>
     <string name="save">"Save"</string> 
@@ -30,6 +32,8 @@
     <string name="filter_menu">"Filter Menu"</string>
     <string name="modify">"Modify"</string>
     <string name="reordernow">"Reorder Now"</string>
+    <string name="requestbill">"Request Bill"</string>
+    <string name="callWaiter">"Call Waiter"</string>
     
     
     <string-array name="ingredients_title">
