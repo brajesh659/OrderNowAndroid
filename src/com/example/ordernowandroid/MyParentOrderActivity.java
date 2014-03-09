@@ -21,6 +21,7 @@ import com.example.ordernowandroid.adapter.MyParentOrderAdapter;
 import com.example.ordernowandroid.model.MyOrderItem;
 import com.example.ordernowandroid.model.OrderNowConstants;
 import com.util.AsyncNetwork;
+import com.util.URLBuilder;
 
 public class MyParentOrderActivity extends Activity {
 
@@ -72,8 +73,11 @@ public class MyParentOrderActivity extends Activity {
 								ApplicationState applicationContext = (ApplicationState) getApplicationContext();
 								String tableId = applicationContext
 										.getTableId();
-								String url = "http://ordernow.herokuapp.com/serveTable?action=requestBill&tableId="
-										+ tableId;
+								String url = new URLBuilder()
+										.addPath(URLBuilder.Path.serveTable)
+										.addAction(URLBuilder.URLAction.requestBill)
+										.addParam(URLBuilder.URLParam.tableId,
+												tableId).build();
 								try {
 									new AsyncNetwork().execute(url).get();
 								} catch (InterruptedException e) {
@@ -81,8 +85,7 @@ public class MyParentOrderActivity extends Activity {
 								} catch (ExecutionException e) {
 									e.printStackTrace();
 								}
-								Toast.makeText(
-										getApplicationContext(),
+								Toast.makeText(getApplicationContext(),
 										"Your bill is getting ready",
 										Toast.LENGTH_LONG).show();
 							}

@@ -13,6 +13,7 @@ import android.util.Log;
 
 import com.data.menu.Restaurant;
 import com.google.gson.Gson;
+import com.util.URLBuilder;
 
 public class DownloadResturantMenu {
     private LruCache<String, Restaurant> lruResturant = new LruCache<String, Restaurant>(2048);
@@ -25,8 +26,11 @@ public class DownloadResturantMenu {
     private DownloadResturantMenu() {
     }
 
-    public Restaurant getResturant(String endpoint, String qrCode) {
-        final String urlString = endpoint + "?tableId=" + qrCode;
+	public Restaurant getResturant(String qrCode) {
+		final String urlString = new URLBuilder()
+				.addPath(URLBuilder.Path.serveTable)
+				.addParam(URLBuilder.URLParam.tableId, qrCode)
+				.build();
         Restaurant resturant = null;
         String urlEncodedParam = null;
         try {

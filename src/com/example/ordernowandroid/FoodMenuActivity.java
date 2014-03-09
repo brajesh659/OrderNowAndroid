@@ -72,6 +72,7 @@ import com.example.ordernowandroid.model.MyOrderItem;
 import com.example.ordernowandroid.model.OrderNowConstants;
 
 import com.util.AsyncNetwork;
+import com.util.URLBuilder;
 import com.util.Utilities;
 
 public class FoodMenuActivity extends FragmentActivity implements numListener, AddNoteListener,
@@ -281,8 +282,11 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 						ApplicationState applicationContext = (ApplicationState) context.getApplicationContext();
 						String tableId = applicationContext
 								.getTableId();
-						String url = "http://ordernow.herokuapp.com/serveTable?action=callWaiter&tableId="
-								+ tableId;
+						String url = new URLBuilder()
+								.addPath(URLBuilder.Path.serveTable)
+								.addAction(URLBuilder.URLAction.callWaiter)
+								.addParam(URLBuilder.URLParam.tableId, tableId)
+								.build();
 						try {
 							new AsyncNetwork().execute(url).get();
 						} catch (InterruptedException e) {
@@ -527,7 +531,7 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 		//http://ordernow.herokuapp.com/serveTable?tableId=T1
 		Restaurant restaurant = null;
 		try {
-			restaurant =  new DownloadRestaurantTask().execute("http://ordernow.herokuapp.com/serveTable",tableId).get();
+			restaurant =  new DownloadRestaurantTask().execute(tableId).get();
 			if (restaurant != null) {
 				loadRestaurantDishes(restaurant);
 			} else {
@@ -789,7 +793,7 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 		@Override
 		protected Restaurant doInBackground(String... params) {
 			// "http://www.creativefreedom.co.uk/icon-designers-blog/wp-content/uploads/2013/03/00-android-4-0_icons.png"
-			return DownloadResturantMenu.getInstance().getResturant(params[0], params[1]);
+			return DownloadResturantMenu.getInstance().getResturant(params[0]);
 		}
 	}
 

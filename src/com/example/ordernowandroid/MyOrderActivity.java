@@ -29,6 +29,7 @@ import com.example.ordernowandroid.model.OrderNowConstants;
 import com.google.gson.Gson;
 import com.parse.ParseInstallation;
 import com.util.AsyncNetwork;
+import com.util.URLBuilder;
 
 public class MyOrderActivity extends Activity {
 	private static final String TEXT_COMMENT = "TextComment"; //FIXME: Make the Properties names more readable
@@ -151,9 +152,9 @@ public class MyOrderActivity extends Activity {
 
 		Gson gs = new Gson();
 		String order = gs.toJson(customerOrder);
-		String url = "http://ordernow.herokuapp.com/order?order=";
 		String encoded = URLEncoder.encode(order);
-		url += encoded;
+		String url = new URLBuilder().addPath(URLBuilder.Path.order)
+				.addParam(URLBuilder.URLParam.order, encoded).build();
 
 		try {
 			new AsyncNetwork().execute(url).get();
