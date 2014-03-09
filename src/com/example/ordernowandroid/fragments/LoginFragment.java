@@ -12,6 +12,7 @@ import com.example.ordernowandroid.ApplicationState;
 import com.example.ordernowandroid.FoodMenuActivity;
 import com.example.ordernowandroid.QRCodeScannerActivity;
 import com.example.ordernowandroid.R;
+import com.example.ordernowandroid.model.OrderNowConstants;
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.Session;
@@ -22,7 +23,6 @@ import com.facebook.widget.LoginButton;
 
 public class LoginFragment extends Fragment {
 
-	public static boolean IS_DEBUG_MODE = false;
 	private UiLifecycleHelper uiHelper;
 
 	private Session.StatusCallback callback = new Session.StatusCallback() {
@@ -60,7 +60,7 @@ public class LoginFragment extends Fragment {
 							applicationContext.setUserName(user.getFirstName());
 							applicationContext.setProfilePictureId(user.getId());
 
-							if (!IS_DEBUG_MODE){
+							if (!OrderNowConstants.IS_DEBUG_MODE){
 								Intent intent = new Intent(getActivity(), QRCodeScannerActivity.class); //FIXME: Found NPE on a new login
 								startActivity(intent);
 								getActivity().finish();

@@ -1,9 +1,6 @@
 package com.example.ordernowandroid.fragments;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -17,9 +14,8 @@ import com.example.ordernowandroid.ApplicationState;
 import com.example.ordernowandroid.R;
 import com.example.ordernowandroid.adapter.FoodMenuItemAdapter;
 import com.example.ordernowandroid.filter.MenuFilter;
-import com.example.ordernowandroid.filter.MenuPropertyKey;
-import com.example.ordernowandroid.filter.MenuPropertyValue;
 import com.example.ordernowandroid.model.FoodMenuItem;
+import com.google.gson.Gson;
 
 public class IndividualMenuTabFragment extends Fragment {
 
@@ -42,7 +38,8 @@ public class IndividualMenuTabFragment extends Fragment {
 
 	numListener numCallBack;	
 	AddNoteListener addNoteListener;
-    private HashMap<MenuPropertyKey, List<MenuPropertyValue>> selectedFilters;   
+	private MenuFilter menuFilterLocal = new MenuFilter();
+//    private HashMap<MenuPropertyKey, List<MenuPropertyValue>> selectedFilters;   
 
     @Override
     public void onAttach(android.app.Activity activity) {
@@ -55,14 +52,14 @@ public class IndividualMenuTabFragment extends Fragment {
         };
     };
 
-	public static Fragment newInstance(String categoryName, ArrayList<FoodMenuItem> foodMenuItem, HashMap<MenuPropertyKey, List<MenuPropertyValue>> selectedFilters) {	
+	public static Fragment newInstance(String categoryName, ArrayList<FoodMenuItem> foodMenuItem, MenuFilter selectedFilters) {	
 	    if(foodMenuItem == null||foodMenuItem.size()==0) {
 	        return new NullDishesFragment();
 	    }
 		IndividualMenuTabFragment imt = new IndividualMenuTabFragment();		
 		imt.tabTitle = categoryName;
 		imt.foodMenuItemList = foodMenuItem;
-		imt.selectedFilters = selectedFilters;
+		imt.menuFilterLocal = selectedFilters;
 		return imt;
 	}
 	
@@ -73,7 +70,7 @@ public class IndividualMenuTabFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey(FILTER_CONTENT)) {
-                selectedFilters = (HashMap<MenuPropertyKey, List<MenuPropertyValue>>) savedInstanceState.getSerializable(FILTER_CONTENT);
+                menuFilterLocal = (MenuFilter) savedInstanceState.getSerializable(FILTER_CONTENT);
             }
             if (savedInstanceState.containsKey(TAB_TITLE)) {
                 tabTitle = savedInstanceState.getString(TAB_TITLE);
@@ -97,18 +94,20 @@ public class IndividualMenuTabFragment extends Fragment {
 		lv.setOnCreateContextMenuListener(getActivity());
 		//check if filter is present
 		
-		// TODO govind: Need refactoring to avoid race condition. 
-        // PageAdapter automatically loads next page to current selected page and as filters are defined globally
-        // so there is race condition when in ALL filter, instead of displaying ALL items it applies Veg 
-        // filter of some of the dishes. 
-		
 		MenuFilter menuFilter = ApplicationState.getMenuFilter((ApplicationState)getActivity().getApplicationContext());
-        if (selectedFilters != null) {
-            menuFilter.addFilter(selectedFilters);
+		String filter = "";
+
+		if (menuFilterLocal != null) {
+            if (menuFilter != null && menuFilter.getFilterProperties() != null) {
+                menuFilterLocal.addFilter(menuFilter.getFilterProperties());
+            }
+            Gson gs = new Gson();
+            filter = gs.toJson(menuFilterLocal);
+            Log.i("IndividualMenu","filterValue = " + filter);
         }
-        Map<MenuPropertyKey, List<MenuPropertyValue>> filterProperties = menuFilter.getFilterProperties();
-        if (filterProperties != null && !filterProperties.isEmpty()) {
-            this.foodMenuItemAdapter.getFilter().filter("");
+
+		if (filter != null && !filter.isEmpty()) {
+            this.foodMenuItemAdapter.getFilter().filter(filter);
         }
 
 		return foodCategoryView;
@@ -118,7 +117,7 @@ public class IndividualMenuTabFragment extends Fragment {
 	 @Override
 	    public void onSaveInstanceState(Bundle outState) {
 	        super.onSaveInstanceState(outState);
-	        outState.putSerializable(FILTER_CONTENT, selectedFilters);
+	        outState.putSerializable(FILTER_CONTENT, menuFilterLocal);
 	        outState.putString(TAB_TITLE, tabTitle);
 	        outState.putSerializable(TAB_ITEM_LIST, foodMenuItemList);
 	    }

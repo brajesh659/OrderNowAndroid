@@ -1,6 +1,6 @@
 package com.example.ordernowandroid.filter;
 
-import java.util.Arrays;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,32 +8,20 @@ import java.util.Map;
 import com.example.ordernowandroid.model.FoodMenuItem;
 import com.util.Utilities;
 
-public class MenuFilter {
+public class MenuFilter implements Serializable{
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
     private Map<MenuPropertyKey, List<MenuPropertyValue>> filterProperties;
-
-    private Map<MenuPropertyKey, List<MenuPropertyValue>> availableFilters;
-
-    public void setAvailableFilters(Map<MenuPropertyKey, List<MenuPropertyValue>> availablefilterProperties) {
-        this.availableFilters = availablefilterProperties;
+    
+    public MenuFilter() {
+        filterProperties = new HashMap<MenuPropertyKey, List<MenuPropertyValue>>();
     }
 
     public Map<MenuPropertyKey, List<MenuPropertyValue>> getFilterProperties() {
         return filterProperties;
-    }
-
-    public Map<MenuPropertyKey, List<MenuPropertyValue>> getAvailableFilters() {
-        if (availableFilters == null) {
-            Map<MenuPropertyKey, List<MenuPropertyValue>> dishProperties = new HashMap<MenuPropertyKey, List<MenuPropertyValue>>();
-            dishProperties
-                    .put(MenuPropertyKey.FoodType, Arrays.asList(MenuPropertyValue.Veg, MenuPropertyValue.NonVeg));
-
-            dishProperties.put(MenuPropertyKey.CousineType,
-                    Arrays.asList(MenuPropertyValue.NorthIndian, MenuPropertyValue.SouthIndian));
-            return dishProperties;
-        }
-        return availableFilters;
-
     }
 
     public void addFilter(Map<MenuPropertyKey, List<MenuPropertyValue>> filterProp) {

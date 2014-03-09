@@ -56,16 +56,21 @@ import com.dm.zbar.android.scanner.ZBarConstants;
 import com.example.ordernowandroid.adapter.DownloadResturantMenu;
 import com.example.ordernowandroid.adapter.ImageService;
 import com.example.ordernowandroid.adapter.NewNavDrawerListAdapter;
-import com.example.ordernowandroid.filter.MenuFilter;
+import com.example.ordernowandroid.filter.AvailableMenuFilter;
+import com.example.ordernowandroid.filter.MenuPropertyKey;
+import com.example.ordernowandroid.filter.MenuPropertyValue;
+
 import com.example.ordernowandroid.fragments.AddNoteDialogFragment;
 import com.example.ordernowandroid.fragments.AddNoteListener;
 import com.example.ordernowandroid.fragments.IndividualMenuTabFragment;
 import com.example.ordernowandroid.fragments.IndividualMenuTabFragment.numListener;
-import com.example.ordernowandroid.fragments.LoginFragment;
+
 import com.example.ordernowandroid.fragments.MenuFragment;
 import com.example.ordernowandroid.model.CategoryNavDrawerItem;
 import com.example.ordernowandroid.model.FoodMenuItem;
 import com.example.ordernowandroid.model.MyOrderItem;
+import com.example.ordernowandroid.model.OrderNowConstants;
+
 import com.util.AsyncNetwork;
 import com.util.Utilities;
 
@@ -135,13 +140,14 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 		};
 		
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
-		if(LoginFragment.IS_DEBUG_MODE) {
+		if(OrderNowConstants.IS_DEBUG_MODE && OrderNowConstants.IS_LOCAL_RESTURANT_ENABLED) {
+		    restaurant = getResturantLocaly();
+		} else if (OrderNowConstants.IS_DEBUG_MODE){
 		    restaurant = getResturant("T1");
 		} else {
 		    restaurant = getResturant(applicationContext.getTableId());
 		}
-		
-		//restaurant = getResturantLocaly();
+
 		if (restaurant == null){
 			AlertDialog.Builder builder = new AlertDialog.Builder(FoodMenuActivity.this);            
 			builder.setTitle("Invalid QR code");
@@ -161,7 +167,7 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 			if (savedInstanceState == null) {
 				// on first time display view for first menu item
 			    Log.e("on resume ","in saved instance check ");
-				newdisplayView(0, 0);
+				displayView(0, 0);
 			}
 			mDrawerList.setOnGroupClickListener(new SlideMenuClickListener());
 			mDrawerList.setOnChildClickListener(new SlideMenuChildClickListener());
@@ -367,7 +373,7 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 				//					}
 				//				}
 				Log.e("on RESULT_OK ",""+ApplicationState.getCategoryId(applicationContext) + " " + ApplicationState.getChildCategoryId(applicationContext));
-				newdisplayView(ApplicationState.getCategoryId(applicationContext), ApplicationState.getChildCategoryId(applicationContext));
+				displayView(ApplicationState.getCategoryId(applicationContext), ApplicationState.getChildCategoryId(applicationContext));
 			} else if(resultCode == RESULT_CANCELED && data != null) {
 				String error = data.getStringExtra(ZBarConstants.ERROR_INFO);
 				if(!TextUtils.isEmpty(error)) {
@@ -423,7 +429,7 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
         public boolean onGroupClick(ExpandableListView parent, View v, int position, long id) {
             
             if(adapter.getChildrenCount(position)==0) {
-                newdisplayView(position, -1);
+                displayView(position, -1);
                 return true;
             }
             // TODO Auto-generated method stub
@@ -437,13 +443,13 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
         @Override
         public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
 //            Toast.makeText(getApplicationContext(), "child selected" + groupPosition, Toast.LENGTH_LONG).show();
-            newdisplayView(groupPosition, childPosition);
+            displayView(groupPosition, childPosition);
             return true;
         }
 
     }
 
-	private void newdisplayView(int position, int childPosition) {
+	private void displayView(int position, int childPosition) {
 	    // TODO Auto-generated method stub
 	    Category category;
 	    Category parentCategory = getCategories().get(position);
@@ -466,38 +472,6 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
         setTitle(category.getName());
         mDrawerLayout.closeDrawer(mDrawerList);
         
-	}
-
-	/**
-	 * Diplaying fragment view for selected nav drawer list item
-	 * */
-	private void displayView(int position) { // update the main content by
-		// replacing fragments
-		Fragment fragment = null;
-		Category category = getCategories().get(position);
-        fragment = IndividualMenuTabFragment.newInstance(category.getName(), getFoodMenuItems(category.getDishes()), null);
-
-		if (fragment != null) {
-			FragmentManager fragmentManager = getSupportFragmentManager();
-			fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).addToBackStack(null).commit();
-		} else {
-			// error in creating fragment
-			Log.e("FoodMenuActivity", "Error in creating fragment");
-		}
-		// update selected item and title, then close the drawer
-		mDrawerList.setItemChecked(position, true);
-		mDrawerList.setSelection(position);
-		ApplicationState.setCategoryId((ApplicationState)getApplicationContext(), position);
-		setTitle(category.getName());
-		mDrawerLayout.closeDrawer(mDrawerList);
-	}
-
-	private ArrayList<FoodMenuItem> getFoodMenuItems(List<Dish> dishes) {
-		ArrayList<FoodMenuItem> foodMenuItem = new ArrayList<FoodMenuItem>();
-		for (Dish dish : dishes) {
-			foodMenuItem.add(new FoodMenuItem(dish));
-		}
-		return foodMenuItem;
 	}
 
 	@Override
@@ -565,19 +539,28 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 		return restaurant;
 	}
 
-	private void loadRestaurantDishes(final Restaurant restaurant) {
-		Utilities.info("restaurant load " + restaurant.getName() + restaurantLoadedInDb);
-		if (!restaurantLoadedInDb.containsKey(restaurant.getName())) {
-			//load filter first time
-			MenuFilter menuFilter = ApplicationState.getMenuFilter((ApplicationState) getApplicationContext());
-			menuFilter.setAvailableFilters(restaurant.getAvailableFilters());
-			new Thread(new Runnable() {
-				public void run() {
-					try {
-						CustomDbAdapter dbManager = CustomDbAdapter
-								.getInstance(getBaseContext());
-						DishHelper dh = new DishHelper(dbManager);
-						for(Category category : restaurant.getMenu().getCategories()) {
+    private void loadRestaurantDishes(final Restaurant restaurant) {
+        Utilities.info("restaurant load " + restaurant.getName() + restaurantLoadedInDb);
+        if (!restaurantLoadedInDb.containsKey(restaurant.getName())) {
+            // load filter first time
+            AvailableMenuFilter availableMenuFilter = null;
+            if (restaurant.getAvailableFilters() != null) {
+                availableMenuFilter = new AvailableMenuFilter(restaurant.getAvailableFilters());
+            } else {
+                Map<MenuPropertyKey, List<MenuPropertyValue>> dishProperties = new HashMap<MenuPropertyKey, List<MenuPropertyValue>>();
+                // dishProperties.put(MenuPropertyKey.FoodType,
+                // Arrays.asList(MenuPropertyValue.Veg,
+                // MenuPropertyValue.NonVeg));
+                dishProperties.put(MenuPropertyKey.CousineType, Arrays.asList(MenuPropertyValue.NorthIndian, MenuPropertyValue.SouthIndian));
+                availableMenuFilter = new AvailableMenuFilter(dishProperties);
+            }
+            ApplicationState.setAvailableMenuFilter((ApplicationState) getApplicationContext(), availableMenuFilter);
+            new Thread(new Runnable() {
+                public void run() {
+                    try {
+                        CustomDbAdapter dbManager = CustomDbAdapter.getInstance(getBaseContext());
+                        DishHelper dh = new DishHelper(dbManager);
+                        for (Category category : restaurant.getMenu().getCategories()) {
                             if (category.getDishes() != null && !category.getDishes().isEmpty()) {
                                 for (Dish dish : category.getDishes()) {
                                     dh.addDish(dish, category.getName());
@@ -591,16 +574,16 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
                                     }
                                 }
                             }
-						}
-						restaurantLoadedInDb.put(restaurant.getName(), true);
-						//for(Res)
-					} catch (Exception e) {
-						Utilities.error("Failed to load into DB " + e);
-					}
-				}
-			}).start();
-		}
-	}
+                        }
+                        restaurantLoadedInDb.put(restaurant.getName(), true);
+                        // for(Res)
+                    } catch (Exception e) {
+                        Utilities.error("Failed to load into DB " + e);
+                    }
+                }
+            }).start();
+        }
+    }
 
 	private Restaurant getResturantLocaly() {
         List<Integer> categoryItemName = new LinkedList<Integer>();
@@ -886,7 +869,7 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 		
 		
 		if(position > 0) {
-			newdisplayView(position, childPosition);
+			displayView(position, childPosition);
 		}
 	}
 

@@ -1,11 +1,13 @@
 package com.example.ordernowandroid.adapter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,14 +18,19 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.data.menu.FoodType;
+import com.data.menu.Restaurant;
 import com.example.ordernowandroid.ApplicationState;
 import com.example.ordernowandroid.IngredientsActivity;
 import com.example.ordernowandroid.R;
 import com.example.ordernowandroid.filter.MenuFilter;
+import com.example.ordernowandroid.filter.MenuPropertyKey;
+import com.example.ordernowandroid.filter.MenuPropertyValue;
 import com.example.ordernowandroid.fragments.AddNoteListener;
 import com.example.ordernowandroid.fragments.IndividualMenuTabFragment.numListener;
 import com.example.ordernowandroid.model.FoodMenuItem;
 import com.example.ordernowandroid.model.OrderNowConstants;
+import com.google.gson.Gson;
 
 /**
  * 
@@ -40,7 +47,6 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
     private AddNoteListener addNoteListener;
     private ModelFilter filter;
     
-    private MenuFilter menuFilter;
     private Context context;
 
     public FoodMenuItemAdapter(Context context, ArrayList<FoodMenuItem> foodMenuItems, numListener numCallBack, AddNoteListener addNoteListener) {
@@ -51,7 +57,6 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
         allfoodMenuItems.addAll(foodMenuItems);
         this.foodMenuItems = foodMenuItems;
         this.numCallBack = numCallBack;
-        this.menuFilter = ApplicationState.getMenuFilter((ApplicationState)context);
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -204,34 +209,22 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
         protected FilterResults performFiltering(CharSequence constraint) {
             FilterResults filterResults = new FilterResults();
             List<FoodMenuItem> filteredItemList = new ArrayList<FoodMenuItem>();
-            if(menuFilter.getFilterProperties() !=null && !menuFilter.getFilterProperties().isEmpty()) {
+            MenuFilter filter = null ;
+            if (constraint != null && !constraint.equals("")) {
+                Gson gs = new Gson();
+                filter = gs.fromJson(constraint.toString(), MenuFilter.class);
+            }
+            
+            if(filter!=null && filter.getFilterProperties() !=null && !filter.getFilterProperties().isEmpty()) {
                 for (FoodMenuItem foodItem : allfoodMenuItems) {
-                    if(menuFilter.isItemFiltered(foodItem)) {
+                    if(filter.isItemFiltered(foodItem)) {
                         filteredItemList.add(foodItem);
                     }
                 }
             } else {
                 filteredItemList.addAll(allfoodMenuItems);
             }
-            
-            
-            /*
-            if (constraint.equals(FoodType.Veg.toString())) {
-                for (FoodMenuItem foodItem : allfoodMenuItems) {
-                    if (foodItem.getFoodType().equals(FoodType.Veg)) {
-                        filteredItemList.add(foodItem);
-                    }
-                }
-            } else if (constraint.equals(FoodType.NonVeg.toString())) {
-                for (FoodMenuItem foodItem : allfoodMenuItems) {
-                    if (foodItem.getFoodType().equals(FoodType.NonVeg)) {
-                        filteredItemList.add(foodItem);
-                    }
-                }
-            } else {
-                filteredItemList.addAll(allfoodMenuItems);
-            }
-            */
+
             filterResults.count = filteredItemList.size();
             filterResults.values = filteredItemList;
             return filterResults;

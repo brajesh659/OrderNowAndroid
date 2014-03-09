@@ -8,6 +8,7 @@ import java.util.Map;
 import android.app.Application;
 
 import com.data.menu.CustomerOrderWrapper;
+import com.example.ordernowandroid.filter.AvailableMenuFilter;
 import com.example.ordernowandroid.filter.MenuFilter;
 import com.example.ordernowandroid.model.IngredientOptionView;
 import com.example.ordernowandroid.model.MyOrderItem;
@@ -19,6 +20,7 @@ public class ApplicationState extends Application {
     private String profilePictureId;
     private int categoryId = -1;
     private MenuFilter menuFilter;
+    private AvailableMenuFilter menuFilterAvailable;
     private HashMap<String, MyOrderItem> foodMenuItemQuantityMap;
     private CustomerOrderWrapper customerOrderWrapper;
     private ArrayList<CustomerOrderWrapper> subOrdersFromDB;
@@ -88,6 +90,23 @@ public class ApplicationState extends Application {
         return applicationContext.getMenuFilter();
     }
 
+    public AvailableMenuFilter getAvailableMenuFilter() {
+        return menuFilterAvailable;
+    }
+
+    public void setAvailableMenuFilter(AvailableMenuFilter menuFilterAvailable) {
+        this.menuFilterAvailable = menuFilterAvailable;
+    }
+
+    public static AvailableMenuFilter getAvailableMenuFilter(ApplicationState applicationContext) {
+        return applicationContext.getAvailableMenuFilter();
+    }
+    
+    public static void setAvailableMenuFilter(ApplicationState applicationContext,AvailableMenuFilter menuFilterAvailable ) {
+         applicationContext.setAvailableMenuFilter(menuFilterAvailable);
+    }
+
+    
     public HashMap<String, MyOrderItem> getFoodMenuItemQuantityMap() {
         if (foodMenuItemQuantityMap == null)
             foodMenuItemQuantityMap = new HashMap<String, MyOrderItem>();

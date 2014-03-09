@@ -143,5 +143,13 @@ public class Dish implements Serializable {
 		this.selectedIngredientOptions = selectedIngredientOptions;
 	}
 
+    public boolean isAvailable() {
+        return isAvailable;
+    }
+
+    public void setAvailable(boolean isAvailable) {
+        this.isAvailable = isAvailable;
+    }
+
 
 }

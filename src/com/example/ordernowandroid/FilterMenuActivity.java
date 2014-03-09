@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.ordernowandroid.filter.AvailableMenuFilter;
 import com.example.ordernowandroid.filter.MenuFilter;
 import com.example.ordernowandroid.filter.MenuPropertyKey;
 import com.example.ordernowandroid.filter.MenuPropertyValue;
@@ -41,7 +42,9 @@ public class FilterMenuActivity extends Activity {
         if (selectedFilters == null) {
             selectedFilters = new HashMap<MenuPropertyKey, List<MenuPropertyValue>>();
         }
-        Map<MenuPropertyKey, List<MenuPropertyValue>> availableFilters = menuFilter.getAvailableFilters();
+        
+        AvailableMenuFilter availableMenuFilter = ApplicationState.getAvailableMenuFilter((ApplicationState) getApplicationContext());
+        Map<MenuPropertyKey, List<MenuPropertyValue>> availableFilters = availableMenuFilter.getAvailableFilters();
 
         if (availableFilters != null && !availableFilters.isEmpty()) {
             for (final MenuPropertyKey filterKey : availableFilters.keySet()) {

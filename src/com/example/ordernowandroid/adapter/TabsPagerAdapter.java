@@ -12,6 +12,7 @@ import android.util.Log;
 
 import com.data.menu.Category;
 import com.data.menu.Dish;
+import com.example.ordernowandroid.filter.MenuFilter;
 import com.example.ordernowandroid.filter.MenuPropertyKey;
 import com.example.ordernowandroid.filter.MenuPropertyValue;
 import com.example.ordernowandroid.fragments.IndividualMenuTabFragment;
@@ -26,11 +27,11 @@ public class TabsPagerAdapter extends FragmentStatePagerAdapter {
         this.category = category;
 	}
 	
-	@Override
-	public Fragment getItem(int index) {
-	    Log.i("TabsPagerAdapter", "slide event "+ index);
-	    List<MenuPropertyValue> value = new ArrayList<MenuPropertyValue>();
-	    MenuPropertyValue tabType = null;
+    @Override
+    public Fragment getItem(int index) {
+        Log.i("TabsPagerAdapter", "slide event " + index);
+        List<MenuPropertyValue> value = new ArrayList<MenuPropertyValue>();
+        MenuPropertyValue tabType = null;
         if (index == 0) {
             tabType = MenuPropertyValue.All;
         } else if (index == 1) {
@@ -38,15 +39,17 @@ public class TabsPagerAdapter extends FragmentStatePagerAdapter {
         } else if (index == 2) {
             tabType = MenuPropertyValue.NonVeg;
         }
-      
+
         value.add(tabType);
 
-      HashMap<MenuPropertyKey, List<MenuPropertyValue>> selectedFilters = new HashMap<MenuPropertyKey, List<MenuPropertyValue>>();
-      selectedFilters.put(MenuPropertyKey.FoodType, value);
+        HashMap<MenuPropertyKey, List<MenuPropertyValue>> selectedFilters = new HashMap<MenuPropertyKey, List<MenuPropertyValue>>();
+        selectedFilters.put(MenuPropertyKey.FoodType, value);
 
-      
-      return IndividualMenuTabFragment.newInstance(category.getName(), getFoodMenuItems(category.getDishes()), selectedFilters);
-	}
+        MenuFilter menuFilter = new MenuFilter();
+        menuFilter.addFilter(selectedFilters);
+
+        return IndividualMenuTabFragment.newInstance(category.getName(), getFoodMenuItems(category.getDishes()), menuFilter);
+    }
 
 	@Override
 	public int getCount() {
