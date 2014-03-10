@@ -3,6 +3,9 @@ package com.example.ordernowandroid.filter;
 import java.util.List;
 import java.util.Map;
 
+import com.data.menu.MenuPropertyKey;
+import com.data.menu.MenuPropertyValue;
+
 public class AvailableMenuFilter {
     public MenuFilter availableFilters;
 

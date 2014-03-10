@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Map;
 
-import com.example.ordernowandroid.filter.MenuPropertyKey;
-import com.example.ordernowandroid.filter.MenuPropertyValue;
 
 public class Dish implements Serializable {
     

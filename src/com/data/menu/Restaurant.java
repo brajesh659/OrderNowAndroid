@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.example.ordernowandroid.filter.MenuPropertyKey;
-import com.example.ordernowandroid.filter.MenuPropertyValue;
 
 public class Restaurant {
 	private String _id;

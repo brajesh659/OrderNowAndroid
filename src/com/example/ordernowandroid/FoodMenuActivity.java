@@ -45,20 +45,21 @@ import android.widget.Toast;
 import com.data.database.CustomDbAdapter;
 import com.data.database.DishHelper;
 import com.data.menu.Category;
+import com.data.menu.CategoryLevelFilter;
 import com.data.menu.CustomerOrderWrapper;
 import com.data.menu.Dish;
 import com.data.menu.DishIngredients;
 import com.data.menu.FoodType;
 import com.data.menu.Ingredient;
 import com.data.menu.IngredientOption;
+import com.data.menu.MenuPropertyKey;
+import com.data.menu.MenuPropertyValue;
 import com.data.menu.Restaurant;
 import com.dm.zbar.android.scanner.ZBarConstants;
 import com.example.ordernowandroid.adapter.DownloadResturantMenu;
 import com.example.ordernowandroid.adapter.ImageService;
 import com.example.ordernowandroid.adapter.NewNavDrawerListAdapter;
 import com.example.ordernowandroid.filter.AvailableMenuFilter;
-import com.example.ordernowandroid.filter.MenuPropertyKey;
-import com.example.ordernowandroid.filter.MenuPropertyValue;
 
 import com.example.ordernowandroid.fragments.AddNoteDialogFragment;
 import com.example.ordernowandroid.fragments.AddNoteListener;
@@ -628,11 +629,19 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
         List<Category> categories = new LinkedList<Category>();
         for (int i = 0; i < categoryNames.length-1; i++) {
             Category category = new Category();
+            CategoryLevelFilter categoryProperty;
+            if(i==2){
+                List<MenuPropertyValue> propertyValue = new ArrayList<MenuPropertyValue>(Arrays.asList(MenuPropertyValue.Beer, MenuPropertyValue.Whisky, MenuPropertyValue.Wine, MenuPropertyValue.Scotch));
+                categoryProperty = new CategoryLevelFilter(MenuPropertyKey.DrinkType, propertyValue );
+            } else { 
+                List<MenuPropertyValue> propertyValue = new ArrayList<MenuPropertyValue>(Arrays.asList(MenuPropertyValue.All, MenuPropertyValue.Veg, MenuPropertyValue.NonVeg));
+                categoryProperty = new CategoryLevelFilter(MenuPropertyKey.FoodType, propertyValue );
+            }            
+            category.setCategoryLevelFilter(categoryProperty );
 			getCategory(categoryNames[i], categoryItemName.get(i),
 					categoryItemPrice.get(i), categoryItemID.get(i), imageId.get(i), category);
 			if(category.getName().equals("Soups")) {
 			    Category category1 = new Category();
-			    
 			    List<Category> categories1 = new ArrayList<Category>();
 			    categories1.add(category);
                 category1.setCategories(categories1);
@@ -692,6 +701,7 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
             } else {
                 dish.setType(FoodType.NonVeg);
             }
+
             dish.setDescription("item description comes here");
 			dish.setDishId(itemids[i]);
             dishes.add(dish);

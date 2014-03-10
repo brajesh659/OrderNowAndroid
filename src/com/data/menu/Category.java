@@ -11,6 +11,7 @@ public class Category implements Serializable{
     private List<Category> categories;
 	private List<Dish> dishes;
 	private String name;
+	private CategoryLevelFilter categoryLevelFilter;
 	
 	public List<Dish> getDishes() {
 		return dishes;
@@ -29,6 +30,14 @@ public class Category implements Serializable{
 	public List<Category> getCategories() {
 		return categories;
 	}
+	
+	public CategoryLevelFilter getCategoryLevelFilter() {
+        return categoryLevelFilter;
+    }
+	
+	public void setCategoryLevelFilter(CategoryLevelFilter categoryProperty) {
+        this.categoryLevelFilter = categoryProperty;
+    }
 
 	public void setCategories(List<Category> categories) {
 		this.categories = categories;

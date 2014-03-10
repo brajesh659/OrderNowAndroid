@@ -19,13 +19,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.data.menu.FoodType;
+import com.data.menu.MenuPropertyKey;
+import com.data.menu.MenuPropertyValue;
 import com.data.menu.Restaurant;
 import com.example.ordernowandroid.ApplicationState;
 import com.example.ordernowandroid.IngredientsActivity;
 import com.example.ordernowandroid.R;
 import com.example.ordernowandroid.filter.MenuFilter;
-import com.example.ordernowandroid.filter.MenuPropertyKey;
-import com.example.ordernowandroid.filter.MenuPropertyValue;
 import com.example.ordernowandroid.fragments.AddNoteListener;
 import com.example.ordernowandroid.fragments.IndividualMenuTabFragment.numListener;
 import com.example.ordernowandroid.model.FoodMenuItem;

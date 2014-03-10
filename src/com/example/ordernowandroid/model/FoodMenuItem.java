@@ -12,9 +12,9 @@ import com.data.menu.Dish;
 import com.data.menu.FoodType;
 import com.data.menu.Ingredient;
 import com.data.menu.IngredientOption;
+import com.data.menu.MenuPropertyKey;
+import com.data.menu.MenuPropertyValue;
 import com.example.ordernowandroid.adapter.ImageService;
-import com.example.ordernowandroid.filter.MenuPropertyKey;
-import com.example.ordernowandroid.filter.MenuPropertyValue;
 import com.util.Utilities;
 
 /**
@@ -188,7 +188,6 @@ public class FoodMenuItem implements Serializable {
 	public Map<MenuPropertyKey, MenuPropertyValue> getDishFilterProperties() {
 		Map<MenuPropertyKey, MenuPropertyValue> dishProperties = dish
 				.getDishProperties();
-		int i = 0;
 		if (dishProperties == null) {
 			dishProperties = new HashMap<MenuPropertyKey, MenuPropertyValue>();
 
@@ -198,7 +197,19 @@ public class FoodMenuItem implements Serializable {
 			} else {
 				dishProperties.put(MenuPropertyKey.CousineType,
 						MenuPropertyValue.SouthIndian);
+				dishProperties.put(MenuPropertyKey.DrinkType,
+                        MenuPropertyValue.Whisky);
 			}
+            if (dish.getName().length() % 4 == 0) {
+                dishProperties.put(MenuPropertyKey.DrinkType, MenuPropertyValue.Beer);
+            } else if (dish.getName().length() % 4 == 1) {
+                dishProperties.put(MenuPropertyKey.DrinkType, MenuPropertyValue.Whisky);
+            } else if (dish.getName().length() % 4 == 2) {
+                dishProperties.put(MenuPropertyKey.DrinkType, MenuPropertyValue.Scotch);
+            } else {
+                dishProperties.put(MenuPropertyKey.DrinkType, MenuPropertyValue.Wine);
+            }
+			
 		}
 		Utilities.info("getDishFilterProperties " + dishProperties);
 		dishProperties.put(MenuPropertyKey.FoodType,

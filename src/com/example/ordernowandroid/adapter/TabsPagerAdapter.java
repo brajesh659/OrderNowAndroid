@@ -1,7 +1,6 @@
 package com.example.ordernowandroid.adapter;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -12,38 +11,36 @@ import android.util.Log;
 
 import com.data.menu.Category;
 import com.data.menu.Dish;
+import com.data.menu.MenuPropertyKey;
+import com.data.menu.MenuPropertyValue;
 import com.example.ordernowandroid.filter.MenuFilter;
-import com.example.ordernowandroid.filter.MenuPropertyKey;
-import com.example.ordernowandroid.filter.MenuPropertyValue;
 import com.example.ordernowandroid.fragments.IndividualMenuTabFragment;
 import com.example.ordernowandroid.model.FoodMenuItem;
 
 public class TabsPagerAdapter extends FragmentStatePagerAdapter {
-	private static final List<String> TITLES = new ArrayList<String>(Arrays.asList("All", "Veg", "NonVeg"));;
-    
     private Category category;
-	public TabsPagerAdapter(FragmentManager fm, Category category) {
-		super(fm);
+
+    public TabsPagerAdapter(FragmentManager fm, Category category) {
+        super(fm);
         this.category = category;
-	}
-	
+    }
+
+    private List<MenuPropertyValue> getTitles() {
+        return category.getCategoryLevelFilter().getFilterValue();
+    }
+
     @Override
     public Fragment getItem(int index) {
         Log.i("TabsPagerAdapter", "slide event " + index);
         List<MenuPropertyValue> value = new ArrayList<MenuPropertyValue>();
         MenuPropertyValue tabType = null;
-        if (index == 0) {
-            tabType = MenuPropertyValue.All;
-        } else if (index == 1) {
-            tabType = MenuPropertyValue.Veg;
-        } else if (index == 2) {
-            tabType = MenuPropertyValue.NonVeg;
-        }
+
+        tabType = category.getCategoryLevelFilter().getFilterValue().get(index);
 
         value.add(tabType);
 
         HashMap<MenuPropertyKey, List<MenuPropertyValue>> selectedFilters = new HashMap<MenuPropertyKey, List<MenuPropertyValue>>();
-        selectedFilters.put(MenuPropertyKey.FoodType, value);
+        selectedFilters.put(getFilterType(), value);
 
         MenuFilter menuFilter = new MenuFilter();
         menuFilter.addFilter(selectedFilters);
@@ -51,19 +48,22 @@ public class TabsPagerAdapter extends FragmentStatePagerAdapter {
         return IndividualMenuTabFragment.newInstance(category.getName(), getFoodMenuItems(category.getDishes()), menuFilter);
     }
 
-	@Override
-	public int getCount() {
-		if(TITLES !=  null ) {
-			return TITLES.size();
-		}
-		return 0;
-	}
-	
-	@Override
-	public CharSequence getPageTitle(int position) {
-		return TITLES.get(position);
-	}
-	
+    private MenuPropertyKey getFilterType() {
+        return category.getCategoryLevelFilter().getFilterName();
+    }
+
+    @Override
+    public int getCount() {
+        if (getTitles() != null) {
+            return getTitles().size();
+        }
+        return 0;
+    }
+
+    @Override
+    public CharSequence getPageTitle(int position) {
+        return getTitles().get(position).toString();
+    }
 
     private ArrayList<FoodMenuItem> getFoodMenuItems(List<Dish> dishes) {
         ArrayList<FoodMenuItem> foodMenuItem = new ArrayList<FoodMenuItem>();
