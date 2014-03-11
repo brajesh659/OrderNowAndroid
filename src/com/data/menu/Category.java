@@ -11,7 +11,7 @@ public class Category implements Serializable{
     private List<Category> categories;
 	private List<Dish> dishes;
 	private String name;
-	private CategoryLevelFilter categoryLevelFilter;
+	private CategoryLevelFilter categoryLevelFilter = CategoryLevelFilter.NONE_CATEGORY_LEVEL_FILTER;
 	
 	public List<Dish> getDishes() {
 		return dishes;

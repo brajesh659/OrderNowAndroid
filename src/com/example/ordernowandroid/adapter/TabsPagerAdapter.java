@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.data.menu.Category;
 import com.data.menu.Dish;
@@ -16,6 +17,8 @@ import com.data.menu.MenuPropertyValue;
 import com.example.ordernowandroid.filter.MenuFilter;
 import com.example.ordernowandroid.fragments.IndividualMenuTabFragment;
 import com.example.ordernowandroid.model.FoodMenuItem;
+import com.google.gson.Gson;
+import com.util.OrderNowUtilities;
 
 public class TabsPagerAdapter extends FragmentStatePagerAdapter {
     private Category category;
@@ -45,7 +48,7 @@ public class TabsPagerAdapter extends FragmentStatePagerAdapter {
         MenuFilter menuFilter = new MenuFilter();
         menuFilter.addFilter(selectedFilters);
 
-        return IndividualMenuTabFragment.newInstance(category.getName(), getFoodMenuItems(category.getDishes()), menuFilter);
+        return IndividualMenuTabFragment.newInstance(category.getName(), OrderNowUtilities.getFoodMenuItems(category.getDishes()), menuFilter);
     }
 
     private MenuPropertyKey getFilterType() {
@@ -65,14 +68,5 @@ public class TabsPagerAdapter extends FragmentStatePagerAdapter {
         return getTitles().get(position).toString();
     }
 
-    private ArrayList<FoodMenuItem> getFoodMenuItems(List<Dish> dishes) {
-        ArrayList<FoodMenuItem> foodMenuItem = new ArrayList<FoodMenuItem>();
-        if (dishes != null) {
-            for (Dish dish : dishes) {
-                foodMenuItem.add(new FoodMenuItem(dish));
-            }
-        }
-        return foodMenuItem;
-    }
 
 }

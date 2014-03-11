@@ -60,6 +60,7 @@ import com.example.ordernowandroid.adapter.DownloadResturantMenu;
 import com.example.ordernowandroid.adapter.ImageService;
 import com.example.ordernowandroid.adapter.NewNavDrawerListAdapter;
 import com.example.ordernowandroid.filter.AvailableMenuFilter;
+import com.example.ordernowandroid.filter.MenuFilter;
 
 import com.example.ordernowandroid.fragments.AddNoteDialogFragment;
 import com.example.ordernowandroid.fragments.AddNoteListener;
@@ -73,6 +74,7 @@ import com.example.ordernowandroid.model.MyOrderItem;
 import com.example.ordernowandroid.model.OrderNowConstants;
 
 import com.util.AsyncNetwork;
+import com.util.OrderNowUtilities;
 import com.util.URLBuilder;
 import com.util.Utilities;
 
@@ -469,8 +471,13 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 	        }
 	    }
 	   // Toast.makeText(this, category.toString(), Toast.LENGTH_LONG).show();
+	    Fragment menuFragment = null;
 	    Log.i("FoodMenuActiviry.class", category.toString());
-	    Fragment menuFragment = MenuFragment.newInstance(category);
+        if (category.getCategoryLevelFilter().getFilterName() == MenuPropertyKey.NULL) {
+            menuFragment = IndividualMenuTabFragment.newInstance(category.getName(), OrderNowUtilities.getFoodMenuItems(category.getDishes()), new MenuFilter());
+        } else {
+            menuFragment = MenuFragment.newInstance(category);
+        }
 	    FragmentManager fragmentManager = getSupportFragmentManager();
 	    fragmentManager.beginTransaction().replace(R.id.frame_container, menuFragment).addToBackStack(null).commit();
 	    mDrawerList.setItemChecked(position, true);
