@@ -16,6 +16,7 @@ import com.util.Utilities;
 public class RestaurantHelper extends SQLHelper {
 
 	private static final String KEY_TYPE = "type";
+	private static final String KEY_CATEGORY = "category";
 	private static final String KEY_PRICE = "price";
 	private static final String KEY_IMG = "img";
 	private static final String KEY_DESCRIPTION = "description";
@@ -62,6 +63,7 @@ public class RestaurantHelper extends SQLHelper {
 		String img = "";
 		String price = "";
 		String type = "";
+		String category = "";
 
 		if (cursor.getCount() > 0) {
 			cursor.moveToFirst();
@@ -73,9 +75,11 @@ public class RestaurantHelper extends SQLHelper {
 				img = cursor.getString(cursor.getColumnIndex(KEY_IMG));
 				price = cursor.getString(cursor.getColumnIndex(KEY_PRICE));
 				type = cursor.getString(cursor.getColumnIndex(KEY_TYPE));
+				category = cursor.getString(cursor.getColumnIndex(KEY_CATEGORY));
 				Dish dish = new Dish(dishId, name, description, img,
 						Float.valueOf(price), FoodType.valueOf(type));
 				FoodMenuItem foodMenuItem = new FoodMenuItem(dish);
+				foodMenuItem.setCategory(category);
 
 				searchFoodList.add(foodMenuItem);
 
@@ -97,6 +101,7 @@ public class RestaurantHelper extends SQLHelper {
 						: "");
 				values.put(KEY_PRICE, Float.toString(dish.getPrice()));
 				values.put(KEY_TYPE, dish.getType().toString());
+				values.put(KEY_CATEGORY, category);
 				values.put(
 						KEY_DISH_DETAIL,
 						category + " " + dish.getName() + " "

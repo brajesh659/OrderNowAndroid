@@ -27,6 +27,7 @@ public class FoodMenuItem implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private Dish dish;
+	private String category = "";
 	private ArrayList<FoodIngredient> ingredients;
 
 	public FoodMenuItem(Dish dish) {
@@ -121,7 +122,7 @@ public class FoodMenuItem implements Serializable {
 
 	@Override
 	public String toString() {
-		return dish.toString();
+		return dish.toString() + " category " + category;
 	}
 
 	@Override
@@ -216,6 +217,14 @@ public class FoodMenuItem implements Serializable {
 				MenuPropertyValue.valueOf(getFoodType().toString()));
 		return dishProperties;
 
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
 	}
 
 }

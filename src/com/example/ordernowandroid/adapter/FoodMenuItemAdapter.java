@@ -67,6 +67,7 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
             convertView = l_Inflater.inflate(R.layout.food_menu_item, null);
             holder = new ViewHolder();
             holder.txt_itemName = (TextView) convertView.findViewById(R.id.dish_name);
+            holder.txt_itemCategory = (TextView) convertView.findViewById(R.id.dish_category);
             holder.txt_itemDescription = (TextView) convertView.findViewById(R.id.dish_description);
             holder.txt_itemPrice = (TextView) convertView.findViewById(R.id.dish_price);
             holder.txt_itemQuantity = (TextView) convertView.findViewById(R.id.dish_quantity);
@@ -86,6 +87,12 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
         holder.txt_itemDescription.setText(foodItem.getDescription());
         holder.txt_itemPrice.setText(OrderNowConstants.INDIAN_RUPEE_UNICODE + " " + foodItem.getItemPrice().toString());
 
+        if(foodItem.getCategory()!= null && !foodItem.getCategory().isEmpty()) {
+        	holder.txt_itemCategory.setText(foodItem.getCategory());
+        	holder.txt_itemCategory.setVisibility(View.VISIBLE);
+        } else {
+        	holder.txt_itemCategory.setVisibility(View.INVISIBLE);
+        }
         if(foodItem.getFoodType().equals(FoodType.Veg)) {
         	holder.catImage.setVisibility(View.VISIBLE);
         	holder.catImage.setImageResource(R.drawable.veg);
@@ -196,6 +203,7 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
 
     static class ViewHolder {
         TextView txt_itemName;
+        TextView txt_itemCategory;
         TextView txt_itemDescription;
         TextView txt_itemPrice;
         TextView txt_itemQuantity;

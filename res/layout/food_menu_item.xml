@@ -63,6 +63,15 @@
          android:background="@color/white"
          android:src="@drawable/ic_action_edit" />
     
+    <TextView
+        android:id="@+id/dish_category"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/addnote"
+        android:paddingTop="8sp"
+        android:paddingRight="6sp"
+        android:textColor="@color/dimgray"
+        android:textSize="10sp"/>    
 
     <TextView
         android:id="@+id/dish_description"

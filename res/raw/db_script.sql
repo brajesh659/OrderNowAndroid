@@ -58,6 +58,7 @@ CREATE VIRTUAL TABLE [dishes] USING fts3(
 , [img] nvarchar(300) not null
 , [price] nvarchar(300) not null
 , [type] nvarchar(300) not null
+, [category] nvarchar(300) not null
 , [dishDetail] nvarchar(300) not null
 );
 
