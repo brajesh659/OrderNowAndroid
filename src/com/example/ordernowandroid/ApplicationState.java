@@ -16,6 +16,7 @@ import com.util.Utilities;
 
 public class ApplicationState extends Application {
     private String tableId;
+    private String restaurantId;
     private String restaurantName;
     private String userName;
     private String profilePictureId;
@@ -310,5 +311,21 @@ public class ApplicationState extends Application {
 	public void setRestaurantName(String restaurantName) {
 		this.restaurantName = restaurantName;
 	}
+
+	public String getRestaurantId() {
+		return restaurantId;
+	}
+
+	public void setRestaurantId(String restaurantId) {
+		this.restaurantId = restaurantId;
+	}
+	
+	public static String getRestaurantId(ApplicationState applicationContext) {
+        return applicationContext.getRestaurantId();
+    }
+
+    public static void setRestaurantId(ApplicationState applicationContext, String restId) {
+        applicationContext.setRestaurantId(restId);
+    }
 
 }

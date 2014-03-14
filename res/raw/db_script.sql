@@ -60,3 +60,9 @@ CREATE VIRTUAL TABLE [dishes] USING fts3(
 , [type] nvarchar(300) not null
 , [dishDetail] nvarchar(300) not null
 );
+
+CREATE TABLE IF NOT EXISTS[restaurantMenu] (
+  [restId] nvarchar(300) not null
+, [menu] clob not null
+, primary key ([restId])
+);

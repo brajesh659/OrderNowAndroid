@@ -58,10 +58,14 @@ public class QRCodeScannerActivity extends Activity {
 		switch (requestCode) {
 		case ZBAR_QR_SCANNER_REQUEST:
 			if (resultCode == RESULT_OK) {
-				String tableId = data.getStringExtra(ZBarConstants.SCAN_RESULT);
-				Toast.makeText(this, "Table Id = " + tableId, Toast.LENGTH_SHORT).show();
+				String tableId_restID = data.getStringExtra(ZBarConstants.SCAN_RESULT);
+				String[] scanResultStrings = tableId_restID.split(" ");
+				String tableId = scanResultStrings[0];
+				String restId = (scanResultStrings.length > 1)?scanResultStrings[1]:"";
+				Toast.makeText(this, "Table Id = " + tableId + " Rest Id = " + restId, Toast.LENGTH_SHORT).show();
 
 				ApplicationState.setTableId(applicationContext, tableId);
+				ApplicationState.setRestaurantId(applicationContext, restId);
 				ApplicationState.setOpenCategoryDrawer(applicationContext, true);
 				//clean order stuff if present
 				ApplicationState.cleanSubOrdersFromDB(applicationContext);

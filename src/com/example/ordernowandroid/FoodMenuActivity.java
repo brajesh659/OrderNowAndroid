@@ -43,7 +43,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.data.database.CustomDbAdapter;
-import com.data.database.DishHelper;
+import com.data.database.RestaurantHelper;
 import com.data.menu.Category;
 import com.data.menu.CategoryLevelFilter;
 import com.data.menu.CustomerOrderWrapper;
@@ -61,18 +61,15 @@ import com.example.ordernowandroid.adapter.ImageService;
 import com.example.ordernowandroid.adapter.NewNavDrawerListAdapter;
 import com.example.ordernowandroid.filter.AvailableMenuFilter;
 import com.example.ordernowandroid.filter.MenuFilter;
-
 import com.example.ordernowandroid.fragments.AddNoteDialogFragment;
 import com.example.ordernowandroid.fragments.AddNoteListener;
 import com.example.ordernowandroid.fragments.IndividualMenuTabFragment;
 import com.example.ordernowandroid.fragments.IndividualMenuTabFragment.numListener;
-
 import com.example.ordernowandroid.fragments.MenuFragment;
 import com.example.ordernowandroid.model.CategoryNavDrawerItem;
 import com.example.ordernowandroid.model.FoodMenuItem;
 import com.example.ordernowandroid.model.MyOrderItem;
 import com.example.ordernowandroid.model.OrderNowConstants;
-
 import com.util.AsyncNetwork;
 import com.util.OrderNowUtilities;
 import com.util.URLBuilder;
@@ -80,8 +77,6 @@ import com.util.Utilities;
 
 public class FoodMenuActivity extends FragmentActivity implements numListener, AddNoteListener,
 SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
-
-	
 
     private static final int MY_ORDER_REQUEST_CODE = 1;
 	private DrawerLayout mDrawerLayout;
@@ -93,7 +88,7 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 	private HashMap<String, ArrayList<CategoryNavDrawerItem>> childDrawerItems;
 	private NewNavDrawerListAdapter adapter;
 	private Restaurant restaurant;
-	private DishHelper dh;
+	private RestaurantHelper dh;
 	private static Map<String, Boolean> restaurantLoadedInDb = new HashMap<String, Boolean>();
 	private SearchRecentSuggestions suggestionProvider;
 	private CursorAdapter suggestionAdapter;
@@ -147,9 +142,9 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 		if(OrderNowConstants.IS_DEBUG_MODE && OrderNowConstants.IS_LOCAL_RESTURANT_ENABLED) {
 		    restaurant = getResturantLocaly();
 		} else if (OrderNowConstants.IS_DEBUG_MODE){
-		    restaurant = getResturant("T1");
+		    restaurant = getResturant("T1", "R1");
 		} else {
-		    restaurant = getResturant(applicationContext.getTableId());
+		    restaurant = getResturant(applicationContext.getTableId(), applicationContext.getRestaurantId());
 		}
 
 		if (restaurant == null){
@@ -198,7 +193,7 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 
 		CustomDbAdapter dbManager = CustomDbAdapter
 				.getInstance(getBaseContext());
-		dh = new DishHelper(dbManager); 
+		dh = new RestaurantHelper(dbManager); 
 
 		suggestionProvider = new SearchRecentSuggestions(this, SearchSuggestionProvider.AUTHORITY,
 				SearchSuggestionProvider.MODE);
@@ -480,6 +475,9 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
         }
 	    FragmentManager fragmentManager = getSupportFragmentManager();
 	    fragmentManager.beginTransaction().replace(R.id.frame_container, menuFragment).addToBackStack(null).commit();
+	    CustomDbAdapter dbManager = CustomDbAdapter
+				.getInstance(getBaseContext());
+		dh = new RestaurantHelper(dbManager); 	    
 	    mDrawerList.setItemChecked(position, true);
         mDrawerList.setSelection(position);
         ApplicationState.setCategoryId((ApplicationState)getApplicationContext(), position);
@@ -534,14 +532,14 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 		invalidateOptionsMenu();
 	}
 
-	public Restaurant getResturant(String tableId) {
+	public Restaurant getResturant(String tableId, String restaurantId) {
 		if(tableId == null || tableId.trim().length() == 0) {
 			return null;
 		}
 		//http://ordernow.herokuapp.com/serveTable?tableId=T1
 		Restaurant restaurant = null;
 		try {
-			restaurant =  new DownloadRestaurantTask().execute(tableId).get();
+			restaurant =  new DownloadRestaurantTask().execute(tableId, restaurantId).get();
 			if (restaurant != null) {
 				loadRestaurantDishes(restaurant);
 			} else {
@@ -573,7 +571,7 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
                 public void run() {
                     try {
                         CustomDbAdapter dbManager = CustomDbAdapter.getInstance(getBaseContext());
-                        DishHelper dh = new DishHelper(dbManager);
+                        RestaurantHelper dh = new RestaurantHelper(dbManager);
                         for (Category category : restaurant.getMenu().getCategories()) {
                             if (category.getDishes() != null && !category.getDishes().isEmpty()) {
                                 for (Dish dish : category.getDishes()) {
@@ -812,7 +810,9 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 		@Override
 		protected Restaurant doInBackground(String... params) {
 			// "http://www.creativefreedom.co.uk/icon-designers-blog/wp-content/uploads/2013/03/00-android-4-0_icons.png"
-			return DownloadResturantMenu.getInstance().getResturant(params[0]);
+			CustomDbAdapter dbManager = CustomDbAdapter.getInstance(getBaseContext());
+	        RestaurantHelper restHelper = new RestaurantHelper(dbManager);
+			return DownloadResturantMenu.getInstance().getResturant(params[0],params[1],restHelper);
 		}
 	}
 

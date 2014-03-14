@@ -10,7 +10,7 @@ public class URLBuilder {
 	}
 	
 	public enum URLParam {
-		tableId, order, feedback
+		tableId, order, feedback, lastUpdatedAt
 	}
 	
 	public enum URLAction {

@@ -71,6 +71,7 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
             holder.txt_itemPrice = (TextView) convertView.findViewById(R.id.dish_price);
             holder.txt_itemQuantity = (TextView) convertView.findViewById(R.id.dish_quantity);
             holder.itemImage = (ImageView) convertView.findViewById(R.id.dish_photo);
+            holder.catImage = (ImageView) convertView.findViewById(R.id.dish_cat_image);
             holder.addItem = (ImageButton) convertView.findViewById(R.id.addbutton);
             holder.subItem = (ImageButton) convertView.findViewById(R.id.subbutton);
             holder.addNote = (ImageButton) convertView.findViewById(R.id.addnote);
@@ -85,6 +86,15 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
         holder.txt_itemDescription.setText(foodItem.getDescription());
         holder.txt_itemPrice.setText(OrderNowConstants.INDIAN_RUPEE_UNICODE + " " + foodItem.getItemPrice().toString());
 
+        if(foodItem.getFoodType().equals(FoodType.Veg)) {
+        	holder.catImage.setVisibility(View.VISIBLE);
+        	holder.catImage.setImageResource(R.drawable.veg);
+        } else if(foodItem.getFoodType().equals(FoodType.NonVeg)){
+        	holder.catImage.setVisibility(View.VISIBLE);
+        	holder.catImage.setImageResource(R.drawable.non_veg);
+        } else {
+        	holder.catImage.setVisibility(View.INVISIBLE);
+        }
         Bitmap bitmap = foodItem.getImage();
         if (bitmap == null) {
             holder.itemImage.setImageResource(R.drawable.bb1);
@@ -190,6 +200,7 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
         TextView txt_itemPrice;
         TextView txt_itemQuantity;
         ImageView itemImage;
+        ImageView catImage;
         ImageButton addItem;
         ImageButton subItem;
         ImageButton addNote;
