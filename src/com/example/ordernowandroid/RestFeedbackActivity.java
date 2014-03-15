@@ -26,7 +26,7 @@ public class RestFeedbackActivity extends Activity {
 		setTitle("Feedback");
 		setContentView(R.layout.restaurant_rate_page);
 		ApplicationState applicationContext = (ApplicationState) getApplicationContext();
-		final String tableId = applicationContext.getTableId();
+		final String orderId = applicationContext.getActiveOrderId();
 		String restaurantName = applicationContext.getRestaurantName();
 
 		TextView resName = (TextView) findViewById(R.id.restName);
@@ -48,7 +48,7 @@ public class RestFeedbackActivity extends Activity {
 				String feedback = gs.toJson(restFeedback);
 				String url = new URLBuilder().addPath(Path.serveTable)
 						.addAction(URLAction.feedbackSubmit)
-						.addParam(URLParam.tableId, tableId)
+						.addParam(URLParam.orderId, orderId)
 						.addParam(URLParam.feedback, feedback).build();
 
 				new AsyncNetwork().execute(url);

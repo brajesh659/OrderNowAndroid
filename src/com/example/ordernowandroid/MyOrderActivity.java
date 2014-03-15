@@ -6,6 +6,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -30,6 +33,7 @@ import com.google.gson.Gson;
 import com.parse.ParseInstallation;
 import com.util.AsyncNetwork;
 import com.util.URLBuilder;
+import com.util.Utilities;
 
 public class MyOrderActivity extends Activity {
 	private static final String TEXT_COMMENT = "TextComment"; //FIXME: Make the Properties names more readable
@@ -157,10 +161,19 @@ public class MyOrderActivity extends Activity {
 				.addParam(URLBuilder.URLParam.order, encoded).build();
 
 		try {
-			new AsyncNetwork().execute(url).get();
+			String output = new AsyncNetwork().execute(url).get();
+			JSONObject json = new JSONObject(output);
+			String orderId = (String) json.get(URLBuilder.URLParam.orderId.toString());
+			ApplicationState.setActiveOrderId(applicationContext, orderId);
+			//subOrderId not used currently
+			Integer subOrderId = (Integer) json.get(URLBuilder.URLParam.subOrderId.toString());
+			Utilities.info("Order response: "+ output + " orderId "+ orderId + " subOrderId " + subOrderId);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		} catch (ExecutionException e) {
+			e.printStackTrace();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

@@ -10,7 +10,7 @@ public class URLBuilder {
 	}
 	
 	public enum URLParam {
-		tableId, order, feedback, lastUpdatedAt
+		tableId, order, feedback, lastUpdatedAt, orderId, subOrderId
 	}
 	
 	public enum URLAction {
@@ -39,6 +39,7 @@ public class URLBuilder {
 	
 	
 	public String build() {
+		Utilities.info("URL " + url);
 		return url;
 	}
 }

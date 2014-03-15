@@ -18,7 +18,8 @@ public class ApplicationState extends Application {
     private String tableId;
     private String restaurantId;
     private String restaurantName;
-    private String userName;
+    private String activeOrderId;
+	private String userName;
     private String profilePictureId;
     private int categoryId = -1;
     private MenuFilter menuFilter;
@@ -327,5 +328,23 @@ public class ApplicationState extends Application {
     public static void setRestaurantId(ApplicationState applicationContext, String restId) {
         applicationContext.setRestaurantId(restId);
     }
+    
+    public String getActiveOrderId() {
+		return activeOrderId;
+	}
+
+	public void setActiveOrderId(String activeOrderId) {
+		this.activeOrderId = activeOrderId;
+	}
+	
+	public static String getActiveOrderId(ApplicationState applicationContext) {
+        return applicationContext.getActiveOrderId();
+    }
+
+    public static void setActiveOrderId(ApplicationState applicationContext, String orderId) {
+        applicationContext.setActiveOrderId(orderId);
+    }
+	
+	
 
 }

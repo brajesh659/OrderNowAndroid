@@ -72,13 +72,13 @@ public class MyParentOrderActivity extends Activity {
 							public void onClick(DialogInterface dialog,
 									int which) {
 								ApplicationState applicationContext = (ApplicationState) getApplicationContext();
-								String tableId = applicationContext
-										.getTableId();
+								String orderId = applicationContext
+										.getActiveOrderId();
 								String url = new URLBuilder()
 										.addPath(URLBuilder.Path.serveTable)
 										.addAction(URLBuilder.URLAction.requestBill)
-										.addParam(URLBuilder.URLParam.tableId,
-												tableId).build();
+										.addParam(URLBuilder.URLParam.orderId,
+												orderId).build();
 								try {
 									new AsyncNetwork().execute(url).get();
 									// clear active tableId/restId preferences
