@@ -19,10 +19,6 @@ import com.google.gson.Gson;
 
 public class IndividualMenuTabFragment extends Fragment {
 
-	private static final String TAB_TITLE = "tabTitle";
-	private static final String TAB_ITEM_LIST = "tabItemList";
-    private static final String FILTER_CONTENT = "filterContent";
-    
 	private String tabTitle;
 	private ArrayList<FoodMenuItem> foodMenuItemList;
 	private FoodMenuItemAdapter foodMenuItemAdapter;
@@ -62,25 +58,6 @@ public class IndividualMenuTabFragment extends Fragment {
 		imt.menuFilterLocal = selectedFilters;
 		return imt;
 	}
-	
-		
-	@SuppressWarnings("unchecked")
-	@Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (savedInstanceState != null) {
-            if (savedInstanceState.containsKey(FILTER_CONTENT)) {
-                menuFilterLocal = (MenuFilter) savedInstanceState.getSerializable(FILTER_CONTENT);
-            }
-            if (savedInstanceState.containsKey(TAB_TITLE)) {
-                tabTitle = savedInstanceState.getString(TAB_TITLE);
-            }
-            if (savedInstanceState.containsKey(TAB_ITEM_LIST)) {
-                foodMenuItemList = (ArrayList<FoodMenuItem>) savedInstanceState.getSerializable(TAB_ITEM_LIST);
-            }
-        }
-
-    }
 
 	@Override
 	public View onCreateView(final LayoutInflater inflater, ViewGroup container,
@@ -112,14 +89,5 @@ public class IndividualMenuTabFragment extends Fragment {
 
 		return foodCategoryView;
 	}
-
-	
-	 @Override
-	    public void onSaveInstanceState(Bundle outState) {
-	        super.onSaveInstanceState(outState);
-	        outState.putSerializable(FILTER_CONTENT, menuFilterLocal);
-	        outState.putString(TAB_TITLE, tabTitle);
-	        outState.putSerializable(TAB_ITEM_LIST, foodMenuItemList);
-	    }
 
 }

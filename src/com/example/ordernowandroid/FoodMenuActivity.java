@@ -862,7 +862,8 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 	public boolean onQueryTextSubmit(String finalText) {
 		onQueryTextChange(finalText);
 		suggestionProvider.saveRecentQuery(finalText, null);
-		return false;
+		searchView.clearFocus();
+		return true;
 	}
 
 	@Override
@@ -874,7 +875,8 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 	public boolean onSuggestionClick(int position) {
 		String suggestion = (String) suggestionAdapter.convertToString((Cursor) suggestionAdapter.getItem(position));
 		searchView.setQuery(suggestion, false);
-		return false;
+		searchView.clearFocus();
+		return true;
 	}
 
 	@Override
