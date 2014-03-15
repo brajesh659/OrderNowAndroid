@@ -139,6 +139,11 @@
         <receiver android:name="com.example.ordernowandroid.MyCustomReceiver" >
             <intent-filter>
                 <action android:name="com.example.UPDATE_STATUS" />
+                <action android:name="com.example.orderReceived" />
+                <action android:name="com.example.orderAccepted" />
+                <action android:name="com.example.generateBill" />
+                <action android:name="com.example.orderCompleted" />
+                <action android:name="com.example.modifyOrder" />
             </intent-filter>
         </receiver>
     </application>
