@@ -147,7 +147,7 @@ public class MyOrderActivity extends Activity {
 
 		CharSequence text = ParseInstallation.getCurrentInstallation().getObjectId();
 
-		CustomerOrder customerOrder = new CustomerOrder(dishes, "R1",
+		CustomerOrder customerOrder = new CustomerOrder(dishes, ApplicationState.getRestaurantId((ApplicationState)getApplicationContext()),
 				text.toString(), ApplicationState.getTableId((ApplicationState)getApplicationContext()), orderNote);
 		CustomerOrderWrapper customerOrderWrapper = new CustomerOrderWrapper(customerOrder, myOrderItemList);
 
