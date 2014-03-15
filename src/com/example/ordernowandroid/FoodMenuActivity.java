@@ -165,6 +165,7 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 			String resName = restaurant.getName();
 			mDrawerTitle = resName;
 			ApplicationState.setRestaurantName(applicationContext, resName);
+			OrderNowUtilities.putKeyToSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_RESTAURANT_NAME, resName);
 			if (savedInstanceState == null) {
 				// on first time display view for first menu item
 			    Log.e("on resume ","in saved instance check ");

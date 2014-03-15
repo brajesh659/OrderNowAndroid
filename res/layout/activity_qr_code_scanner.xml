@@ -18,6 +18,7 @@
         android:id="@+id/welcome_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:text="@string/welcome_text" />
 
     <Button
@@ -26,5 +27,12 @@
         android:layout_height="wrap_content"
         android:onClick="launchQRScanner"
         android:text="@string/scan_qr_codes" />
+    
+    <Button
+        android:id="@+id/open_res_menu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="openRestaurantMenu"
+        android:text="@string/open_res_menu" />
 
 </LinearLayout>

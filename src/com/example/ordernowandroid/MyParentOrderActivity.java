@@ -21,6 +21,7 @@ import com.example.ordernowandroid.adapter.MyParentOrderAdapter;
 import com.example.ordernowandroid.model.MyOrderItem;
 import com.example.ordernowandroid.model.OrderNowConstants;
 import com.util.AsyncNetwork;
+import com.util.OrderNowUtilities;
 import com.util.URLBuilder;
 
 public class MyParentOrderActivity extends Activity {
@@ -80,6 +81,17 @@ public class MyParentOrderActivity extends Activity {
 												tableId).build();
 								try {
 									new AsyncNetwork().execute(url).get();
+									// clear active tableId/restId preferences
+									OrderNowUtilities
+											.putKeyToSharedPreferences(
+													getApplicationContext(),
+													OrderNowConstants.KEY_ACTIVE_TABLE_ID,
+													"");
+									OrderNowUtilities
+											.putKeyToSharedPreferences(
+													getApplicationContext(),
+													OrderNowConstants.KEY_ACTIVE_RESTAURANT_ID,
+													"");
 								} catch (InterruptedException e) {
 									e.printStackTrace();
 								} catch (ExecutionException e) {

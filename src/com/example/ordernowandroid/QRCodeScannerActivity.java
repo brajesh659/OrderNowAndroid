@@ -6,18 +6,24 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dm.zbar.android.scanner.ZBarConstants;
 import com.dm.zbar.android.scanner.ZBarScannerActivity;
+import com.example.ordernowandroid.model.OrderNowConstants;
 import com.facebook.widget.ProfilePictureView;
+import com.util.OrderNowUtilities;
 import com.util.Utilities;
 
 public class QRCodeScannerActivity extends Activity {
 
 	private static final int ZBAR_QR_SCANNER_REQUEST = 1;
 	private ProfilePictureView profilePictureView;
+	private String activetableId;
+	private String activeRestId;
+	private String activeRestName;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -25,16 +31,38 @@ public class QRCodeScannerActivity extends Activity {
 		setContentView(R.layout.activity_qr_code_scanner);
 
 		ApplicationState applicationContext = (ApplicationState) getApplicationContext();
-
-		if(applicationContext.getUserName() != null && applicationContext.getUserName().trim() != "") {		
-			TextView welcome = (TextView) findViewById(R.id.welcome_text);
-			welcome.setText("Hello " + applicationContext.getUserName() + "! " + welcome.getText());
+		TextView welcome = (TextView) findViewById(R.id.welcome_text);
+		Button qrCodeButton = (Button) findViewById(R.id.qrscan_btn);
+		Button openRestMenuButton = (Button) findViewById(R.id.open_res_menu);
+		String greetCustomerName = "";
+		if(applicationContext.getUserName() != null && applicationContext.getUserName().trim() != "") {
+			greetCustomerName = "Hello " + applicationContext.getUserName() + "! ";
 		}
-
+		if(activeSessionPresent()) {
+			welcome.setText(greetCustomerName + " Your are currently logged in restuarant " + activeRestName);
+			qrCodeButton.setVisibility(View.INVISIBLE);
+			openRestMenuButton.setVisibility(View.VISIBLE);
+		} else {
+			welcome.setText(greetCustomerName + welcome.getText());
+			qrCodeButton.setVisibility(View.VISIBLE);
+			openRestMenuButton.setVisibility(View.INVISIBLE);
+		}
+		
 		if(applicationContext.getProfilePictureId() != null) {
 			profilePictureView = (ProfilePictureView) findViewById(R.id.selection_profile_pic);
 			profilePictureView.setProfileId(applicationContext.getProfilePictureId());
 		}
+		
+	}
+
+	private boolean activeSessionPresent() {
+		activetableId = OrderNowUtilities.getKeyFromSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_TABLE_ID);
+		activeRestId = OrderNowUtilities.getKeyFromSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_RESTAURANT_ID);
+		activeRestName = OrderNowUtilities.getKeyFromSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_RESTAURANT_NAME);
+		if(activetableId != null && !activetableId.isEmpty()) {
+			return true;
+		}
+		return false;
 	}
 
 	public void launchQRScanner(View v) {        
@@ -46,6 +74,21 @@ public class QRCodeScannerActivity extends Activity {
 			Toast.makeText(this, "Rear Facing Camera Unavailable", Toast.LENGTH_SHORT).show();
 		}    	        
 	}
+	
+	public void openRestaurantMenu(View v) {
+		if(activetableId != null && !activetableId.isEmpty()) {
+			ApplicationState applicationContext = (ApplicationState) getApplicationContext();
+			ApplicationState.setTableId(applicationContext, activetableId);
+			ApplicationState.setRestaurantId(applicationContext, activeRestId);
+			ApplicationState.setOpenCategoryDrawer(applicationContext, true);
+			Toast.makeText(this, "Session Table Id = " + activetableId + " Rest Id = " + activeRestId, Toast.LENGTH_SHORT).show();
+			//start new intent 
+			Intent intent = new Intent(this, FoodMenuActivity.class);
+			startActivity(intent);				
+			finish();				
+		} 
+	}
+	
 
 	public boolean isCameraAvailable() {
 		PackageManager pm = getPackageManager();
@@ -69,8 +112,11 @@ public class QRCodeScannerActivity extends Activity {
 				ApplicationState.setOpenCategoryDrawer(applicationContext, true);
 				//clean order stuff if present
 				ApplicationState.cleanSubOrdersFromDB(applicationContext);
-				ApplicationState.cleanFoodMenuItemQuantityMap(applicationContext);
-				//start new intent
+				ApplicationState.cleanFoodMenuItemQuantityMap(applicationContext);				
+				//save preferences
+				OrderNowUtilities.putKeyToSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_TABLE_ID, tableId);
+				OrderNowUtilities.putKeyToSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_RESTAURANT_ID, restId);
+				//start new intent 
 				Intent intent = new Intent(this, FoodMenuActivity.class);
 				startActivity(intent);				
 				finish();	
