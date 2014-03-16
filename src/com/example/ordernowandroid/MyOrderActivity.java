@@ -1,9 +1,9 @@
 package com.example.ordernowandroid;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import org.json.JSONException;
@@ -15,6 +15,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -22,23 +23,17 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.data.menu.CustomerOrder;
 import com.data.menu.CustomerOrderWrapper;
-import com.data.menu.OrderDish;
 import com.example.ordernowandroid.adapter.MyOrderAdapter;
 import com.example.ordernowandroid.fragments.ConfirmOrderDialogFragment;
 import com.example.ordernowandroid.model.MyOrderItem;
 import com.example.ordernowandroid.model.OrderNowConstants;
 import com.google.gson.Gson;
-import com.parse.ParseInstallation;
 import com.util.AsyncNetwork;
 import com.util.URLBuilder;
 import com.util.Utilities;
 
 public class MyOrderActivity extends Activity {
-	private static final String TEXT_COMMENT = "TextComment"; //FIXME: Make the Properties names more readable
-	public static final String SPICE_LEVEL = "SpiceLevel";
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -127,36 +122,24 @@ public class MyOrderActivity extends Activity {
 	}
 
 	public void doPositiveClick(String orderNote) {
-		OrderDish orderDish;
-		Map<String, OrderDish> dishes = new HashMap<String, OrderDish>();
 		ArrayList<MyOrderItem> myOrderItemList = ApplicationState.getMyOrderItems((ApplicationState)getApplicationContext());
-		for (MyOrderItem myOrderItem : myOrderItemList) {
-			if (myOrderItem.getMetaData() != null) {
-				orderDish = new OrderDish(myOrderItem.getQuantity(), myOrderItem.getMetaData().get(TEXT_COMMENT), myOrderItem.getMetaData().get(SPICE_LEVEL));	
-			} else {
-				orderDish = new OrderDish(myOrderItem.getQuantity());
-			}
-            // Clean Dish Ingredient if present
-            if (myOrderItem.getFoodMenuItem().isItemCustomizable()) {
-                orderDish.setSelectedOptions(myOrderItem.getFoodMenuItem().getCurrentSelectedIngredients());
-                ApplicationState.cleanDishSelectedIngredients((ApplicationState) getApplicationContext(), myOrderItem
-                        .getFoodMenuItem().getItemName());
-            }
-            dishes.put(myOrderItem.getFoodMenuItem().getDishId(), orderDish);
-        }
+		String restaurantId = ApplicationState.getRestaurantId((ApplicationState)getApplicationContext());
+		Log.i("MyOrderActivity ", restaurantId);
 
-		CharSequence text = ParseInstallation.getCurrentInstallation().getObjectId();
-
-		CustomerOrder customerOrder = new CustomerOrder(dishes, ApplicationState.getRestaurantId((ApplicationState)getApplicationContext()),
-				text.toString(), ApplicationState.getTableId((ApplicationState)getApplicationContext()), orderNote);
-		CustomerOrderWrapper customerOrderWrapper = new CustomerOrderWrapper(customerOrder, myOrderItemList);
+		CustomerOrderWrapper customerOrderWrapper = new CustomerOrderWrapper(myOrderItemList, (ApplicationState)getApplicationContext(),orderNote);
 
 		ApplicationState applicationContext = (ApplicationState)getApplicationContext();
 		ApplicationState.setCustomerOrderWrapper(applicationContext, customerOrderWrapper);
 
 		Gson gs = new Gson();
-		String order = gs.toJson(customerOrder);
-		String encoded = URLEncoder.encode(order);
+		String order = gs.toJson(customerOrderWrapper.getCustomerOrder());
+		String encoded = "";
+        try {
+            encoded = URLEncoder.encode(order,"UTF-8");
+        } catch (UnsupportedEncodingException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
 		String url = new URLBuilder().addPath(URLBuilder.Path.order)
 				.addParam(URLBuilder.URLParam.order, encoded).build();
 

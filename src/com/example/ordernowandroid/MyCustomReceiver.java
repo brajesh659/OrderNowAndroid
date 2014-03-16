@@ -5,6 +5,8 @@ import java.util.Iterator;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.util.Utilities;
+
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -56,7 +58,9 @@ public class MyCustomReceiver extends BroadcastReceiver {
             String channel = intent.getExtras().getString("com.parse.Channel");
             JSONObject json = new JSONObject(intent.getExtras().getString("com.parse.Data"));
 
-			System.out.println(json);
+            Utilities.info(json.toString());
+			Utilities.info(action);
+			Utilities.info(channel);
             Iterator itr = json.keys();
            // Toast.makeText(context, "MyCustomerReciver", duration).show();
 			String message = null;
@@ -69,6 +73,7 @@ public class MyCustomReceiver extends BroadcastReceiver {
                     //toast.show();
 				} else if (key.equals("dishIds")) {
                     subject = json.getString(key);
+                    Utilities.info(subject);
                     //toast = Toast.makeText(context, subject, duration);
                     //toast.show();
 				}

@@ -543,6 +543,7 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 			restaurant =  new DownloadRestaurantTask().execute(tableId, restaurantId).get();
 			if (restaurant != null) {
 				loadRestaurantDishes(restaurant);
+				ApplicationState.setRestaurantId((ApplicationState)getApplicationContext(), restaurant.getrId());
 			} else {
 				throw new Exception("Server failed to load Menu for Table Id: " + tableId);
 			}

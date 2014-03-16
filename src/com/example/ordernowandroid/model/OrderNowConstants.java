@@ -7,4 +7,6 @@ public class OrderNowConstants {
 	public static final String KEY_ACTIVE_RESTAURANT_NAME = "ActiveRestaurantName";
     public static boolean IS_DEBUG_MODE = false ;
     public static boolean IS_LOCAL_RESTURANT_ENABLED = false;
+	public static final String TEXT_COMMENT = "TextComment"; //FIXME: Make the Properties names more readable
+	public static final String SPICE_LEVEL = "SpiceLevel";
 }
