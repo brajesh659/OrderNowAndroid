@@ -15,6 +15,7 @@ import com.data.menu.CustomerOrderWrapper;
 import com.example.ordernowandroid.R;
 import com.example.ordernowandroid.model.MyOrderItem;
 import com.example.ordernowandroid.model.OrderNowConstants;
+import com.example.ordernowandroid.model.OrderStatus;
 
 public class MyParentOrderAdapter extends ArrayAdapter<CustomerOrderWrapper> {
 
@@ -38,11 +39,23 @@ public class MyParentOrderAdapter extends ArrayAdapter<CustomerOrderWrapper> {
 		//Implement a List View inside a List View Example
 		LinearLayout list = (LinearLayout) convertView.findViewById(R.id.subOrderItemListLinearLayout);
 		list.removeAllViews();
-
-		for (MyOrderItem myOrderItem : subOrderList.get(position).getMyOrderItemList()) {
+		CustomerOrderWrapper customerOrderWrapper = subOrderList.get(position);
+        OrderStatus orderStatus = customerOrderWrapper.getOrderStatus();
+        List<String> unAvailableItems = customerOrderWrapper.getUnAvailableItems();
+		for (MyOrderItem myOrderItem : customerOrderWrapper.getMyOrderItemList()) {
 			LayoutInflater li = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			View line = li.inflate(R.layout.my_parent_order_item, null);
-
+			
+			TextView itemStatus = (TextView) line.findViewById(R.id.itemStatus);
+			if(OrderStatus.ModifiedOrder.equals(orderStatus)) {
+			    if(unAvailableItems.contains(myOrderItem.getFoodMenuItem().getDishId())){
+			        itemStatus.setText(orderStatus.getSymbol());
+			    }else {
+			        itemStatus.setText(OrderStatus.Accepted.getSymbol());
+			    }
+			} else {
+			    itemStatus.setText(orderStatus.getSymbol());
+			}
 			TextView itemName = (TextView) line.findViewById(R.id.parentItemName);
 			TextView itemNote = (TextView) line.findViewById(R.id.parentItemNote);
 			final TextView quantity = (TextView) line.findViewById(R.id.parentQuantity);
@@ -69,7 +82,7 @@ public class MyParentOrderAdapter extends ArrayAdapter<CustomerOrderWrapper> {
 			list.addView(line);
 		}
 
-		String subOrderNote = subOrderList.get(position).getCustomerOrder().getOrderNote();
+		String subOrderNote = customerOrderWrapper.getCustomerOrder().getOrderNote();
 
 		if(subOrderNote != null) {
 			subOrderNoteView.setText(subOrderNote);

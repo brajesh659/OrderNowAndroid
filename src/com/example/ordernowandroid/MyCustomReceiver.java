@@ -1,11 +1,12 @@
 package com.example.ordernowandroid;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.util.Utilities;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -13,10 +14,15 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
+import com.example.ordernowandroid.model.OrderNowConstants;
+import com.util.Utilities;
+
 public class MyCustomReceiver extends BroadcastReceiver {
+    private ArrayList<String> unAvailableDishes = null;
    // private static final String TAG = "MyCustomReceiver";
 
 	/*
@@ -59,7 +65,7 @@ public class MyCustomReceiver extends BroadcastReceiver {
             JSONObject json = new JSONObject(intent.getExtras().getString("com.parse.Data"));
 
             Utilities.info(json.toString());
-			Utilities.info(action);
+			Utilities.info("action recieved from server " +action);
 			Utilities.info(channel);
             Iterator itr = json.keys();
            // Toast.makeText(context, "MyCustomerReciver", duration).show();
@@ -74,20 +80,34 @@ public class MyCustomReceiver extends BroadcastReceiver {
 				} else if (key.equals("dishIds")) {
                     subject = json.getString(key);
                     Utilities.info(subject);
+                     List<String> asList = Arrays.asList(subject.split("\\s*,\\s*"));
+                     unAvailableDishes = new ArrayList<String>();
+                     for (String string : asList) {
+                        unAvailableDishes.add(string);
+                     }
                     //toast = Toast.makeText(context, subject, duration);
                     //toast.show();
 				}
 			}
-			notification(context, message, subject);
+			notification(context, message, subject, action);
 
         } catch (JSONException e) {
         }
     }
     
     
-    public void notification(Context context, String message, String subject) {
+    private void notification(Context context, String message, String subject, String action) {
+
         Intent intent = new Intent(context, MyParentOrderActivity.class);
-        PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent, 0);
+        Utilities.info("Utilities + action not null" + action);
+        intent.putExtra(OrderNowConstants.ACTION, action);
+        if (unAvailableDishes != null) {
+            Bundle b = new Bundle();
+            b.putSerializable(OrderNowConstants.UNAVAILABLEITEMS, unAvailableDishes);
+            intent.putExtras(b);
+        }
+        
+        PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent, Intent.FLAG_ACTIVITY_NEW_TASK);
         Notification noti = new NotificationCompat.Builder(context)
         .setContentTitle(message)
         .setContentText(subject)

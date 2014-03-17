@@ -3,11 +3,13 @@ package com.data.menu;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.example.ordernowandroid.ApplicationState;
 import com.example.ordernowandroid.model.MyOrderItem;
 import com.example.ordernowandroid.model.OrderNowConstants;
+import com.example.ordernowandroid.model.OrderStatus;
 import com.parse.ParseInstallation;
 
 /**
@@ -24,6 +26,9 @@ public class CustomerOrderWrapper implements Serializable {
     private ArrayList<MyOrderItem> myOrderItemList;
     private ApplicationState applicationState;
     private String orderNote;
+    private OrderStatus orderStatus = OrderStatus.Sent;
+    private List<String> unAvailableItems ;
+    
 
     public CustomerOrderWrapper(ArrayList<MyOrderItem> myOrderItemList, ApplicationState applicationState, String orderNote) {
         super();
@@ -61,6 +66,28 @@ public class CustomerOrderWrapper implements Serializable {
 
     public void setMyOrderItemList(ArrayList<MyOrderItem> myOrderItemList) {
         this.myOrderItemList = myOrderItemList;
+    }
+
+    public OrderStatus getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(OrderStatus orderStatus) {
+        this.orderStatus = orderStatus;
+    }
+
+    public List<String> getUnAvailableItems() {
+        if(unAvailableItems==null) {
+            unAvailableItems = new ArrayList<String>();
+        }
+        return unAvailableItems;
+    }
+
+    public void setUnAvailableItems(List<String> unAvailableItems) {
+        if(unAvailableItems==null) {
+            return ;
+        }
+        this.unAvailableItems = unAvailableItems;
     }
 
 }

@@ -20,18 +20,38 @@ import com.data.menu.CustomerOrderWrapper;
 import com.example.ordernowandroid.adapter.MyParentOrderAdapter;
 import com.example.ordernowandroid.model.MyOrderItem;
 import com.example.ordernowandroid.model.OrderNowConstants;
+import com.example.ordernowandroid.model.OrderStatus;
 import com.util.AsyncNetwork;
 import com.util.OrderNowUtilities;
 import com.util.URLBuilder;
+import com.util.Utilities;
 
 public class MyParentOrderActivity extends Activity {
 
-	@Override
+    
+	@SuppressWarnings("unchecked")
+    @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		String action = "";
+		ArrayList<String> unAvailableDishes = null;
+        Bundle b = getIntent().getExtras();
+        if (b != null) {
+            action = b.getString(OrderNowConstants.ACTION);
+            Utilities.info("Utilities + bundle not null" + action);
+            unAvailableDishes = (ArrayList<String>) b.getSerializable(OrderNowConstants.UNAVAILABLEITEMS);
+            Utilities.info("Utilities in bundle + " + unAvailableDishes);
+        }
+        
+		Utilities.info("Utilities +" + action);
+		OrderStatus orderStatus = OrderStatus.Sent;
+		if (action != null && !action.isEmpty()) {
+            orderStatus = OrderNowConstants.actionToOrderStatusMap.get(action);
+        }
 		setContentView(R.layout.my_parent_order_summary);
 		setTitle("Confirmed Order");
 		getActionBar().setDisplayHomeAsUpEnabled(true);
+		
 
 		ApplicationState applicationContext = (ApplicationState)getApplicationContext();
 		ArrayList<CustomerOrderWrapper> subOrdersFromDB = ApplicationState.getSubOrdersFromDB(applicationContext);
@@ -41,10 +61,21 @@ public class MyParentOrderActivity extends Activity {
 		Float totalOrderAmount = (float) 0.00;
 
 		CustomerOrderWrapper customerOrderWrapper = ApplicationState.getCustomerOrderWrapper((ApplicationState)getApplicationContext());
+		Utilities.info("Utilities + " + orderStatus.toString());
 		if(customerOrderWrapper !=null) {
+		    customerOrderWrapper.setOrderStatus(orderStatus);
+            if (unAvailableDishes != null) {
+                customerOrderWrapper.getUnAvailableItems().addAll(unAvailableDishes);
+            }
 			subOrdersFromDB.add(customerOrderWrapper);
 			ApplicationState.setCustomerOrderWrapper(applicationContext, null);
 		}
+		
+		/*Hack this should be based on order id.*/
+		subOrdersFromDB.get(subOrdersFromDB.size()-1).setOrderStatus(orderStatus);
+		if (unAvailableDishes != null) {
+            subOrdersFromDB.get(subOrdersFromDB.size()-1).getUnAvailableItems().addAll(unAvailableDishes);
+        }
 		
 		for (CustomerOrderWrapper subOrder:subOrdersFromDB) {			
 			for (MyOrderItem myOrderItem: subOrder.getMyOrderItemList()) {

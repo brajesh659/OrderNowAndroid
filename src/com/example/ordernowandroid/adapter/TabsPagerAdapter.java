@@ -29,6 +29,9 @@ public class TabsPagerAdapter extends FragmentStatePagerAdapter {
     }
 
     private List<MenuPropertyValue> getTitles() {
+        if(category==null || category.getCategoryLevelFilter() == null){
+            return new ArrayList<MenuPropertyValue>();
+        }
         return category.getCategoryLevelFilter().getFilterValue();
     }
 
