@@ -77,7 +77,7 @@ public class RestaurantHelper extends SQLHelper {
 				type = cursor.getString(cursor.getColumnIndex(KEY_TYPE));
 				category = cursor.getString(cursor.getColumnIndex(KEY_CATEGORY));
 				Dish dish = new Dish(dishId, name, description, img,
-						Float.valueOf(price), FoodType.valueOf(type));
+						Float.valueOf(price), FoodType.valueOf(type), true);
 				FoodMenuItem foodMenuItem = new FoodMenuItem(dish);
 				foodMenuItem.setCategory(category);
 
@@ -141,7 +141,7 @@ public class RestaurantHelper extends SQLHelper {
 			price = cursor.getString(cursor.getColumnIndex(KEY_PRICE));
 			type = cursor.getString(cursor.getColumnIndex(KEY_TYPE));
 			Dish dish = new Dish(founddishId, name, description, img,
-					Float.valueOf(price), FoodType.valueOf(type));
+					Float.valueOf(price), FoodType.valueOf(type), true);
 			FoodMenuItem foodMenuItem = new FoodMenuItem(dish);
 			return foodMenuItem;
 		}

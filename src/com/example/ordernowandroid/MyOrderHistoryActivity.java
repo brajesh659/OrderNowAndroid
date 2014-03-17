@@ -41,8 +41,8 @@ public class MyOrderHistoryActivity extends Activity {
 	private void populateOrderHistoryLocally() {
 		
 		ArrayList<MyOrderItem> myOrderItemList = new ArrayList<MyOrderItem>();
-		myOrderItemList.add(new MyOrderItem(new FoodMenuItem(new Dish("d0", "Cream of Veg", null, null, 95, FoodType.Veg)), 2));
-		myOrderItemList.add(new MyOrderItem(new FoodMenuItem(new Dish("d1", "Roasted Bell Pepper Soup", null, null, 115, FoodType.Veg)), 3));
+		myOrderItemList.add(new MyOrderItem(new FoodMenuItem(new Dish("d0", "Cream of Veg", null, null, 95, FoodType.Veg, true)), 2));
+		myOrderItemList.add(new MyOrderItem(new FoodMenuItem(new Dish("d1", "Roasted Bell Pepper Soup", null, null, 115, FoodType.Veg, true)), 3));
 		
 		CustomerOrderWrapper customerOrderWrapper1 = new CustomerOrderWrapper(myOrderItemList, (ApplicationState) getApplicationContext(), "First Order");
 		CustomerOrderWrapper customerOrderWrapper2 = new CustomerOrderWrapper(myOrderItemList, (ApplicationState) getApplicationContext(), "Second Order");

@@ -47,8 +47,8 @@ public class MyOrderHistoryAdapter extends ArrayAdapter<CustomerOrderWrapper> {
 			@Override
 			public void onClick(View v) {
 				HashMap<String, MyOrderItem> foodItemQtyMap = new HashMap<String, MyOrderItem>();
-				foodItemQtyMap.put("Cream of Veg", new MyOrderItem(new FoodMenuItem(new Dish("d0", "Cream of Veg", null, null, 95, FoodType.Veg)), 2));
-				foodItemQtyMap.put("Roasted Bell Pepper Soup", new MyOrderItem(new FoodMenuItem(new Dish("d1", "Roasted Bell Pepper Soup", null, null, 115, FoodType.Veg)), 3));
+				foodItemQtyMap.put("Cream of Veg", new MyOrderItem(new FoodMenuItem(new Dish("d0", "Cream of Veg", null, null, 95, FoodType.Veg, true)), 2));
+				foodItemQtyMap.put("Roasted Bell Pepper Soup", new MyOrderItem(new FoodMenuItem(new Dish("d1", "Roasted Bell Pepper Soup", null, null, 115, FoodType.Veg, true)), 3));
 				
 				ApplicationState.setFoodMenuItemQuantityMap((ApplicationState)v.getContext().getApplicationContext(), foodItemQtyMap);
 				Intent intent = new Intent(getContext(), MyOrderActivity.class);

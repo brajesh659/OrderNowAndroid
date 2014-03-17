@@ -12,13 +12,14 @@ public class Dish implements Serializable {
      */
     private static final long serialVersionUID = 1L;
 
-    public Dish(String dishId, String name, String description, String img, float price, FoodType type) {
+    public Dish(String dishId, String name, String description, String img, float price, FoodType type, boolean available) {
         this.dishId = dishId;
         this.name = name;
         this.description = description;
         this.img = img;
         this.price = price;
         this.type = type;
+        this.available = available;
     };
 
     public Dish() {
@@ -33,8 +34,17 @@ public class Dish implements Serializable {
     private Map<MenuPropertyKey, MenuPropertyValue> dishProperties;
 	private DishIngredients ingredients;
 	private String dishIngredientId;
+	private boolean available = true;
 
-    private ArrayList<IngredientOption> selectedIngredientOptions;
+    public boolean isAvailable() {
+		return available;
+	}
+
+	public void setAvailable(boolean available) {
+		this.available = available;
+	}
+
+	private ArrayList<IngredientOption> selectedIngredientOptions;
     private boolean isIngredientCustomizable = false;
     
 	public Map<MenuPropertyKey, MenuPropertyValue> getDishProperties() {
@@ -44,8 +54,6 @@ public class Dish implements Serializable {
     public void setDishProperties(Map<MenuPropertyKey, MenuPropertyValue> dishProperties) {
         this.dishProperties = dishProperties;
     }
-
-    private boolean isAvailable = true;
 
     public String getDishId() {
         return dishId;
@@ -140,14 +148,4 @@ public class Dish implements Serializable {
 			ArrayList<IngredientOption> selectedIngredientOptions) {
 		this.selectedIngredientOptions = selectedIngredientOptions;
 	}
-
-    public boolean isAvailable() {
-        return isAvailable;
-    }
-
-    public void setAvailable(boolean isAvailable) {
-        this.isAvailable = isAvailable;
-    }
-
-
 }
