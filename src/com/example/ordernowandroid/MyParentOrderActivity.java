@@ -63,19 +63,13 @@ public class MyParentOrderActivity extends Activity {
 		CustomerOrderWrapper customerOrderWrapper = ApplicationState.getCustomerOrderWrapper((ApplicationState)getApplicationContext());
 		Utilities.info("Utilities + " + orderStatus.toString());
 		if(customerOrderWrapper !=null) {
-		    customerOrderWrapper.setOrderStatus(orderStatus);
-            if (unAvailableDishes != null) {
-                customerOrderWrapper.getUnAvailableItems().addAll(unAvailableDishes);
-            }
+		    customerOrderWrapper.modifyItemStatus(orderStatus, unAvailableDishes);
 			subOrdersFromDB.add(customerOrderWrapper);
 			ApplicationState.setCustomerOrderWrapper(applicationContext, null);
 		}
 		
 		/*Hack this should be based on order id.*/
-		subOrdersFromDB.get(subOrdersFromDB.size()-1).setOrderStatus(orderStatus);
-		if (unAvailableDishes != null) {
-            subOrdersFromDB.get(subOrdersFromDB.size()-1).getUnAvailableItems().addAll(unAvailableDishes);
-        }
+		subOrdersFromDB.get(subOrdersFromDB.size()-1).modifyItemStatus(orderStatus, unAvailableDishes);
 		
 		for (CustomerOrderWrapper subOrder:subOrdersFromDB) {			
 			for (MyOrderItem myOrderItem: subOrder.getMyOrderItemList()) {

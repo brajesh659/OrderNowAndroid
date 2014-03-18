@@ -11,6 +11,7 @@ public class MyOrderItem implements Serializable {
 	private float quantity;
 	private String notes;
 	private HashMap<String, String> metaData;
+	private OrderStatus itemStatus = OrderStatus.NULL; 
 
 	public MyOrderItem(FoodMenuItem foodMenuItem, float quantity) {
 		super();
@@ -61,5 +62,13 @@ public class MyOrderItem implements Serializable {
 	public String toString() {
 		return "MyOrderItem [item=" + foodMenuItem + ", quantity=" + quantity + "]";
 	}
+
+    public OrderStatus getItemStatus() {
+        return itemStatus;
+    }
+
+    public void setItemStatus(OrderStatus itemStatus) {
+        this.itemStatus = itemStatus;
+    }
     
 }

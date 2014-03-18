@@ -40,22 +40,14 @@ public class MyParentOrderAdapter extends ArrayAdapter<CustomerOrderWrapper> {
 		LinearLayout list = (LinearLayout) convertView.findViewById(R.id.subOrderItemListLinearLayout);
 		list.removeAllViews();
 		CustomerOrderWrapper customerOrderWrapper = subOrderList.get(position);
-        OrderStatus orderStatus = customerOrderWrapper.getOrderStatus();
-        List<String> unAvailableItems = customerOrderWrapper.getUnAvailableItems();
 		for (MyOrderItem myOrderItem : customerOrderWrapper.getMyOrderItemList()) {
+		    OrderStatus orderStatus = myOrderItem.getItemStatus();
 			LayoutInflater li = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			View line = li.inflate(R.layout.my_parent_order_item, null);
 			
 			TextView itemStatus = (TextView) line.findViewById(R.id.itemStatus);
-			if(OrderStatus.ModifiedOrder.equals(orderStatus)) {
-			    if(unAvailableItems.contains(myOrderItem.getFoodMenuItem().getDishId())){
-			        itemStatus.setText(orderStatus.getSymbol());
-			    }else {
-			        itemStatus.setText(OrderStatus.Accepted.getSymbol());
-			    }
-			} else {
-			    itemStatus.setText(orderStatus.getSymbol());
-			}
+			itemStatus.setText(orderStatus.getSymbol());
+			
 			TextView itemName = (TextView) line.findViewById(R.id.parentItemName);
 			TextView itemNote = (TextView) line.findViewById(R.id.parentItemNote);
 			final TextView quantity = (TextView) line.findViewById(R.id.parentQuantity);

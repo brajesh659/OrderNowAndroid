@@ -26,9 +26,6 @@ public class CustomerOrderWrapper implements Serializable {
     private ArrayList<MyOrderItem> myOrderItemList;
     private ApplicationState applicationState;
     private String orderNote;
-    private OrderStatus orderStatus = OrderStatus.Sent;
-    private List<String> unAvailableItems ;
-    
 
     public CustomerOrderWrapper(ArrayList<MyOrderItem> myOrderItemList, ApplicationState applicationState, String orderNote) {
         super();
@@ -68,26 +65,20 @@ public class CustomerOrderWrapper implements Serializable {
         this.myOrderItemList = myOrderItemList;
     }
 
-    public OrderStatus getOrderStatus() {
-        return orderStatus;
-    }
-
-    public void setOrderStatus(OrderStatus orderStatus) {
-        this.orderStatus = orderStatus;
-    }
-
-    public List<String> getUnAvailableItems() {
-        if(unAvailableItems==null) {
-            unAvailableItems = new ArrayList<String>();
+    public void modifyItemStatus(OrderStatus orderStatus, List<String> unAvailableItems) {
+        for (MyOrderItem myOrderItem : myOrderItemList) {
+            OrderStatus newStatus = OrderStatus.NULL;
+            OrderStatus itemCurrentStatus = myOrderItem.getItemStatus();
+            if (orderStatus == OrderStatus.ModifiedOrder && unAvailableItems != null) {
+                if (!unAvailableItems.contains(myOrderItem.getFoodMenuItem().getDishId())) {
+                    newStatus = itemCurrentStatus.newStatus(OrderStatus.Accepted);
+                } else {
+                    newStatus = itemCurrentStatus.newStatus(orderStatus);
+                }
+            } else {
+                newStatus = itemCurrentStatus.newStatus(orderStatus);
+            }
+            myOrderItem.setItemStatus(newStatus);
         }
-        return unAvailableItems;
     }
-
-    public void setUnAvailableItems(List<String> unAvailableItems) {
-        if(unAvailableItems==null) {
-            return ;
-        }
-        this.unAvailableItems = unAvailableItems;
-    }
-
 }
