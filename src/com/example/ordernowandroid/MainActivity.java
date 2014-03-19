@@ -12,8 +12,6 @@ import com.parse.PushService;
 public class MainActivity extends FragmentActivity {
 
 	private LoginFragment loginFragment;
-	private static final String PARSE_APP_ID = "vMFTELLhOo9RDRql9HpV9lKRot5xQTCCD63wkYdQ";
-	private static final String PARSE_CLIENT_KEY = "mdz7n8XUjy3u0MSQRnuwmogqXZrw3qJnRwmRxx0g";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -26,7 +24,7 @@ public class MainActivity extends FragmentActivity {
 			loginFragment = (LoginFragment) getSupportFragmentManager().findFragmentById(android.R.id.content);
 		}
 
-		Parse.initialize(this, PARSE_APP_ID, PARSE_CLIENT_KEY);
+		Parse.initialize(this, getString(R.string.parse_app_id), getString(R.string.parse_client_key));
 		PushService.setDefaultPushCallback(this, MainActivity.class);
 		ParseInstallation.getCurrentInstallation().saveInBackground();
 		ParseAnalytics.trackAppOpened(getIntent());

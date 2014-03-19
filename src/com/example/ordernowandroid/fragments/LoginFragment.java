@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.example.ordernowandroid.ApplicationState;
 import com.example.ordernowandroid.FoodMenuActivity;
@@ -24,13 +23,13 @@ import com.facebook.widget.LoginButton;
 public class LoginFragment extends Fragment {
 
 	private UiLifecycleHelper uiHelper;
-
 	private Session.StatusCallback callback = new Session.StatusCallback() {
 		@Override
 		public void call(Session session, SessionState state, Exception exception) {
 			onSessionStateChange(session, state, exception);
 		}
 	};
+	
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -42,9 +41,8 @@ public class LoginFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.activity_main, container, false);
-		LoginButton authButton = (LoginButton) view.findViewById(R.id.facebook_auth_btn);
-		authButton.setFragment(this);
-		//authButton.setReadPermissions(Arrays.asList("email"));
+		LoginButton facebookAuthButton = (LoginButton) view.findViewById(R.id.facebook_auth_btn);
+		facebookAuthButton.setFragment(this);
 		return view;
 	}
 
@@ -61,12 +59,12 @@ public class LoginFragment extends Fragment {
 							applicationContext.setProfilePictureId(user.getId());
 
 							if (!OrderNowConstants.IS_DEBUG_MODE){
-								Intent intent = new Intent(getActivity(), QRCodeScannerActivity.class); //FIXME: Found NPE on a new login
+								Intent intent = new Intent(getActivity().getApplicationContext(), QRCodeScannerActivity.class);
 								startActivity(intent);
 								getActivity().finish();
 							} else {
 								ApplicationState.setTableId(applicationContext, "T1"); //All the Orders would default to Table 1 in Debug Mode
-								Intent intent = new Intent(getActivity(), FoodMenuActivity.class);
+								Intent intent = new Intent(getActivity().getApplicationContext(), FoodMenuActivity.class);
 								startActivity(intent);				
 								getActivity().finish();
 							}
@@ -81,7 +79,7 @@ public class LoginFragment extends Fragment {
 			request.executeAsync();
 
 		} else if (state.isClosed()) {
-			Toast.makeText(getActivity(), "Logged out successfully", Toast.LENGTH_SHORT).show();
+			//Toast.makeText(getActivity(), "Logged out successfully", Toast.LENGTH_SHORT).show();
 		}
 	}
 
