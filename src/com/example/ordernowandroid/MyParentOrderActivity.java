@@ -90,7 +90,7 @@ public class MyParentOrderActivity extends Activity {
 				AlertDialog.Builder builder = new AlertDialog.Builder(
 						MyParentOrderActivity.this);
 				builder.setTitle("Request Bill");
-				builder.setMessage("Are you done with your order ?");
+				builder.setMessage("Would you like to request for the bill?");
 				builder.setPositiveButton(R.string.yes,
 						new AlertDialog.OnClickListener() {
 							@Override
@@ -124,7 +124,7 @@ public class MyParentOrderActivity extends Activity {
 								}
 								
 								Toast.makeText(getApplicationContext(),
-										"Your bill is getting ready",
+										"You will be receiving the bill very shortly!",
 										Toast.LENGTH_LONG).show();
 								Intent intent = new Intent(getApplicationContext(),
 										RestFeedbackActivity.class);

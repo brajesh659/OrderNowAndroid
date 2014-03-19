@@ -274,8 +274,8 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 		AlertDialog.Builder builder = new AlertDialog.Builder(
 				context);
 		builder.setTitle("Call Waiter");
-		builder.setMessage("Are you sure you want to call waiter ?");
-		builder.setPositiveButton(R.string.ok,
+		builder.setMessage("Would you like to call a waiter?");
+		builder.setPositiveButton(R.string.yes,
 				new AlertDialog.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog,
@@ -297,11 +297,11 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 						}
 						Toast.makeText(
 								context.getApplicationContext(),
-								"Soon Waiter will be there to help you",
+								"A waiter will be coming soon to help you!",
 								Toast.LENGTH_LONG).show();
 					}
 				});
-		builder.setNegativeButton(R.string.cancel, null);
+		builder.setNegativeButton(R.string.no, null);
 		AlertDialog alert = builder.create();
 		alert.show();
 	}

@@ -40,12 +40,12 @@ public class QRCodeScannerActivity extends Activity {
 		}
 		if(activeSessionPresent()) {
 			welcome.setText(greetCustomerName + " Your are currently logged in restuarant " + activeRestName);
-			qrCodeButton.setVisibility(View.INVISIBLE);
+			qrCodeButton.setVisibility(View.GONE);
 			openRestMenuButton.setVisibility(View.VISIBLE);
 		} else {
 			welcome.setText(greetCustomerName + welcome.getText());
 			qrCodeButton.setVisibility(View.VISIBLE);
-			openRestMenuButton.setVisibility(View.INVISIBLE);
+			openRestMenuButton.setVisibility(View.GONE);
 		}
 		
 		if(applicationContext.getProfilePictureId() != null) {
