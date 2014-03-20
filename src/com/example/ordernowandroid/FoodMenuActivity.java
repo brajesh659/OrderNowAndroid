@@ -307,8 +307,8 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 	}
 
 	private void startPartentOrderActivity(final Context context) {
-		ArrayList<CustomerOrderWrapper> subOrdersFromDB = ApplicationState.getSubOrdersFromDB((ApplicationState)getApplicationContext());
-		if (subOrdersFromDB !=null && subOrdersFromDB.size() >= 1) {
+		ArrayList<CustomerOrderWrapper> subOrderList = ApplicationState.getSubOrderList((ApplicationState)getApplicationContext());
+		if (subOrderList !=null && subOrderList.size() >= 1) {
 			Intent intent = new Intent(context, MyParentOrderActivity.class);
 			startActivity(intent);
 		}  else {

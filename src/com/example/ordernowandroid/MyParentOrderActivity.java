@@ -28,33 +28,32 @@ import com.util.Utilities;
 
 public class MyParentOrderActivity extends Activity {
 
-    
 	@SuppressWarnings("unchecked")
-    @Override
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		String action = "";
 		ArrayList<String> unAvailableDishes = null;
-        Bundle b = getIntent().getExtras();
-        if (b != null) {
-            action = b.getString(OrderNowConstants.ACTION);
-            Utilities.info("Utilities + bundle not null" + action);
-            unAvailableDishes = (ArrayList<String>) b.getSerializable(OrderNowConstants.UNAVAILABLEITEMS);
-            Utilities.info("Utilities in bundle + " + unAvailableDishes);
-        }
-        
+		Bundle b = getIntent().getExtras();
+		if (b != null) {
+			action = b.getString(OrderNowConstants.ACTION);
+			Utilities.info("Utilities + bundle not null" + action);
+			unAvailableDishes = (ArrayList<String>) b.getSerializable(OrderNowConstants.UNAVAILABLEITEMS);
+			Utilities.info("Utilities in bundle + " + unAvailableDishes);
+		}
+
 		Utilities.info("Utilities +" + action);
 		OrderStatus orderStatus = OrderStatus.Sent;
 		if (action != null && !action.isEmpty()) {
-            orderStatus = OrderNowConstants.actionToOrderStatusMap.get(action);
-        }
+			orderStatus = OrderNowConstants.actionToOrderStatusMap.get(action);
+		}
 		setContentView(R.layout.my_parent_order_summary);
 		setTitle("Confirmed Order");
 		getActionBar().setDisplayHomeAsUpEnabled(true);
-		
+
 
 		ApplicationState applicationContext = (ApplicationState)getApplicationContext();
-		ArrayList<CustomerOrderWrapper> subOrdersFromDB = ApplicationState.getSubOrdersFromDB(applicationContext);
+		ArrayList<CustomerOrderWrapper> subOrderList = ApplicationState.getSubOrderList(applicationContext);
 
 		TextView totalAmount = (TextView) findViewById(R.id.parentTotalAmount);
 		Button requestBillButton = (Button) findViewById(R.id.requestBillButton);
@@ -63,28 +62,31 @@ public class MyParentOrderActivity extends Activity {
 		CustomerOrderWrapper customerOrderWrapper = ApplicationState.getCustomerOrderWrapper((ApplicationState)getApplicationContext());
 		Utilities.info("Utilities + " + orderStatus.toString());
 		if(customerOrderWrapper !=null) {
-		    customerOrderWrapper.modifyItemStatus(orderStatus, unAvailableDishes);
-			subOrdersFromDB.add(customerOrderWrapper);
+			customerOrderWrapper.modifyItemStatus(orderStatus, unAvailableDishes);
+			subOrderList.add(customerOrderWrapper);
 			ApplicationState.setCustomerOrderWrapper(applicationContext, null);
+			
+			//Only update Shared Prefs Object when there is a new suborder
+			//OrderNowUtilities.putObjectToSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_SUB_ORDER_LIST, subOrderList);
 		}
-		
+
 		/*Hack this should be based on order id.*/
-		subOrdersFromDB.get(subOrdersFromDB.size()-1).modifyItemStatus(orderStatus, unAvailableDishes);
-		
-		for (CustomerOrderWrapper subOrder:subOrdersFromDB) {			
+		subOrderList.get(subOrderList.size()-1).modifyItemStatus(orderStatus, unAvailableDishes);
+
+		for (CustomerOrderWrapper subOrder:subOrderList) {			
 			for (MyOrderItem myOrderItem: subOrder.getMyOrderItemList()) {
 				totalOrderAmount = totalOrderAmount + (myOrderItem.getQuantity() * myOrderItem.getFoodMenuItem().getItemPrice());
 			}
 		}
-		
+
 		totalAmount.setText(OrderNowConstants.INDIAN_RUPEE_UNICODE + " " + Float.toString(totalOrderAmount));
 
 		ListView subOrderListView = (ListView) findViewById(R.id.subOrderList);
-		MyParentOrderAdapter myParentOrderAdapter = new MyParentOrderAdapter(this, subOrdersFromDB);
+		MyParentOrderAdapter myParentOrderAdapter = new MyParentOrderAdapter(this, subOrderList);
 		subOrderListView.setAdapter(myParentOrderAdapter);
-		
+
 		requestBillButton.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				AlertDialog.Builder builder = new AlertDialog.Builder(
@@ -93,44 +95,40 @@ public class MyParentOrderActivity extends Activity {
 				builder.setMessage("Would you like to request for the bill?");
 				builder.setPositiveButton(R.string.yes,
 						new AlertDialog.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								ApplicationState applicationContext = (ApplicationState) getApplicationContext();
-								String orderId = applicationContext
-										.getActiveOrderId();
-								String url = new URLBuilder()
-										.addPath(URLBuilder.Path.serveTable)
-										.addAction(URLBuilder.URLAction.requestBill)
-										.addParam(URLBuilder.URLParam.orderId,
-												orderId).build();
-								try {
-									new AsyncNetwork().execute(url).get();
-									// clear active tableId/restId preferences
-									OrderNowUtilities
-											.putKeyToSharedPreferences(
-													getApplicationContext(),
-													OrderNowConstants.KEY_ACTIVE_TABLE_ID,
-													"");
-									OrderNowUtilities
-											.putKeyToSharedPreferences(
-													getApplicationContext(),
-													OrderNowConstants.KEY_ACTIVE_RESTAURANT_ID,
-													"");
-								} catch (InterruptedException e) {
-									e.printStackTrace();
-								} catch (ExecutionException e) {
-									e.printStackTrace();
-								}
-								
-								Toast.makeText(getApplicationContext(),
-										"You will be receiving the bill very shortly!",
-										Toast.LENGTH_LONG).show();
-								Intent intent = new Intent(getApplicationContext(),
-										RestFeedbackActivity.class);
-								startActivity(intent);
-							}
-						});
+					@Override
+					public void onClick(DialogInterface dialog,
+							int which) {
+						ApplicationState applicationContext = (ApplicationState) getApplicationContext();
+						String orderId = applicationContext
+								.getActiveOrderId();
+						String url = new URLBuilder()
+						.addPath(URLBuilder.Path.serveTable)
+						.addAction(URLBuilder.URLAction.requestBill)
+						.addParam(URLBuilder.URLParam.orderId,
+								orderId).build();
+						try {
+							new AsyncNetwork().execute(url).get();
+							
+							//Clear Shared Prefs for Active Rest Id and Table Id
+							ArrayList<String> sharedPrefsToRemove = new ArrayList<String>();
+							sharedPrefsToRemove.add(OrderNowConstants.KEY_ACTIVE_RESTAURANT_ID);
+							sharedPrefsToRemove.add(OrderNowConstants.KEY_ACTIVE_TABLE_ID);
+							OrderNowUtilities.removeSharedPreferences(getApplicationContext(), sharedPrefsToRemove);
+							//TODO: Remove SubOrderList
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						} catch (ExecutionException e) {
+							e.printStackTrace();
+						}
+
+						Toast.makeText(getApplicationContext(),
+								"You will be receiving the bill very shortly!",
+								Toast.LENGTH_LONG).show();
+						Intent intent = new Intent(getApplicationContext(),
+								RestFeedbackActivity.class);
+						startActivity(intent);
+					}
+				});
 				builder.setNegativeButton(R.string.no, null);
 				AlertDialog alert = builder.create();
 				alert.show();
@@ -149,15 +147,14 @@ public class MyParentOrderActivity extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// TODO Auto-generated method stub
 		getMenuInflater().inflate(R.menu.confirmed_page_menu, menu);
 		return super.onCreateOptionsMenu(menu);
-		
 	}
-	
+
 	@Override
 	public void onBackPressed() {
 		ApplicationState.setOpenCategoryDrawer((ApplicationState) getApplicationContext(), true); //FIXME: Persist the myOrderItem List Data on FoodMenuActivity Page

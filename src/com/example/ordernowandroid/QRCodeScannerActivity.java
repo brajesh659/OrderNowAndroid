@@ -111,7 +111,7 @@ public class QRCodeScannerActivity extends Activity {
 				ApplicationState.setRestaurantId(applicationContext, restId);
 				ApplicationState.setOpenCategoryDrawer(applicationContext, true);
 				//clean order stuff if present
-				ApplicationState.cleanSubOrdersFromDB(applicationContext);
+				ApplicationState.cleanSubOrderList(applicationContext);
 				ApplicationState.cleanFoodMenuItemQuantityMap(applicationContext);				
 				//save preferences
 				OrderNowUtilities.putKeyToSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_TABLE_ID, tableId);
