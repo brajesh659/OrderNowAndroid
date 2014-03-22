@@ -34,7 +34,7 @@ public class MyOrderHistoryActivity extends Activity {
 		}
 
 		ListView myOrderHistoryListView = (ListView) findViewById(R.id.orderHistoryList);
-		MyOrderHistoryAdapter myOrderHistoryAdapter = new MyOrderHistoryAdapter(MyOrderHistoryActivity.this, myOrderHistoryList);
+		MyOrderHistoryAdapter myOrderHistoryAdapter = new MyOrderHistoryAdapter(applicationContext, myOrderHistoryList);
 		myOrderHistoryListView.setAdapter(myOrderHistoryAdapter);
 	}
 
@@ -44,8 +44,8 @@ public class MyOrderHistoryActivity extends Activity {
 		myOrderItemList.add(new MyOrderItem(new FoodMenuItem(new Dish("d0", "Cream of Veg", null, null, 95, FoodType.Veg, true)), 2));
 		myOrderItemList.add(new MyOrderItem(new FoodMenuItem(new Dish("d1", "Roasted Bell Pepper Soup", null, null, 115, FoodType.Veg, true)), 3));
 		
-		CustomerOrderWrapper customerOrderWrapper1 = new CustomerOrderWrapper(myOrderItemList, (ApplicationState) getApplicationContext(), "First Order");
-		CustomerOrderWrapper customerOrderWrapper2 = new CustomerOrderWrapper(myOrderItemList, (ApplicationState) getApplicationContext(), "Second Order");
+		CustomerOrderWrapper customerOrderWrapper1 = new CustomerOrderWrapper(myOrderItemList, "First Order");
+		CustomerOrderWrapper customerOrderWrapper2 = new CustomerOrderWrapper(myOrderItemList, "Second Order");
 		
 		myOrderHistoryList.add(customerOrderWrapper1);
 		myOrderHistoryList.add(customerOrderWrapper2);

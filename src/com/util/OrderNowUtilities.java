@@ -67,9 +67,6 @@ public class OrderNowUtilities {
 	}
 
 	public static void putObjectToSharedPreferences(Context context, String key, ArrayList<CustomerOrderWrapper> subOrderList) {
-		/**
-		 *  It seems Gson chokes while Serializing an object in some cases : SO http://stackoverflow.com/questions/8151082/gson-an-java-throwable
-		 */
 		Gson gson = new Gson();
 		String json = gson.toJson(subOrderList);
 		Editor prefsEditor = getSharedPreferencesEditor(context);
@@ -81,7 +78,7 @@ public class OrderNowUtilities {
 	public static ArrayList<CustomerOrderWrapper> getObjectFromSharedPreferences(Context context, String key) {
 		SharedPreferences preferences = getSharedPreferences(context);
 		String json = preferences.getString(key, "");
-
+		Utilities.info("SharedPrefs Object get key " + key);
 		Gson gson = new Gson();
 		Type type = new TypeToken<ArrayList<CustomerOrderWrapper>>(){}.getType();
 		ArrayList<CustomerOrderWrapper> subOrderList = gson.fromJson(json, type);

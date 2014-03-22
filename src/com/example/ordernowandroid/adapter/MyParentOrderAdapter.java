@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.data.menu.CustomerOrderWrapper;
+import com.example.ordernowandroid.ApplicationState;
 import com.example.ordernowandroid.R;
 import com.example.ordernowandroid.model.MyOrderItem;
 import com.example.ordernowandroid.model.OrderNowConstants;
@@ -73,8 +74,8 @@ public class MyParentOrderAdapter extends ArrayAdapter<CustomerOrderWrapper> {
 
 			list.addView(line);
 		}
-
-		String subOrderNote = customerOrderWrapper.getCustomerOrder().getOrderNote();
+		ApplicationState applicationContext = (ApplicationState) getContext();
+		String subOrderNote = customerOrderWrapper.getCustomerOrder(applicationContext).getOrderNote();
 
 		if(subOrderNote != null) {
 			subOrderNoteView.setText(subOrderNote);

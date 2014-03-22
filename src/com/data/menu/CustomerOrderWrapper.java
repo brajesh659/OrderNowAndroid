@@ -24,17 +24,15 @@ public class CustomerOrderWrapper implements Serializable {
 	 */
     private static final long serialVersionUID = 1L;
     private ArrayList<MyOrderItem> myOrderItemList;
-    private ApplicationState applicationState;
     private String orderNote;
 
-    public CustomerOrderWrapper(ArrayList<MyOrderItem> myOrderItemList, ApplicationState applicationState, String orderNote) {
+    public CustomerOrderWrapper(ArrayList<MyOrderItem> myOrderItemList, String orderNote) {
         super();
         this.myOrderItemList = myOrderItemList;
-        this.applicationState = applicationState;
         this.orderNote = orderNote;
     }
 
-    public CustomerOrder getCustomerOrder() {
+    public CustomerOrder getCustomerOrder(ApplicationState applicationState) {
         OrderDish orderDish;
         Map<String, OrderDish> dishes = new HashMap<String, OrderDish>();
         for (MyOrderItem myOrderItem : myOrderItemList) {

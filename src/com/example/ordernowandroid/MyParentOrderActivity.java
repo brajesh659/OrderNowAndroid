@@ -67,7 +67,7 @@ public class MyParentOrderActivity extends Activity {
 			ApplicationState.setCustomerOrderWrapper(applicationContext, null);
 			
 			//Only update Shared Prefs Object when there is a new suborder
-			//OrderNowUtilities.putObjectToSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_SUB_ORDER_LIST, subOrderList);
+			OrderNowUtilities.putObjectToSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_SUB_ORDER_LIST, subOrderList);
 		}
 
 		/*Hack this should be based on order id.*/
@@ -82,7 +82,7 @@ public class MyParentOrderActivity extends Activity {
 		totalAmount.setText(OrderNowConstants.INDIAN_RUPEE_UNICODE + " " + Float.toString(totalOrderAmount));
 
 		ListView subOrderListView = (ListView) findViewById(R.id.subOrderList);
-		MyParentOrderAdapter myParentOrderAdapter = new MyParentOrderAdapter(this, subOrderList);
+		MyParentOrderAdapter myParentOrderAdapter = new MyParentOrderAdapter((ApplicationState)getApplicationContext(), subOrderList);
 		subOrderListView.setAdapter(myParentOrderAdapter);
 
 		requestBillButton.setOnClickListener(new View.OnClickListener() {
@@ -109,12 +109,11 @@ public class MyParentOrderActivity extends Activity {
 						try {
 							new AsyncNetwork().execute(url).get();
 							
-							//Clear Shared Prefs for Active Rest Id and Table Id
 							ArrayList<String> sharedPrefsToRemove = new ArrayList<String>();
 							sharedPrefsToRemove.add(OrderNowConstants.KEY_ACTIVE_RESTAURANT_ID);
 							sharedPrefsToRemove.add(OrderNowConstants.KEY_ACTIVE_TABLE_ID);
+							sharedPrefsToRemove.add(OrderNowConstants.KEY_ACTIVE_SUB_ORDER_LIST);
 							OrderNowUtilities.removeSharedPreferences(getApplicationContext(), sharedPrefsToRemove);
-							//TODO: Remove SubOrderList
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						} catch (ExecutionException e) {
@@ -150,7 +149,6 @@ public class MyParentOrderActivity extends Activity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// TODO Auto-generated method stub
 		getMenuInflater().inflate(R.menu.confirmed_page_menu, menu);
 		return super.onCreateOptionsMenu(menu);
 	}

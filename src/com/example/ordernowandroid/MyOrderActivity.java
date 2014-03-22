@@ -126,13 +126,13 @@ public class MyOrderActivity extends Activity {
 		String restaurantId = ApplicationState.getRestaurantId((ApplicationState)getApplicationContext());
 		Log.i("MyOrderActivity ", restaurantId);
 
-		CustomerOrderWrapper customerOrderWrapper = new CustomerOrderWrapper(myOrderItemList, (ApplicationState)getApplicationContext(),orderNote);
+		CustomerOrderWrapper customerOrderWrapper = new CustomerOrderWrapper(myOrderItemList, orderNote);
 
 		ApplicationState applicationContext = (ApplicationState)getApplicationContext();
 		ApplicationState.setCustomerOrderWrapper(applicationContext, customerOrderWrapper);
 
 		Gson gs = new Gson();
-		String order = gs.toJson(customerOrderWrapper.getCustomerOrder());
+		String order = gs.toJson(customerOrderWrapper.getCustomerOrder(applicationContext));
 		String encoded = "";
         try {
             encoded = URLEncoder.encode(order,"UTF-8");

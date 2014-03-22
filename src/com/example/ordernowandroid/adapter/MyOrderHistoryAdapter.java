@@ -36,9 +36,9 @@ public class MyOrderHistoryAdapter extends ArrayAdapter<CustomerOrderWrapper> {
 			LayoutInflater vi = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			convertView = vi.inflate(R.layout.my_order_history_item, null);
 		}
-		
+		ApplicationState applicationContext = (ApplicationState) getContext();
 		TextView orderDateView = (TextView) convertView.findViewById(R.id.orderDate);
-		String orderDate = myOrderHistoryList.get(position).getCustomerOrder().getOrderNote(); //TODO: Change this to Order Date
+		String orderDate = myOrderHistoryList.get(position).getCustomerOrder(applicationContext).getOrderNote(); //TODO: Change this to Order Date
 		orderDateView.setText(orderDate);
 		
 		Button reorderNowBtn = (Button) convertView.findViewById(R.id.reorderNowBtn);

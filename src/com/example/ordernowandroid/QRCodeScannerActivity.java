@@ -1,5 +1,7 @@
 package com.example.ordernowandroid;
 
+import java.util.ArrayList;
+
 import net.sourceforge.zbar.Symbol;
 import android.app.Activity;
 import android.content.Intent;
@@ -10,6 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.data.menu.CustomerOrderWrapper;
 import com.dm.zbar.android.scanner.ZBarConstants;
 import com.dm.zbar.android.scanner.ZBarScannerActivity;
 import com.example.ordernowandroid.model.OrderNowConstants;
@@ -24,6 +27,7 @@ public class QRCodeScannerActivity extends Activity {
 	private String activetableId;
 	private String activeRestId;
 	private String activeRestName;
+	private ArrayList<CustomerOrderWrapper> activeSubOrderList;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -59,6 +63,7 @@ public class QRCodeScannerActivity extends Activity {
 		activetableId = OrderNowUtilities.getKeyFromSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_TABLE_ID);
 		activeRestId = OrderNowUtilities.getKeyFromSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_RESTAURANT_ID);
 		activeRestName = OrderNowUtilities.getKeyFromSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_RESTAURANT_NAME);
+		activeSubOrderList = OrderNowUtilities.getObjectFromSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_SUB_ORDER_LIST);
 		if(activetableId != null && !activetableId.isEmpty()) {
 			return true;
 		}
@@ -80,6 +85,7 @@ public class QRCodeScannerActivity extends Activity {
 			ApplicationState applicationContext = (ApplicationState) getApplicationContext();
 			ApplicationState.setTableId(applicationContext, activetableId);
 			ApplicationState.setRestaurantId(applicationContext, activeRestId);
+			ApplicationState.setSubOrderList(applicationContext, activeSubOrderList);
 			ApplicationState.setOpenCategoryDrawer(applicationContext, true);
 			Toast.makeText(this, "Session Table Id = " + activetableId + " Rest Id = " + activeRestId, Toast.LENGTH_SHORT).show();
 			//start new intent 
