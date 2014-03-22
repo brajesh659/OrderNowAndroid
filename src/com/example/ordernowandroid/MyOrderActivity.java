@@ -26,6 +26,7 @@ import com.data.menu.CustomerOrderWrapper;
 import com.example.ordernowandroid.adapter.MyOrderAdapter;
 import com.example.ordernowandroid.fragments.ConfirmOrderDialogFragment;
 import com.example.ordernowandroid.model.MyOrderItem;
+import com.example.ordernowandroid.model.Order;
 import com.example.ordernowandroid.model.OrderNowConstants;
 import com.google.gson.Gson;
 import com.util.AsyncNetwork;
@@ -107,7 +108,6 @@ public class MyOrderActivity extends Activity {
 		CustomerOrderWrapper customerOrderWrapper = new CustomerOrderWrapper(myOrderItemList, orderNote);
 
 		ApplicationState applicationContext = (ApplicationState)getApplicationContext();
-		ApplicationState.setCustomerOrderWrapper(applicationContext, customerOrderWrapper);
 
 		Gson gs = new Gson();
 		String order = gs.toJson(customerOrderWrapper.getCustomerOrder(applicationContext));
@@ -127,6 +127,7 @@ public class MyOrderActivity extends Activity {
 			ApplicationState.setActiveOrderId(applicationContext, orderId);
 			//subOrderId not used currently
 			Integer subOrderId = (Integer) json.get(URLBuilder.URLParam.subOrderId.toString());
+			customerOrderWrapper.setOrder(new Order(orderId, subOrderId));
 			Utilities.info("Order response: "+ output + " orderId "+ orderId + " subOrderId " + subOrderId);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
@@ -136,8 +137,12 @@ public class MyOrderActivity extends Activity {
 			e.printStackTrace();
 		}
 
+		ApplicationState.setCustomerOrderWrapper(applicationContext, customerOrderWrapper);
+
 		ApplicationState.cleanFoodMenuItemQuantityMap(applicationContext);
+		
 		Intent intent = new Intent(getApplicationContext(), MyParentOrderActivity.class);
+
 		startActivity(intent);
 		finish();
 	}

@@ -21,56 +21,49 @@ import com.example.ordernowandroid.adapter.MyParentOrderAdapter;
 import com.example.ordernowandroid.model.MyOrderItem;
 import com.example.ordernowandroid.model.OrderNowConstants;
 import com.example.ordernowandroid.model.OrderStatus;
+import com.parse.ParseAnalytics;
 import com.util.AsyncNetwork;
 import com.util.OrderNowUtilities;
 import com.util.URLBuilder;
 import com.util.Utilities;
 
 public class MyParentOrderActivity extends Activity {
-
-	@SuppressWarnings("unchecked")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		String action = "";
-		ArrayList<String> unAvailableDishes = null;
-		Bundle b = getIntent().getExtras();
-		if (b != null) {
-			action = b.getString(OrderNowConstants.ACTION);
-			Utilities.info("Utilities + bundle not null" + action);
-			unAvailableDishes = (ArrayList<String>) b.getSerializable(OrderNowConstants.UNAVAILABLEITEMS);
-			Utilities.info("Utilities in bundle + " + unAvailableDishes);
-		}
+				
+		ParseAnalytics.trackAppOpened(getIntent());
+		
+        Float totalOrderAmount = (float) 0.00;
+        ApplicationState applicationContext = (ApplicationState)getApplicationContext();
+        ArrayList<CustomerOrderWrapper> subOrderList = OrderNowUtilities.getObjectFromSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_SUB_ORDER_LIST);
+        if(subOrderList==null){
+            subOrderList = new ArrayList<CustomerOrderWrapper>();
+        }
+        
+        OrderStatus orderStatus = OrderStatus.NULL;
+        
+        CustomerOrderWrapper customerOrderWrapper = ApplicationState.getCustomerOrderWrapper((ApplicationState)getApplicationContext());
+        Utilities.info("Utilities + " + orderStatus.toString());
+        
+        if(customerOrderWrapper !=null) { 
+            customerOrderWrapper.modifyItemStatus(OrderStatus.Sent, null);
+            subOrderList.add(customerOrderWrapper);
+            ApplicationState.setCustomerOrderWrapper(applicationContext, null);
+            
+        }
 
-		Utilities.info("Utilities +" + action);
-		OrderStatus orderStatus = OrderStatus.Sent;
-		if (action != null && action.trim() != "") {
-			orderStatus = OrderNowConstants.actionToOrderStatusMap.get(action);
-		}
+        //Only update Shared Prefs Object when there is a new suborder
+        OrderNowUtilities.putObjectToSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_SUB_ORDER_LIST, subOrderList);
+
+		
 		setContentView(R.layout.my_parent_order_summary);
+		TextView totalAmount = (TextView) findViewById(R.id.parentTotalAmount);
+        Button requestBillButton = (Button) findViewById(R.id.requestBillButton);
 		setTitle("Confirmed Order");
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 
-		ApplicationState applicationContext = (ApplicationState)getApplicationContext();
-		ArrayList<CustomerOrderWrapper> subOrderList = ApplicationState.getSubOrderList(applicationContext);
 
-		TextView totalAmount = (TextView) findViewById(R.id.parentTotalAmount);
-		Button requestBillButton = (Button) findViewById(R.id.requestBillButton);
-		Float totalOrderAmount = (float) 0.00;
-
-		CustomerOrderWrapper customerOrderWrapper = ApplicationState.getCustomerOrderWrapper((ApplicationState)getApplicationContext());
-		Utilities.info("Utilities + " + orderStatus.toString());
-		if(customerOrderWrapper !=null) {
-			customerOrderWrapper.modifyItemStatus(orderStatus, unAvailableDishes);
-			subOrderList.add(customerOrderWrapper);
-			ApplicationState.setCustomerOrderWrapper(applicationContext, null);
-			
-			//Only update Shared Prefs Object when there is a new suborder
-			OrderNowUtilities.putObjectToSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_SUB_ORDER_LIST, subOrderList);
-		}
-
-		/*Hack this should be based on order id.*/
-		subOrderList.get(subOrderList.size()-1).modifyItemStatus(orderStatus, unAvailableDishes);
 
 		for (CustomerOrderWrapper subOrder:subOrderList) {			
 			for (MyOrderItem myOrderItem: subOrder.getMyOrderItemList()) {
@@ -83,7 +76,8 @@ public class MyParentOrderActivity extends Activity {
 		ListView subOrderListView = (ListView) findViewById(R.id.subOrderList);
 		MyParentOrderAdapter myParentOrderAdapter = new MyParentOrderAdapter((ApplicationState)getApplicationContext(), subOrderList);
 		subOrderListView.setAdapter(myParentOrderAdapter);
-
+		myParentOrderAdapter.notifyDataSetChanged();
+		
 		requestBillButton.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -151,4 +145,12 @@ public class MyParentOrderActivity extends Activity {
 		return super.onCreateOptionsMenu(menu);
 	}
 
+	@Override
+	public void onBackPressed() {
+		ApplicationState.setOpenCategoryDrawer((ApplicationState) getApplicationContext(), true); //FIXME: Persist the myOrderItem List Data on FoodMenuActivity Page
+		Intent intent = new Intent(getApplicationContext(), FoodMenuActivity.class);
+		startActivity(intent);
+		finish();		
+	}
+	
 }

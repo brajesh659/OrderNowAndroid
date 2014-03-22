@@ -10,6 +10,9 @@ public enum OrderStatus {
         
         @Override
         public OrderStatus newStatus(OrderStatus itemNewStatus) {
+            if(isNewRequestedStatusNull(itemNewStatus)) {
+                return this;
+            }
             if(itemNewStatus==OrderStatus.Complete)
                 return ModifiedOrder;
             return itemNewStatus;
@@ -23,6 +26,9 @@ public enum OrderStatus {
         
         @Override
         public OrderStatus newStatus(OrderStatus itemNewStatus) {
+            if(isNewRequestedStatusNull(itemNewStatus)) {
+                return this;
+            }
             return itemNewStatus;
         }
     },
@@ -34,6 +40,9 @@ public enum OrderStatus {
         
         @Override
         public OrderStatus newStatus(OrderStatus itemNewStatus) {
+            if(isNewRequestedStatusNull(itemNewStatus)) {
+                return this;
+            }
             return itemNewStatus;
         }
     },
@@ -45,6 +54,9 @@ public enum OrderStatus {
 
         @Override
         public OrderStatus newStatus(OrderStatus itemNewStatus) {
+            if(isNewRequestedStatusNull(itemNewStatus)) {
+                return this;
+            }
             return itemNewStatus;
         }
     }, Complete {
@@ -55,8 +67,12 @@ public enum OrderStatus {
 
         @Override
         public OrderStatus newStatus(OrderStatus itemNewStatus) {
+            if(isNewRequestedStatusNull(itemNewStatus)) {
+                return this;
+            }
             return OrderStatus.Complete;
         }
+
     }, NULL {
         @Override
         public String getSymbol() {
@@ -71,5 +87,9 @@ public enum OrderStatus {
     ;
     public abstract String getSymbol();
     public abstract OrderStatus newStatus(OrderStatus itemNewStatus);
+
+    protected boolean isNewRequestedStatusNull(OrderStatus itemNewStatus) {
+        return itemNewStatus==NULL;
+    }
 
 }

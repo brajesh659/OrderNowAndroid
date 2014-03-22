@@ -135,9 +135,16 @@
             android:name=".SearchSuggestionProvider"
             android:authorities="com.example.ordernowandroid.SearchSuggestionProvider" />
 
-        <service android:name="com.parse.PushService" />
+<!--         <service android:name="com.parse.PushService" />
 
-        <receiver android:name="com.example.ordernowandroid.MyCustomReceiver" >
+        <receiver android:name="com.parse.ParseBroadcastReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.USER_PRESENT" />
+            </intent-filter>
+        </receiver>
+        
+        <receiver android:name="com.example.ordernowandroid.MyParentOrderActivity.TickReceiver" >
             <intent-filter>
                 <action android:name="com.example.orderReceived" />
                 <action android:name="com.example.orderAccepted" />
@@ -145,7 +152,32 @@
                 <action android:name="com.example.orderCompleted" />
                 <action android:name="com.example.modifyOrder" />
             </intent-filter>
-        </receiver>
+        </receiver>  -->
+        
+         <service android:name="com.parse.PushService" />
+		<receiver android:name="com.parse.ParseBroadcastReceiver">
+			<intent-filter>
+				<action android:name="android.intent.action.BOOT_COMPLETED" />
+				<action android:name="android.intent.action.USER_PRESENT" />
+			</intent-filter>
+		</receiver>
+		<receiver android:name="com.example.ordernowandroid.MyCustomReceiver"
+			android:permission="com.google.android.c2dm.permission.SEND">
+			<intent-filter>
+				<action android:name="com.example.orderReceived" />
+                <action android:name="com.example.orderAccepted" />
+                <action android:name="com.example.generateBill" />
+                <action android:name="com.example.orderCompleted" />
+                <action android:name="com.example.modifyOrder" />
+
+				<!--
+				  IMPORTANT: If you change the package name of this sample app,
+				  change "com.parse.tutorials.pushnotifications" in the lines
+				  below to match the new package name.
+				-->
+				<category android:name="com.example.ordernowandroid" />
+			</intent-filter>
+		</receiver>
     </application>
 
 </manifest>

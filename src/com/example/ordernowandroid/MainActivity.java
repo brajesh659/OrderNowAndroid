@@ -12,10 +12,7 @@ import android.support.v4.app.FragmentActivity;
 import android.view.KeyEvent;
 
 import com.example.ordernowandroid.fragments.LoginFragment;
-import com.parse.Parse;
 import com.parse.ParseAnalytics;
-import com.parse.ParseInstallation;
-import com.parse.PushService;
 
 public class MainActivity extends FragmentActivity {
 
@@ -41,11 +38,10 @@ public class MainActivity extends FragmentActivity {
 		} else {
 			loginFragment = (LoginFragment) getSupportFragmentManager().findFragmentById(android.R.id.content);
 		}
-
-		Parse.initialize(this, getString(R.string.parse_app_id), getString(R.string.parse_client_key));
-		PushService.setDefaultPushCallback(this, MainActivity.class);
-		ParseInstallation.getCurrentInstallation().saveInBackground();
-		ParseAnalytics.trackAppOpened(getIntent());
+		
+	    //ParseInstallation.getCurrentInstallation().saveInBackground();
+	    ParseAnalytics.trackAppOpened(getIntent());
+		
 	}
 
 	private boolean isNetworkAvailable() { 

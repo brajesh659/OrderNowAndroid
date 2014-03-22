@@ -8,6 +8,7 @@ import java.util.Map;
 
 import com.example.ordernowandroid.ApplicationState;
 import com.example.ordernowandroid.model.MyOrderItem;
+import com.example.ordernowandroid.model.Order;
 import com.example.ordernowandroid.model.OrderNowConstants;
 import com.example.ordernowandroid.model.OrderStatus;
 import com.parse.ParseInstallation;
@@ -25,6 +26,7 @@ public class CustomerOrderWrapper implements Serializable {
     private static final long serialVersionUID = 1L;
     private ArrayList<MyOrderItem> myOrderItemList;
     private String orderNote;
+    private Order orderId;
 
     public CustomerOrderWrapper(ArrayList<MyOrderItem> myOrderItemList, String orderNote) {
         super();
@@ -78,5 +80,13 @@ public class CustomerOrderWrapper implements Serializable {
             }
             myOrderItem.setItemStatus(newStatus);
         }
+    }
+
+    public Order getOrder() {
+        return orderId;
+    }
+
+    public void setOrder(Order orderId) {
+        this.orderId = orderId;
     }
 }

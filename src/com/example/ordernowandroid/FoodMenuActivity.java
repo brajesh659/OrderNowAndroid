@@ -304,8 +304,9 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 		alert.show();
 	}
 
+
 	private void startParentOrderActivity(final Context context) {
-		ArrayList<CustomerOrderWrapper> subOrderList = ApplicationState.getSubOrderList((ApplicationState)getApplicationContext());
+		ArrayList<CustomerOrderWrapper> subOrderList = OrderNowUtilities.getObjectFromSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_SUB_ORDER_LIST);
 		if (subOrderList !=null && subOrderList.size() >= 1) {
 			Intent intent = new Intent(context, MyParentOrderActivity.class);
 			startActivity(intent);

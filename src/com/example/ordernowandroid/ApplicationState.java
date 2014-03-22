@@ -12,6 +12,8 @@ import com.example.ordernowandroid.filter.AvailableMenuFilter;
 import com.example.ordernowandroid.filter.MenuFilter;
 import com.example.ordernowandroid.model.IngredientOptionView;
 import com.example.ordernowandroid.model.MyOrderItem;
+import com.parse.Parse;
+import com.parse.PushService;
 import com.util.Utilities;
 
 public class ApplicationState extends Application {
@@ -37,6 +39,13 @@ public class ApplicationState extends Application {
 		dishIngredientMap = new HashMap<String, List<IngredientOptionView>>();
 		restaurantName = "";
 	}
+	
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        Parse.initialize(this, getString(R.string.parse_app_id), getString(R.string.parse_client_key));
+        PushService.setDefaultPushCallback(this, MyParentOrderActivity.class);
+    }
 
 	public String getTableId() {
 		return tableId;
