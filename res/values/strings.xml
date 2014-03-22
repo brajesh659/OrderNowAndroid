@@ -22,6 +22,7 @@
     <string name="total">"Total"</string>
     <string name="ok">"OK"</string>
     <string name="cancel">"Cancel"</string> 
+    <string name="retry">"Retry"</string> 
     <string name="yes">"Yes"</string>
     <string name="no">"No"</string>
     <string name="myorder">"My Order"</string> 

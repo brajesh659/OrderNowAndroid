@@ -17,14 +17,6 @@ import com.google.gson.reflect.TypeToken;
 public class OrderNowUtilities {
 	private static final String ORDER_NOW = "OrderNow";
 
-	private static SharedPreferences getSharedPreferences(Context context) {
-		return context.getSharedPreferences(ORDER_NOW, Context.MODE_PRIVATE);
-	}
-
-	private static Editor getSharedPreferencesEditor(Context context) {
-		return getSharedPreferences(context).edit();
-	}
-
 	public static ArrayList<FoodMenuItem> getFoodMenuItems(List<Dish> dishes) {
 		ArrayList<FoodMenuItem> foodMenuItem = new ArrayList<FoodMenuItem>();
 		if (dishes != null) {
@@ -33,6 +25,17 @@ public class OrderNowUtilities {
 			}
 		}
 		return foodMenuItem;
+	}
+	
+	/*
+	 * ---------------------------------- Shared Pref Util Stuff --------------------------------------------------------------------	
+	 */
+	private static SharedPreferences getSharedPreferences(Context context) {
+		return context.getSharedPreferences(ORDER_NOW, Context.MODE_PRIVATE);
+	}
+
+	private static Editor getSharedPreferencesEditor(Context context) {
+		return getSharedPreferences(context).edit();
 	}
 
 	public static void putKeyToSharedPreferences(Context context, String key, String value) {

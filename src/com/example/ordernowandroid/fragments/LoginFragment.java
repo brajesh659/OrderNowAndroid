@@ -29,7 +29,6 @@ public class LoginFragment extends Fragment {
 			onSessionStateChange(session, state, exception);
 		}
 	};
-	
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -59,13 +58,14 @@ public class LoginFragment extends Fragment {
 							applicationContext.setProfilePictureId(user.getId());
 
 							if (!OrderNowConstants.IS_DEBUG_MODE){
-								Intent intent = new Intent(getActivity().getApplicationContext(), QRCodeScannerActivity.class);
-								startActivity(intent);
+								Intent intent = new Intent(applicationContext, QRCodeScannerActivity.class);
+								getActivity().startActivity(intent);
 								getActivity().finish();
 							} else {
-								ApplicationState.setTableId(applicationContext, "T1"); //All the Orders would default to Table 1 in Debug Mode
-								Intent intent = new Intent(getActivity().getApplicationContext(), FoodMenuActivity.class);
-								startActivity(intent);				
+								ApplicationState.setTableId(applicationContext, "T1");
+								ApplicationState.setRestaurantId(applicationContext, "R1");
+								Intent intent = new Intent(applicationContext, FoodMenuActivity.class);
+								getActivity().startActivity(intent);				
 								getActivity().finish();
 							}
 						}
