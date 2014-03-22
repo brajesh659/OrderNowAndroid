@@ -119,9 +119,6 @@ public class QRCodeScannerActivity extends Activity {
 				//clean order stuff if present
 				ApplicationState.cleanSubOrderList(applicationContext);
 				ApplicationState.cleanFoodMenuItemQuantityMap(applicationContext);				
-				//save preferences
-				OrderNowUtilities.putKeyToSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_TABLE_ID, tableId);
-				OrderNowUtilities.putKeyToSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_RESTAURANT_ID, restId);
 				//start new intent 
 				Intent intent = new Intent(this, FoodMenuActivity.class);
 				startActivity(intent);				

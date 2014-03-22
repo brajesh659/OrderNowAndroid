@@ -162,10 +162,16 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 			alert.show();
 			return ;
 		} else {
+			
+			
 			String resName = restaurant.getName();
 			mDrawerTitle = resName;
 			ApplicationState.setRestaurantName(applicationContext, resName);
 			OrderNowUtilities.putKeyToSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_RESTAURANT_NAME, resName);
+			//save preferences
+			OrderNowUtilities.putKeyToSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_TABLE_ID, applicationContext.getTableId());
+			OrderNowUtilities.putKeyToSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_RESTAURANT_ID, applicationContext.getRestaurantId());
+			
 			if (savedInstanceState == null) {
 				// on first time display view for first menu item
 			    Log.e("on resume ","in saved instance check ");
@@ -201,6 +207,7 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 
 		getOverflowMenu();
 	}
+	
 
 	private void getOverflowMenu() {
 
