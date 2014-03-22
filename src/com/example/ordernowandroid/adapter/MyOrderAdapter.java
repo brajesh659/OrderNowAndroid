@@ -21,7 +21,6 @@ import com.example.ordernowandroid.ApplicationState;
 import com.example.ordernowandroid.R;
 import com.example.ordernowandroid.model.MyOrderItem;
 import com.example.ordernowandroid.model.OrderNowConstants;
-import com.util.Utilities;
 
 public class MyOrderAdapter extends ArrayAdapter<MyOrderItem> {
 

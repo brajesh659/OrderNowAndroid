@@ -19,18 +19,14 @@ public class RestaurantFeedback implements Serializable{
 		return rating;
 	}
 
-
 	public String getFeedbackComment() {
 		return feedbackComment;
 	}
-
-
 	
 	@Override
 	public String toString() {
 		return "RestaurantFeedback [rating=" + rating + ", feedbackComment="
 				+ feedbackComment + "]";
 	}
-	
 	
 }

@@ -44,13 +44,12 @@ public class MyParentOrderActivity extends Activity {
 
 		Utilities.info("Utilities +" + action);
 		OrderStatus orderStatus = OrderStatus.Sent;
-		if (action != null && !action.isEmpty()) {
+		if (action != null && action.trim() != "") {
 			orderStatus = OrderNowConstants.actionToOrderStatusMap.get(action);
 		}
 		setContentView(R.layout.my_parent_order_summary);
 		setTitle("Confirmed Order");
 		getActionBar().setDisplayHomeAsUpEnabled(true);
-
 
 		ApplicationState applicationContext = (ApplicationState)getApplicationContext();
 		ArrayList<CustomerOrderWrapper> subOrderList = ApplicationState.getSubOrderList(applicationContext);
@@ -89,18 +88,20 @@ public class MyParentOrderActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				AlertDialog.Builder builder = new AlertDialog.Builder(
-						MyParentOrderActivity.this);
+				AlertDialog.Builder builder = new AlertDialog.Builder(MyParentOrderActivity.this);
 				builder.setTitle("Request Bill");
-				builder.setMessage("Would you like to request for the bill?");
-				builder.setPositiveButton(R.string.yes,
-						new AlertDialog.OnClickListener() {
+				
+				final ApplicationState applicationContext = (ApplicationState) getApplicationContext();
+				if(ApplicationState.getFoodMenuItemQuantityMap(applicationContext) != null && ApplicationState.getFoodMenuItemQuantityMap(applicationContext).size() > 0){
+					builder.setMessage("You have items waiting to be ordered in the Cart. Would you still like to request for the bill?");
+				} else {
+					builder.setMessage("Would you like to request for the bill?");
+				}
+				
+				builder.setPositiveButton(R.string.yes, new AlertDialog.OnClickListener() {
 					@Override
-					public void onClick(DialogInterface dialog,
-							int which) {
-						ApplicationState applicationContext = (ApplicationState) getApplicationContext();
-						String orderId = applicationContext
-								.getActiveOrderId();
+					public void onClick(DialogInterface dialog, int which) {
+						String orderId = ApplicationState.getActiveOrderId(applicationContext);
 						String url = new URLBuilder()
 						.addPath(URLBuilder.Path.serveTable)
 						.addAction(URLBuilder.URLAction.requestBill)
@@ -123,9 +124,9 @@ public class MyParentOrderActivity extends Activity {
 						Toast.makeText(getApplicationContext(),
 								"You will be receiving the bill very shortly!",
 								Toast.LENGTH_LONG).show();
-						Intent intent = new Intent(getApplicationContext(),
-								RestFeedbackActivity.class);
+						Intent intent = new Intent(getApplicationContext(),RestFeedbackActivity.class);
 						startActivity(intent);
+						finish();
 					}
 				});
 				builder.setNegativeButton(R.string.no, null);
@@ -138,9 +139,6 @@ public class MyParentOrderActivity extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case android.R.id.home:
-			onBackPressed();		
-			return true;
 		case R.id.waiter:
 			FoodMenuActivity.callWaiterFunction(MyParentOrderActivity.this);			
 		}
@@ -151,14 +149,6 @@ public class MyParentOrderActivity extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.confirmed_page_menu, menu);
 		return super.onCreateOptionsMenu(menu);
-	}
-
-	@Override
-	public void onBackPressed() {
-		ApplicationState.setOpenCategoryDrawer((ApplicationState) getApplicationContext(), true); //FIXME: Persist the myOrderItem List Data on FoodMenuActivity Page
-		Intent intent = new Intent(getApplicationContext(), FoodMenuActivity.class);
-		startActivity(intent);
-		finish();		
 	}
 
 }

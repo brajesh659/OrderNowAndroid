@@ -24,7 +24,7 @@ public class QRCodeScannerActivity extends Activity {
 
 	private static final int ZBAR_QR_SCANNER_REQUEST = 1;
 	private ProfilePictureView profilePictureView;
-	private String activetableId;
+	private String activeTableId;
 	private String activeRestId;
 	private String activeRestName;
 	private ArrayList<CustomerOrderWrapper> activeSubOrderList;
@@ -43,7 +43,7 @@ public class QRCodeScannerActivity extends Activity {
 			greetCustomerName = "Hello " + applicationContext.getUserName() + "! ";
 		}
 		if(activeSessionPresent()) {
-			welcome.setText(greetCustomerName + " Your are currently logged in restuarant " + activeRestName);
+			welcome.setText(greetCustomerName + " You are currently logged in " + activeRestName + " restaurant.");
 			qrCodeButton.setVisibility(View.GONE);
 			openRestMenuButton.setVisibility(View.VISIBLE);
 		} else {
@@ -60,11 +60,11 @@ public class QRCodeScannerActivity extends Activity {
 	}
 
 	private boolean activeSessionPresent() {
-		activetableId = OrderNowUtilities.getKeyFromSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_TABLE_ID);
-		activeRestId = OrderNowUtilities.getKeyFromSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_RESTAURANT_ID);
-		activeRestName = OrderNowUtilities.getKeyFromSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_RESTAURANT_NAME);
-		activeSubOrderList = OrderNowUtilities.getObjectFromSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_SUB_ORDER_LIST);
-		if(activetableId != null && !activetableId.isEmpty()) {
+		activeTableId = OrderNowUtilities.getKeyFromSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_TABLE_ID);
+		if(activeTableId != null && activeTableId.trim() != "") {
+			activeRestId = OrderNowUtilities.getKeyFromSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_RESTAURANT_ID);
+			activeRestName = OrderNowUtilities.getKeyFromSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_RESTAURANT_NAME);
+			activeSubOrderList = OrderNowUtilities.getObjectFromSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_SUB_ORDER_LIST);
 			return true;
 		}
 		return false;
@@ -81,20 +81,19 @@ public class QRCodeScannerActivity extends Activity {
 	}
 	
 	public void openRestaurantMenu(View v) {
-		if(activetableId != null && !activetableId.isEmpty()) {
+		if(activeTableId != null && activeTableId.trim() != "") {
 			ApplicationState applicationContext = (ApplicationState) getApplicationContext();
-			ApplicationState.setTableId(applicationContext, activetableId);
+			ApplicationState.setTableId(applicationContext, activeTableId);
 			ApplicationState.setRestaurantId(applicationContext, activeRestId);
 			ApplicationState.setSubOrderList(applicationContext, activeSubOrderList);
 			ApplicationState.setOpenCategoryDrawer(applicationContext, true);
-			Toast.makeText(this, "Session Table Id = " + activetableId + " Rest Id = " + activeRestId, Toast.LENGTH_SHORT).show();
-			//start new intent 
+			Toast.makeText(this, "Session Table Id = " + activeTableId + " Rest Id = " + activeRestId, Toast.LENGTH_SHORT).show();
+
 			Intent intent = new Intent(this, FoodMenuActivity.class);
 			startActivity(intent);				
 			finish();				
 		} 
 	}
-	
 
 	public boolean isCameraAvailable() {
 		PackageManager pm = getPackageManager();
@@ -110,33 +109,27 @@ public class QRCodeScannerActivity extends Activity {
 				String tableId_restID = data.getStringExtra(ZBarConstants.SCAN_RESULT);
 				String[] scanResultStrings = tableId_restID.split(" ");
 				String tableId = scanResultStrings[0];
-				String restId = (scanResultStrings.length > 1)?scanResultStrings[1]:"";
+				String restId = (scanResultStrings.length > 1)? scanResultStrings[1] : "";
 				Toast.makeText(this, "Table Id = " + tableId + " Rest Id = " + restId, Toast.LENGTH_SHORT).show();
 
 				ApplicationState.setTableId(applicationContext, tableId);
 				ApplicationState.setRestaurantId(applicationContext, restId);
 				ApplicationState.setOpenCategoryDrawer(applicationContext, true);
+				
 				//clean order stuff if present
 				ApplicationState.cleanSubOrderList(applicationContext);
 				ApplicationState.cleanFoodMenuItemQuantityMap(applicationContext);				
-				//start new intent 
+
 				Intent intent = new Intent(this, FoodMenuActivity.class);
 				startActivity(intent);				
 				finish();	
 			} else if(resultCode == RESULT_CANCELED && data != null) {
 				String error = data.getStringExtra(ZBarConstants.ERROR_INFO);
 				Utilities.error("Error Message: " + error);
-
-				//TODO
 				Toast.makeText(this, "To be implemented", Toast.LENGTH_SHORT).show();
 			}
 			break;
 		}
 	}
 	
-	@Override
-	public void onBackPressed() {
-		finish();
-	}
-
 }

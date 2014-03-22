@@ -1,6 +1,7 @@
 package com.example.ordernowandroid;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -8,6 +9,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.view.KeyEvent;
 
 import com.example.ordernowandroid.fragments.LoginFragment;
 import com.parse.Parse;
@@ -72,7 +74,20 @@ public class MainActivity extends FragmentActivity {
 				finish();
 			}
 		});
+		
 		AlertDialog alert = builder.create();
+		alert.setOnKeyListener(new Dialog.OnKeyListener() {
+            @Override
+            public boolean onKey(DialogInterface dialog, int keyCode,
+                    KeyEvent event) {
+                // TODO Auto-generated method stub
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    finish();
+                    dialog.dismiss();
+                }
+                return true;
+            }
+        });
 		alert.show();
 	}
 

@@ -118,7 +118,6 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 		actionBar.setCustomView(R.layout.search_layout); //load your layout
 		actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME|ActionBar.DISPLAY_SHOW_CUSTOM|ActionBar.DISPLAY_SHOW_TITLE); //show it 
 		getActionBar().setDisplayHomeAsUpEnabled(true);
-		getActionBar().setHomeButtonEnabled(true);
 
 		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, 
 				R.drawable.ic_drawer, // nav menu toggle icon
@@ -141,8 +140,6 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
 		if(OrderNowConstants.IS_DEBUG_MODE && OrderNowConstants.IS_LOCAL_RESTURANT_ENABLED) {
 		    restaurant = getResturantLocaly();
-		} else if (OrderNowConstants.IS_DEBUG_MODE){
-		    restaurant = getResturant("T1", "R1");
 		} else {
 		    restaurant = getResturant(applicationContext.getTableId(), applicationContext.getRestaurantId());
 		}
@@ -154,7 +151,7 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 			builder.setPositiveButton(R.string.ok, new OnClickListener() {                  
 				@Override
 				public void onClick(DialogInterface dialog, int which) {                                                
-					Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+					Intent intent = new Intent(getApplicationContext(), QRCodeScannerActivity.class);
 					startActivity(intent);                                              
 				}
 			});
@@ -162,19 +159,18 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 			alert.show();
 			return ;
 		} else {
-			
-			
 			String resName = restaurant.getName();
 			mDrawerTitle = resName;
 			ApplicationState.setRestaurantName(applicationContext, resName);
 			OrderNowUtilities.putKeyToSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_RESTAURANT_NAME, resName);
+			
 			//save preferences
 			OrderNowUtilities.putKeyToSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_TABLE_ID, applicationContext.getTableId());
 			OrderNowUtilities.putKeyToSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_RESTAURANT_ID, applicationContext.getRestaurantId());
 			
 			if (savedInstanceState == null) {
 				// on first time display view for first menu item
-			    Log.e("on resume ","in saved instance check ");
+			    Log.i("on resume ","in saved instance check ");
 				displayView(0, 0);
 			}
 			mDrawerList.setOnGroupClickListener(new SlideMenuClickListener());
@@ -248,7 +244,6 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 		
 		ImageView call_waiter = (ImageView) actionBar.getCustomView().findViewById(R.id.waiter);
 		call_waiter.setOnClickListener(new View.OnClickListener() {
-			
 			@Override
 			public void onClick(View v) {
 				callWaiterFunction(FoodMenuActivity.this);
@@ -263,10 +258,6 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 		ImageView cart_image = (ImageView)food_cart_layout.findViewById(R.id.action_cart_image);
 
 		final Context context = this;
-		//		if (foodMenuItemQuantityMap != null) {
-		//		    ArrayList<MyOrderItem> myOrder = new ArrayList<MyOrderItem>();
-		//		    myOrder.addAll(foodMenuItemQuantityMap.values());
-		//		} 
 
 		cart_image.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -313,7 +304,7 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 		alert.show();
 	}
 
-	private void startPartentOrderActivity(final Context context) {
+	private void startParentOrderActivity(final Context context) {
 		ArrayList<CustomerOrderWrapper> subOrderList = ApplicationState.getSubOrderList((ApplicationState)getApplicationContext());
 		if (subOrderList !=null && subOrderList.size() >= 1) {
 			Intent intent = new Intent(context, MyParentOrderActivity.class);
@@ -352,7 +343,7 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 			startMyOrderActivity(getApplicationContext());
 			return true;
 		case R.id.confirmed_order :
-			startPartentOrderActivity(getApplicationContext());
+			startParentOrderActivity(getApplicationContext());
 			return true;
 		case R.id.search:
 			onSearchRequested();
@@ -377,14 +368,7 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 		case MY_ORDER_REQUEST_CODE:
 			if (resultCode == RESULT_OK) {            	    	
 				final ApplicationState applicationContext = (ApplicationState)getApplicationContext();
-				//                ArrayList<MyOrderItem> myOrders = ApplicationState.getMyOrderItems(applicationContext);
-				//				if(myOrders!=null){
-				//					foodMenuItemQuantityMap = new HashMap<String, MyOrderItem>();
-				//					for (MyOrderItem myOrderItem : myOrders) {
-				//						foodMenuItemQuantityMap.put(myOrderItem.getFoodMenuItem().getItemName(), myOrderItem);
-				//					}
-				//				}
-				Log.e("on RESULT_OK ",""+ApplicationState.getCategoryId(applicationContext) + " " + ApplicationState.getChildCategoryId(applicationContext));
+				Log.i("on RESULT_OK ",""+ApplicationState.getCategoryId(applicationContext) + " " + ApplicationState.getChildCategoryId(applicationContext));
 				displayView(ApplicationState.getCategoryId(applicationContext), ApplicationState.getChildCategoryId(applicationContext));
 			} else if(resultCode == RESULT_CANCELED && data != null) {
 				String error = data.getStringExtra(ZBarConstants.ERROR_INFO);
@@ -444,7 +428,6 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
                 displayView(position, -1);
                 return true;
             }
-            // TODO Auto-generated method stub
             return false;
         }
 
@@ -462,7 +445,6 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
     }
 
 	private void displayView(int position, int childPosition) {
-	    // TODO Auto-generated method stub
 	    Category category;
 	    Category parentCategory = getCategories().get(position);
         category = parentCategory;
@@ -702,7 +684,7 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
         String[] itemNames = getResources().getStringArray(itemNameResource);
         int[] itemPrices = getResources().getIntArray(itemPriceResource);
 		String[] itemids = getResources().getStringArray(itemDishIds);
-		String[] itemImages = getResources().getStringArray(itemImage);
+		//String[] itemImages = getResources().getStringArray(itemImage);
 
         for (int i = 0; itemNames != null && i < itemNames.length; i++) {
             Dish dish = new Dish();
@@ -728,7 +710,7 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
         String[] itemNames = getResources().getStringArray(itemNameResource);
         int[] itemPrices = getResources().getIntArray(itemPriceResource);
 		String[] itemids = getResources().getStringArray(itemDishIds);
-		String[] itemImages = getResources().getStringArray(itemImage);
+		//String[] itemImages = getResources().getStringArray(itemImage);
 
 		int i = 0;
         for ( i = 0; itemNames != null && i < itemNames.length - 1; i++) {
@@ -848,7 +830,6 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 		return false;
 	}
 
-
 	@Override
 	public boolean onQueryTextChange(String newText) {
 		if(newText == null || newText.isEmpty()) {
@@ -876,11 +857,6 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 	}
 
 	@Override
-	public void onBackPressed(){
-		//Do Nothing as of now
-	}
-
-	@Override
 	public boolean onSuggestionClick(int position) {
 		String suggestion = (String) suggestionAdapter.convertToString((Cursor) suggestionAdapter.getItem(position));
 		searchView.setQuery(suggestion, false);
@@ -895,12 +871,11 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 	
 	@Override
 	protected void onResume() {
-		// TODO Auto-generated method stub
 		super.onResume();
+		invalidateOptionsMenu();
 		int position = ApplicationState.getCategoryId((ApplicationState)getApplicationContext());
 		int childPosition = ApplicationState.getChildCategoryId((ApplicationState)getApplicationContext());
-		Log.e("on resume ",""+position + " " + childPosition);
-		
+		Log.i("on resume ",""+ position + " " + childPosition);
 		
 		if(position > 0) {
 			displayView(position, childPosition);

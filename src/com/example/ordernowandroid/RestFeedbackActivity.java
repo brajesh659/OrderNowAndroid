@@ -23,7 +23,7 @@ public class RestFeedbackActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setTitle("Feedback");
+		setTitle("Restaurant Feedback");
 		setContentView(R.layout.restaurant_rate_page);
 		ApplicationState applicationContext = (ApplicationState) getApplicationContext();
 		final String orderId = applicationContext.getActiveOrderId();
@@ -36,7 +36,6 @@ public class RestFeedbackActivity extends Activity {
 
 		resName.setText(restaurantName);
 		feedbackSubmit.setOnClickListener(new View.OnClickListener() {
-
 			@Override
 			public void onClick(View arg0) {
 				String feedText = feedbackText.getText().toString();
@@ -53,19 +52,21 @@ public class RestFeedbackActivity extends Activity {
 
 				new AsyncNetwork().execute(url);
 				Toast.makeText(getApplicationContext(),
-						"Thank you for visting us", Toast.LENGTH_LONG).show();
+						"Thank you for visting us!", Toast.LENGTH_LONG).show();
 
-				Intent intent = new Intent(getApplicationContext(),
-						QRCodeScannerActivity.class);
+				Intent intent = new Intent(getApplicationContext(), QRCodeScannerActivity.class);
 				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-				
 				startActivity(intent);
-
 				finish();
 			}
 		});
 
+	}
+	
+	@Override
+	public void onBackPressed() {
+		//Back Button Disabled on Feedback Page 
 	}
 
 }

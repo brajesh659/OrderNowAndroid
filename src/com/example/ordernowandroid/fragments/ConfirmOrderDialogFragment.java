@@ -17,7 +17,7 @@ import com.example.ordernowandroid.R;
 public class ConfirmOrderDialogFragment extends DialogFragment {
 
 	private static final String ALERT_DIALOG_TITLE = "Confirm Order";
-	private static final String ALERT_DIALOG_MESSAGE = "Are you sure you want to confirm the order ?";
+	private static final String ALERT_DIALOG_MESSAGE = "Are you sure you want to confirm the order?";
 
 	/*public static ConfirmOrderDialogFragment newInstance() {
 		ConfirmOrderDialogFragment frag = new ConfirmOrderDialogFragment();

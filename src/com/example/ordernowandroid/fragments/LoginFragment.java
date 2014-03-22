@@ -19,6 +19,7 @@ import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
+import com.util.Utilities;
 
 public class LoginFragment extends Fragment {
 
@@ -59,6 +60,9 @@ public class LoginFragment extends Fragment {
 
 							if (!OrderNowConstants.IS_DEBUG_MODE){
 								Intent intent = new Intent(applicationContext, QRCodeScannerActivity.class);
+								if(getActivity() == null)
+									Utilities.info("Get Activity == null");
+								
 								getActivity().startActivity(intent);
 								getActivity().finish();
 							} else {

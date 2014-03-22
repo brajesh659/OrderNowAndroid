@@ -16,7 +16,6 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
@@ -34,6 +33,7 @@ import com.util.URLBuilder;
 import com.util.Utilities;
 
 public class MyOrderActivity extends Activity {
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -51,9 +51,7 @@ public class MyOrderActivity extends Activity {
 		addMoreItemsBtn.setOnClickListener(new Button.OnClickListener() {           
 			@Override
 			public void onClick(View v) {
-				ApplicationState.setOpenCategoryDrawer((ApplicationState) v.getContext().getApplicationContext(), false);
-				Intent intent = new Intent(getApplicationContext(), FoodMenuActivity.class);
-				startActivity(intent);
+				onBackPressed();
 			}
 		});
 
@@ -97,26 +95,6 @@ public class MyOrderActivity extends Activity {
 		myOrderListView.setAdapter(myOrderAdapter);
 	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-
-		switch (item.getItemId()) {
-		// Respond to the action bar's Up/Home button
-		case android.R.id.home:
-			onBackPressed();
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
-
-	@Override
-	public void onBackPressed() {
-		//Start the FoodMenuActivity with updated MyOrderItem List
-		Intent intent = new Intent();
-		setResult(RESULT_OK, intent); // Activity finished ok, return the data
-		finish();
-	}
-
 	void showConfirmOrderDialog() {
 		new ConfirmOrderDialogFragment().show(getFragmentManager(), "confirmOrderEditText");
 	}
@@ -137,7 +115,6 @@ public class MyOrderActivity extends Activity {
         try {
             encoded = URLEncoder.encode(order,"UTF-8");
         } catch (UnsupportedEncodingException e1) {
-            // TODO Auto-generated catch block
             e1.printStackTrace();
         }
 		String url = new URLBuilder().addPath(URLBuilder.Path.order)
@@ -156,7 +133,6 @@ public class MyOrderActivity extends Activity {
 		} catch (ExecutionException e) {
 			e.printStackTrace();
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -169,7 +145,3 @@ public class MyOrderActivity extends Activity {
 	public void doNegativeClick() {}
 
 }
-
-
-
-
