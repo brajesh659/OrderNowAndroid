@@ -4,12 +4,17 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.graphics.Color;
+import android.view.View;
+import android.widget.LinearLayout;
 
 import com.data.menu.CustomerOrderWrapper;
 import com.data.menu.Dish;
+import com.example.ordernowandroid.R;
 import com.example.ordernowandroid.model.FoodMenuItem;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -25,6 +30,31 @@ public class OrderNowUtilities {
 			}
 		}
 		return foodMenuItem;
+	}
+	
+	
+	public static void showActivityOverlay(Context context, int layoutActiviy) {
+		final Dialog dialog = new Dialog(context,
+				android.R.style.Theme_Translucent_NoTitleBar);
+		//final Dialog dialog = new Dialog(context);
+		dialog.setContentView(layoutActiviy);
+
+		LinearLayout layout = (LinearLayout) dialog
+				.findViewById(R.id.llOverlay_activity);
+		layout.setBackgroundColor(Color.TRANSPARENT);
+		layout.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+
+				dialog.dismiss();
+
+			}
+
+		});
+
+		dialog.show();
+
 	}
 	
 	/*

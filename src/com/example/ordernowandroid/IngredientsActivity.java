@@ -135,9 +135,6 @@ public class IngredientsActivity extends Activity {
 			@Override
 			public void onItemClick(StaggeredGridView parent, View view,
 					int position, long id) {
-				Toast.makeText(getApplicationContext(),
-						"Swipe Left/Right For Other Options", Toast.LENGTH_LONG)
-						.show();
 				Intent intent = new Intent(getApplicationContext(),
 						IndividualIngredientActivity.class);
 				intent.putExtra(IndividualIngredientActivity.OPTION_PAGE,

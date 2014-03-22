@@ -15,9 +15,12 @@ import com.example.ordernowandroid.adapter.IndividualIngredientsAdapter;
 import com.example.ordernowandroid.adapter.IngredientListener;
 import com.example.ordernowandroid.model.FoodIngredient;
 import com.example.ordernowandroid.model.IngredientOptionView;
+import com.example.ordernowandroid.model.OrderNowConstants;
+import com.util.OrderNowUtilities;
 import com.util.Utilities;
 
-public class IndividualIngredientActivity extends Activity implements IngredientListener {
+public class IndividualIngredientActivity extends Activity implements
+		IngredientListener {
 
 	private FlipViewController flipView;
 	private IndividualIngredientsAdapter adapter;
@@ -25,7 +28,8 @@ public class IndividualIngredientActivity extends Activity implements Ingredient
 	public static final String OPTION_PAGE = "PageNumber";
 	int page = 0;
 	private String dishname;
-	//Map<String,OptionView> selectedOptions = new HashMap<String,OptionView>();
+	// Map<String,OptionView> selectedOptions = new
+	// HashMap<String,OptionView>();
 	private List<IngredientOptionView> selectedOptions;
 
 	/**
@@ -33,54 +37,66 @@ public class IndividualIngredientActivity extends Activity implements Ingredient
 	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		
+
 		super.onCreate(savedInstanceState);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		Bundle b = getIntent().getExtras();
 		if (b != null) {
 			page = b.getInt(OPTION_PAGE);
 			dishname = b.getString(IngredientsActivity.DISH_NAME);
-			ingList = (ArrayList<FoodIngredient>) b.getSerializable(IngredientsActivity.INGREDIENTS_LIST);
+			ingList = (ArrayList<FoodIngredient>) b
+					.getSerializable(IngredientsActivity.INGREDIENTS_LIST);
 			Utilities.info("ing inside " + ingList.toString());
 		}
 		page++;
 
-		selectedOptions = ApplicationState.getDishSelectedIngredientList((ApplicationState)getApplicationContext(),dishname);
-		if(selectedOptions == null) {
+		selectedOptions = ApplicationState.getDishSelectedIngredientList(
+				(ApplicationState) getApplicationContext(), dishname);
+		if (selectedOptions == null) {
 			selectedOptions = new ArrayList<IngredientOptionView>();
 		}
-		//adding dummay page in start and end to flip to previous activity
+		// adding dummay page in start and end to flip to previous activity
 		ingList.add(new FoodIngredient(new Ingredient(dishname, null)));
-        ingList.add(0, new FoodIngredient(new Ingredient(dishname, null)));
-        
+		ingList.add(0, new FoodIngredient(new Ingredient(dishname, null)));
+
 		setTitle(ingList.get(page).getTitle());
 
 		flipView = new FlipViewController(this, FlipViewController.HORIZONTAL);
-		
 
 		adapter = new IndividualIngredientsAdapter(this, ingList, this);
 		flipView.setAdapter(adapter);
 		flipView.setAnimationBitmapFormat(Bitmap.Config.RGB_565);
-		//flipView.setBackgroundColor(getResources().getColor(R.color.chartreuse));
+		// flipView.setBackgroundColor(getResources().getColor(R.color.chartreuse));
 		flipView.setSelection(page);
-		flipView.setBackgroundColor(getResources().getColor(R.color.blanchedalmond));
+		flipView.setBackgroundColor(getResources().getColor(
+				R.color.blanchedalmond));
 
 		flipView.setOnViewFlipListener(new FlipViewController.ViewFlipListener() {
 			@Override
-            public void onViewFlipped(View view, int position) {
-			    //dummy pages
-                if ((position == adapter.getCount()-1) || (position == 0)) {
-                    onBackPressed();
-                    return;
-                } else {
-                    setTitle(ingList.get(position).getTitle());
-                    page = position;
-                }
+			public void onViewFlipped(View view, int position) {
+				// dummy pages
+				if ((position == adapter.getCount() - 1) || (position == 0)) {
+					onBackPressed();
+					return;
+				} else {
+					setTitle(ingList.get(position).getTitle());
+					page = position;
+				}
 
-            }
+			}
 		});
 
 		setContentView(flipView);
+		if (!OrderNowConstants.FALSE.equals(OrderNowUtilities
+				.getKeyFromSharedPreferences(getApplicationContext(),
+						OrderNowConstants.KEY_INGREDIENTS_SHOW_SWIPTE_TUT))) {
+			OrderNowUtilities.showActivityOverlay(this,
+					R.layout.overlay_activity);
+			OrderNowUtilities.putKeyToSharedPreferences(
+					getApplicationContext(),
+					OrderNowConstants.KEY_INGREDIENTS_SHOW_SWIPTE_TUT,
+					OrderNowConstants.FALSE);
+		}
 	}
 
 	@Override
@@ -109,25 +125,29 @@ public class IndividualIngredientActivity extends Activity implements Ingredient
 
 	@Override
 	public boolean isSelected(IngredientOptionView optionView) {
-		if(selectedOptions.contains(optionView)) {
+		if (selectedOptions.contains(optionView)) {
 			return true;
 		}
 		return false;
 	}
-	
 
 	@Override
-	public void updateIngredient(IngredientOptionView optionView, boolean checked) {
-		if(checked) {
+	public void updateIngredient(IngredientOptionView optionView,
+			boolean checked) {
+		if (checked) {
 			selectedOptions.add(optionView);
-			ApplicationState.addDishSelectedIngredient((ApplicationState)getApplicationContext(), dishname, optionView);
+			ApplicationState.addDishSelectedIngredient(
+					(ApplicationState) getApplicationContext(), dishname,
+					optionView);
 		} else {
-			if(selectedOptions.contains(optionView)) {
+			if (selectedOptions.contains(optionView)) {
 				selectedOptions.remove(optionView);
 			}
-			ApplicationState.removeDishSelectedIngredient((ApplicationState)getApplicationContext(), dishname, optionView);
+			ApplicationState.removeDishSelectedIngredient(
+					(ApplicationState) getApplicationContext(), dishname,
+					optionView);
 		}
-		
+
 	}
 
 }

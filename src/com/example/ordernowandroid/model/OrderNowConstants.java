@@ -18,6 +18,12 @@ public class OrderNowConstants {
     public static final String KEY_ACTIVE_RESTAURANT_ID = "ActiveRestaurantID";
 	public static final String KEY_ACTIVE_RESTAURANT_NAME = "ActiveRestaurantName";
 	public static final String KEY_ACTIVE_SUB_ORDER_LIST = "ActiveSubOrderList";
+
+	public static final String KEY_INGREDIENTS_SHOW_SWIPTE_TUT = "IngredientsSwipeHelp";
+
+	public static final String FALSE = "false";
+
+	public static final String TRUE = "true";
 	
     static {
         actionToOrderStatusMap.put("com.example.orderReceived", OrderStatus.Recieved);
