@@ -1,5 +1,6 @@
 package com.example.ordernowandroid.fragments;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -19,7 +20,6 @@ import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
-import com.util.Utilities;
 
 public class LoginFragment extends Fragment {
 
@@ -48,6 +48,7 @@ public class LoginFragment extends Fragment {
 
 	private void onSessionStateChange(final Session session, SessionState state, Exception exception) {
 		final ApplicationState applicationContext = (ApplicationState) getActivity().getApplicationContext();
+		final Activity activityInstance = getActivity();
 		if (state.isOpened()) {
 			Request request = Request.newMeRequest(session, new Request.GraphUserCallback() {
 				// callback after Graph API response with user object
@@ -60,17 +61,14 @@ public class LoginFragment extends Fragment {
 
 							if (!OrderNowConstants.IS_DEBUG_MODE){
 								Intent intent = new Intent(applicationContext, QRCodeScannerActivity.class);
-								if(getActivity() == null)
-									Utilities.info("Get Activity == null");
-								
-								getActivity().startActivity(intent);
-								getActivity().finish();
+								activityInstance.startActivity(intent);
+								activityInstance.finish();
 							} else {
 								ApplicationState.setTableId(applicationContext, "T1");
 								ApplicationState.setRestaurantId(applicationContext, "R1");
 								Intent intent = new Intent(applicationContext, FoodMenuActivity.class);
-								getActivity().startActivity(intent);				
-								getActivity().finish();
+								activityInstance.startActivity(intent);				
+								activityInstance.finish();
 							}
 						}
 					}

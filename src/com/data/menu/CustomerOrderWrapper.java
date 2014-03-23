@@ -12,7 +12,6 @@ import com.example.ordernowandroid.model.Order;
 import com.example.ordernowandroid.model.OrderNowConstants;
 import com.example.ordernowandroid.model.OrderStatus;
 import com.parse.ParseInstallation;
-import com.util.Utilities;
 
 /**
  * 
@@ -54,7 +53,6 @@ public class CustomerOrderWrapper implements Serializable {
 
         String restaurantId = ApplicationState.getRestaurantId(applicationContext);
         CharSequence text = ParseInstallation.getCurrentInstallation().getObjectId();
-        Utilities.info("text.toString()" + text.toString());
         CustomerOrder customerOrder = new CustomerOrder(dishes, restaurantId, text.toString(), ApplicationState.getTableId(applicationContext), orderNote);
         return customerOrder;
     }
