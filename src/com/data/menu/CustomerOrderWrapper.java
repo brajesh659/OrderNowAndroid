@@ -12,6 +12,7 @@ import com.example.ordernowandroid.model.Order;
 import com.example.ordernowandroid.model.OrderNowConstants;
 import com.example.ordernowandroid.model.OrderStatus;
 import com.parse.ParseInstallation;
+import com.util.Utilities;
 
 /**
  * 
@@ -34,7 +35,7 @@ public class CustomerOrderWrapper implements Serializable {
         this.orderNote = orderNote;
     }
 
-    public CustomerOrder getCustomerOrder(ApplicationState applicationState) {
+    public CustomerOrder getCustomerOrder(ApplicationState applicationContext) {
         OrderDish orderDish;
         Map<String, OrderDish> dishes = new HashMap<String, OrderDish>();
         for (MyOrderItem myOrderItem : myOrderItemList) {
@@ -46,14 +47,15 @@ public class CustomerOrderWrapper implements Serializable {
             // Clean Dish Ingredient if present
             if (myOrderItem.getFoodMenuItem().isItemCustomizable()) {
                 orderDish.setSelectedOptions(myOrderItem.getFoodMenuItem().getCurrentSelectedIngredients());
-                ApplicationState.cleanDishSelectedIngredients(applicationState, myOrderItem.getFoodMenuItem().getItemName());
+                ApplicationState.cleanDishSelectedIngredients(applicationContext, myOrderItem.getFoodMenuItem().getItemName());
             }
             dishes.put(myOrderItem.getFoodMenuItem().getDishId(), orderDish);
         }
 
-        String restaurantId = ApplicationState.getRestaurantId(applicationState);
+        String restaurantId = ApplicationState.getRestaurantId(applicationContext);
         CharSequence text = ParseInstallation.getCurrentInstallation().getObjectId();
-        CustomerOrder customerOrder = new CustomerOrder(dishes, restaurantId, text.toString(), ApplicationState.getTableId(applicationState), orderNote);
+        Utilities.info("text.toString()" + text.toString());
+        CustomerOrder customerOrder = new CustomerOrder(dishes, restaurantId, text.toString(), ApplicationState.getTableId(applicationContext), orderNote);
         return customerOrder;
     }
 

@@ -14,7 +14,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.data.menu.MenuPropertyKey;
 import com.data.menu.MenuPropertyValue;
@@ -27,7 +26,6 @@ public class FilterMenuActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         setTitle("Filter");
         getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -35,7 +33,6 @@ public class FilterMenuActivity extends Activity {
         LinearLayout ll = new LinearLayout(this);
         ll.setOrientation(LinearLayout.VERTICAL);
         ll.setBackgroundColor(getResources().getColor(R.color.white));
-
         
         final MenuFilter menuFilter = ApplicationState.getMenuFilter((ApplicationState) getApplicationContext());
         selectedFilters = menuFilter.getFilterProperties();
@@ -104,8 +101,6 @@ public class FilterMenuActivity extends Activity {
             @Override
             public void onClick(View v) {
                 menuFilter.addFilter(selectedFilters);
-                Toast.makeText(getApplicationContext(), "apply " + menuFilter.getFilterProperties().toString(),
-                        Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(getApplicationContext(), FoodMenuActivity.class);
                 startActivity(intent);
                 finish();

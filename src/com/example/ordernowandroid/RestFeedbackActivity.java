@@ -27,7 +27,7 @@ public class RestFeedbackActivity extends Activity {
 		setContentView(R.layout.restaurant_rate_page);
 		ApplicationState applicationContext = (ApplicationState) getApplicationContext();
 		final String orderId = applicationContext.getActiveOrderId();
-		String restaurantName = applicationContext.getRestaurantName();
+		final String restaurantName = applicationContext.getRestaurantName();
 
 		TextView resName = (TextView) findViewById(R.id.restName);
 		final RatingBar ratingBar = (RatingBar) findViewById(R.id.restRatingBar);
@@ -52,7 +52,7 @@ public class RestFeedbackActivity extends Activity {
 
 				new AsyncNetwork().execute(url);
 				Toast.makeText(getApplicationContext(),
-						"Thank you for visting us!", Toast.LENGTH_LONG).show();
+						"Thank you for visting " + restaurantName + "!", Toast.LENGTH_LONG).show();
 
 				Intent intent = new Intent(getApplicationContext(), QRCodeScannerActivity.class);
 				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

@@ -1,13 +1,11 @@
 package com.example.ordernowandroid.adapter;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,10 +17,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.data.menu.FoodType;
-import com.data.menu.MenuPropertyKey;
-import com.data.menu.MenuPropertyValue;
-import com.data.menu.Restaurant;
-import com.example.ordernowandroid.ApplicationState;
 import com.example.ordernowandroid.IngredientsActivity;
 import com.example.ordernowandroid.R;
 import com.example.ordernowandroid.filter.MenuFilter;
@@ -32,12 +26,6 @@ import com.example.ordernowandroid.model.FoodMenuItem;
 import com.example.ordernowandroid.model.OrderNowConstants;
 import com.google.gson.Gson;
 
-/**
- * 
- * @author Rohit Creating a CustomAdapter since the ArrayAdapter by default only
- *         displays the toString() implementation of the object for each list
- *         row
- */
 public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements Filterable {
 
     private ArrayList<FoodMenuItem> foodMenuItems;

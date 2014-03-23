@@ -36,7 +36,8 @@ public class MyOrderHistoryAdapter extends ArrayAdapter<CustomerOrderWrapper> {
 			LayoutInflater vi = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			convertView = vi.inflate(R.layout.my_order_history_item, null);
 		}
-		ApplicationState applicationContext = (ApplicationState) getContext();
+		
+		final ApplicationState applicationContext = (ApplicationState) getContext().getApplicationContext();
 		TextView orderDateView = (TextView) convertView.findViewById(R.id.orderDate);
 		String orderDate = myOrderHistoryList.get(position).getCustomerOrder(applicationContext).getOrderNote(); //TODO: Change this to Order Date
 		orderDateView.setText(orderDate);
@@ -50,9 +51,9 @@ public class MyOrderHistoryAdapter extends ArrayAdapter<CustomerOrderWrapper> {
 				foodItemQtyMap.put("Cream of Veg", new MyOrderItem(new FoodMenuItem(new Dish("d0", "Cream of Veg", null, null, 95, FoodType.Veg, true)), 2));
 				foodItemQtyMap.put("Roasted Bell Pepper Soup", new MyOrderItem(new FoodMenuItem(new Dish("d1", "Roasted Bell Pepper Soup", null, null, 115, FoodType.Veg, true)), 3));
 				
-				ApplicationState.setFoodMenuItemQuantityMap((ApplicationState)v.getContext().getApplicationContext(), foodItemQtyMap);
+				ApplicationState.setFoodMenuItemQuantityMap(applicationContext, foodItemQtyMap);
 				Intent intent = new Intent(getContext(), MyOrderActivity.class);
-				v.getContext().startActivity(intent);
+				getContext().startActivity(intent);
 			}
 		});
 		

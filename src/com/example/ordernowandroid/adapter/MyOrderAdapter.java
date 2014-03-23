@@ -32,7 +32,6 @@ public class MyOrderAdapter extends ArrayAdapter<MyOrderItem> {
 		super(context, R.layout.my_order, myOrderItemList);
 		applicationState = (ApplicationState) context.getApplicationContext();
 		this.myOrderItemList = myOrderItemList;
-
 	}
 
 	@Override
@@ -99,7 +98,7 @@ public class MyOrderAdapter extends ArrayAdapter<MyOrderItem> {
 					//Show Dialog and Remove Item from ListView on Positive Button Action
 					AlertDialog.Builder builder = new AlertDialog.Builder(getContext());            
 					builder.setTitle("Remove Item");
-					builder.setMessage("Are you sure you want to remove this item from the order ?");
+					builder.setMessage("Are you sure you want to remove this item from the order?");
 					builder.setPositiveButton(R.string.ok, new AlertDialog.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {

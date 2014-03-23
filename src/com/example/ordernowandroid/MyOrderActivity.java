@@ -52,7 +52,10 @@ public class MyOrderActivity extends Activity {
 		addMoreItemsBtn.setOnClickListener(new Button.OnClickListener() {           
 			@Override
 			public void onClick(View v) {
-				onBackPressed();
+				//Cannot use onBackPressed() here due to dependency with Past Orders Page
+				ApplicationState.setOpenCategoryDrawer((ApplicationState) v.getContext().getApplicationContext(), false);
+				Intent intent = new Intent(getApplicationContext(), FoodMenuActivity.class);
+				startActivity(intent);
 			}
 		});
 

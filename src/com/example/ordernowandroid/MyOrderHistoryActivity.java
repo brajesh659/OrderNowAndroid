@@ -34,7 +34,7 @@ public class MyOrderHistoryActivity extends Activity {
 		}
 
 		ListView myOrderHistoryListView = (ListView) findViewById(R.id.orderHistoryList);
-		MyOrderHistoryAdapter myOrderHistoryAdapter = new MyOrderHistoryAdapter(applicationContext, myOrderHistoryList);
+		MyOrderHistoryAdapter myOrderHistoryAdapter = new MyOrderHistoryAdapter(this, myOrderHistoryList);
 		myOrderHistoryListView.setAdapter(myOrderHistoryAdapter);
 	}
 

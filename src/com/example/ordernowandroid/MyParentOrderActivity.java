@@ -74,7 +74,7 @@ public class MyParentOrderActivity extends Activity {
 		totalAmount.setText(OrderNowConstants.INDIAN_RUPEE_UNICODE + " " + Float.toString(totalOrderAmount));
 
 		ListView subOrderListView = (ListView) findViewById(R.id.subOrderList);
-		MyParentOrderAdapter myParentOrderAdapter = new MyParentOrderAdapter((ApplicationState)getApplicationContext(), subOrderList);
+		MyParentOrderAdapter myParentOrderAdapter = new MyParentOrderAdapter(this, subOrderList);
 		subOrderListView.setAdapter(myParentOrderAdapter);
 		myParentOrderAdapter.notifyDataSetChanged();
 		
@@ -87,7 +87,7 @@ public class MyParentOrderActivity extends Activity {
 				
 				final ApplicationState applicationContext = (ApplicationState) getApplicationContext();
 				if(ApplicationState.getFoodMenuItemQuantityMap(applicationContext) != null && ApplicationState.getFoodMenuItemQuantityMap(applicationContext).size() > 0){
-					builder.setMessage("You have items waiting to be ordered in the Cart. Would you still like to request for the bill?");
+					builder.setMessage("You have items waiting to be ordered in the cart. Would you still like to request for the bill?");
 				} else {
 					builder.setMessage("Would you like to request for the bill?");
 				}

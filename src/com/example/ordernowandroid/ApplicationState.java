@@ -354,6 +354,4 @@ public class ApplicationState extends Application {
 		applicationContext.setActiveOrderId(orderId);
 	}
 
-
-
 }

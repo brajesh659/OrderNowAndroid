@@ -13,6 +13,7 @@ import android.view.KeyEvent;
 
 import com.example.ordernowandroid.fragments.LoginFragment;
 import com.parse.ParseAnalytics;
+import com.parse.ParseInstallation;
 
 public class MainActivity extends FragmentActivity {
 
@@ -39,7 +40,7 @@ public class MainActivity extends FragmentActivity {
 			loginFragment = (LoginFragment) getSupportFragmentManager().findFragmentById(android.R.id.content);
 		}
 		
-	    //ParseInstallation.getCurrentInstallation().saveInBackground();
+	    ParseInstallation.getCurrentInstallation().saveInBackground();
 	    ParseAnalytics.trackAppOpened(getIntent());
 		
 	}

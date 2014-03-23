@@ -169,9 +169,11 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 			OrderNowUtilities.putKeyToSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_RESTAURANT_ID, applicationContext.getRestaurantId());
 			
 			if (savedInstanceState == null) {
-				// on first time display view for first menu item
-			    Log.i("on resume ","in saved instance check ");
-				displayView(0, 0);
+			    if (ApplicationState.getCategoryId(applicationContext)> 0) {
+			    	displayView(ApplicationState.getCategoryId(applicationContext), 0);	
+			    } else {
+			    	displayView(0, 0);
+			    }
 			}
 			mDrawerList.setOnGroupClickListener(new SlideMenuClickListener());
 			mDrawerList.setOnChildClickListener(new SlideMenuChildClickListener());
@@ -465,16 +467,14 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
             menuFragment = MenuFragment.newInstance(category);
         }
 	    FragmentManager fragmentManager = getSupportFragmentManager();
-	    fragmentManager.beginTransaction().replace(R.id.frame_container, menuFragment).addToBackStack(null).commit();
-	    CustomDbAdapter dbManager = CustomDbAdapter
-				.getInstance(getBaseContext());
+	    fragmentManager.beginTransaction().replace(R.id.frame_container, menuFragment).commit();
+	    CustomDbAdapter dbManager = CustomDbAdapter.getInstance(getBaseContext());
 		dh = new RestaurantHelper(dbManager); 	    
 	    mDrawerList.setItemChecked(position, true);
         mDrawerList.setSelection(position);
         ApplicationState.setCategoryId((ApplicationState)getApplicationContext(), position);
         setTitle(category.getName());
         mDrawerLayout.closeDrawer(mDrawerList);
-        
 	}
 
 	@Override
@@ -842,7 +842,7 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 			//IndividualMenuTabFragment.newInstance("Search", searchDishList);
 			Fragment fragment = IndividualMenuTabFragment.newInstance("Search", searchDishList, null);
 			FragmentManager fragmentManager = getSupportFragmentManager();
-			fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).addToBackStack(null).commit();
+			fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit();
 			setTitle(newText);
 			return true;
 		}
@@ -876,11 +876,16 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 		invalidateOptionsMenu();
 		int position = ApplicationState.getCategoryId((ApplicationState)getApplicationContext());
 		int childPosition = ApplicationState.getChildCategoryId((ApplicationState)getApplicationContext());
-		Log.i("on resume ",""+ position + " " + childPosition);
+		Log.i("on resume", position + " " + childPosition);
 		
 		if(position > 0) {
 			displayView(position, childPosition);
 		}
 	}
-
+	
+	@Override
+	public void onBackPressed() {
+		mDrawerLayout.openDrawer(Gravity.LEFT);
+	}
+	
 }

@@ -74,7 +74,7 @@ public class MyParentOrderAdapter extends ArrayAdapter<CustomerOrderWrapper> {
 
 			list.addView(line);
 		}
-		ApplicationState applicationContext = (ApplicationState) getContext();
+		ApplicationState applicationContext = (ApplicationState) getContext().getApplicationContext();
 		String subOrderNote = customerOrderWrapper.getCustomerOrder(applicationContext).getOrderNote();
 
 		if(subOrderNote != null) {
