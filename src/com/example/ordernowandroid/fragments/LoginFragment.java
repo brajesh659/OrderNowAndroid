@@ -56,7 +56,7 @@ public class LoginFragment extends Fragment {
 				public void onCompleted(GraphUser user, Response response) {
 					if (session == Session.getActiveSession()) {
 						if (user != null) {
-							applicationContext.setUserName(user.getFirstName());
+							applicationContext.setUserName(user.getFirstName() + " " + user.getLastName());
 							applicationContext.setProfilePictureId(user.getId());
 
 							if (!OrderNowConstants.IS_DEBUG_MODE){

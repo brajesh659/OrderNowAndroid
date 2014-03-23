@@ -3,36 +3,73 @@
     xmlns:facebook="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
+    android:weightSum="1"
     android:orientation="vertical" >
 
-    <com.facebook.widget.ProfilePictureView
-        android:id="@+id/selection_profile_pic"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center_horizontal"
-        facebook:preset_size="small" />
-
-    <TextView
-        android:id="@+id/welcome_text"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="@string/welcome_text" />
+        android:layout_weight="0.2"
+        android:gravity="center_vertical|center_horizontal"
+        android:orientation="horizontal" >
 
-    <Button
-        android:id="@+id/qrscan_btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="launchQRScanner"
-        android:text="@string/scan_qr_codes" />
+        <com.facebook.widget.ProfilePictureView
+            android:id="@+id/selection_profile_pic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            facebook:preset_size="small" >
+        </com.facebook.widget.ProfilePictureView>
+
+        <TextView
+            android:id="@+id/selection_profile_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:gravity="center_vertical|center_horizontal"
+            android:textSize="20sp" />
+    </LinearLayout>
     
-    <Button
-        android:id="@+id/open_res_menu"
+    <ImageView
+        android:id="@+id/rest_image"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="openRestaurantMenu"
-        android:text="@string/open_res_menu" />
+        android:scaleType="fitXY"
+        android:contentDescription="Restaurant Image"
+        android:layout_weight="0.5"
+        android:src="@drawable/rest_food" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="bottom"
+        android:layout_weight="0.3" >
+
+        <TextView
+            android:id="@+id/welcome_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="top|center"
+            android:layout_marginBottom="10dp"
+            android:text="@string/welcome_text" />
+
+        <Button
+            android:id="@+id/qrscan_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/welcome_text"
+            android:onClick="launchQRScanner"
+            android:layout_marginBottom="10dp"
+            android:text="@string/scan_qr_codes" />
+
+        <Button
+            android:id="@+id/open_res_menu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/welcome_text"
+            android:onClick="openRestaurantMenu"
+            android:layout_marginBottom="10dp"
+            android:text="@string/open_res_menu" />
+    </RelativeLayout>
 
 </LinearLayout>

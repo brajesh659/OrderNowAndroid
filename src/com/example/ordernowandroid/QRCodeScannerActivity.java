@@ -36,18 +36,18 @@ public class QRCodeScannerActivity extends Activity {
 
 		ApplicationState applicationContext = (ApplicationState) getApplicationContext();
 		TextView welcome = (TextView) findViewById(R.id.welcome_text);
+		TextView custName = (TextView) findViewById(R.id.selection_profile_name);
 		Button qrCodeButton = (Button) findViewById(R.id.qrscan_btn);
 		Button openRestMenuButton = (Button) findViewById(R.id.open_res_menu);
-		String greetCustomerName = "";
 		if(applicationContext.getUserName() != null && applicationContext.getUserName().trim() != "") {
-			greetCustomerName = "Hello " + applicationContext.getUserName() + "! ";
+			custName.setText(applicationContext.getUserName());
 		}
 		if(activeSessionPresent()) {
-			welcome.setText(greetCustomerName + " You are currently logged in " + activeRestName + " restaurant.");
+			welcome.setText(" You are currently logged in " + activeRestName + " restaurant.");
 			qrCodeButton.setVisibility(View.GONE);
 			openRestMenuButton.setVisibility(View.VISIBLE);
 		} else {
-			welcome.setText(greetCustomerName + welcome.getText());
+			welcome.setText( welcome.getText());
 			qrCodeButton.setVisibility(View.VISIBLE);
 			openRestMenuButton.setVisibility(View.GONE);
 		}
