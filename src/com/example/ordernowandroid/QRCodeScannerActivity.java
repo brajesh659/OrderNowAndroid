@@ -7,6 +7,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -55,6 +57,30 @@ public class QRCodeScannerActivity extends Activity {
 		if(applicationContext.getProfilePictureId() != null) {
 			profilePictureView = (ProfilePictureView) findViewById(R.id.selection_profile_pic);
 			profilePictureView.setProfileId(applicationContext.getProfilePictureId());
+		}
+		
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.qr_page_menu, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.allhistorybutton:
+			Toast.makeText(this, "All History Not Implemented yet", Toast.LENGTH_SHORT).show();
+			return true;
+		case R.id.signOut :
+			Toast.makeText(this, "Sign Out Not Implemented yet", Toast.LENGTH_SHORT).show();
+			return true;
+		case R.id.sendAppFeedback :
+			Toast.makeText(this, "Send App Feedbak Not Implemented yet", Toast.LENGTH_SHORT).show();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
 		}
 		
 	}

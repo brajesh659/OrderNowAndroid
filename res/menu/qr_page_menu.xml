@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+     <item
+        android:id="@+id/allhistorybutton"
+        android:icon="@android:drawable/ic_menu_recent_history"
+        android:orderInCategory="100"
+        android:showAsAction="ifRoom"
+        android:title="@string/history_des"/>
+     
+    <item
+        android:id="@+id/signOut"
+        android:icon="@android:drawable/ic_lock_power_off"
+        android:orderInCategory="110"
+        android:showAsAction="ifRoom"
+        android:title="@string/signOut"/>
+   
+    <item
+        android:id="@+id/sendAppFeedback"
+        android:icon="@android:drawable/ic_menu_send"
+        android:orderInCategory="120"
+        android:showAsAction="ifRoom"
+        android:title="@string/send_App_Feedback"/>
+
+</menu>

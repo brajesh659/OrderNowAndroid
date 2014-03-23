@@ -41,6 +41,8 @@
     <string name="callWaiter">"Call Waiter"</string>
     <string name="rateUs">"Rate Us"</string>
     <string name="submit">"Submit"</string>
+    <string name="signOut">"Sign Out"</string>
+    <string name="send_App_Feedback">"Send App Feedback"</string>
     
     
     <string-array name="ingredients_title">
