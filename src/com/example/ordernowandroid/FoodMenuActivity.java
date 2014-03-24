@@ -883,9 +883,4 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 		}
 	}
 	
-	@Override
-	public void onBackPressed() {
-		mDrawerLayout.openDrawer(Gravity.LEFT);
-	}
-	
 }

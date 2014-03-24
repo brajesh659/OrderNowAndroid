@@ -26,6 +26,11 @@ public class QRCodeScannerActivity extends Activity {
 
 	private static final int ZBAR_QR_SCANNER_REQUEST = 1;
 	private ProfilePictureView profilePictureView;
+	private TextView welcome;
+	private TextView custName;
+	private Button qrCodeButton;
+	private Button openRestMenuButton;
+
 	private String activeTableId;
 	private String activeRestId;
 	private String activeRestName;
@@ -36,16 +41,27 @@ public class QRCodeScannerActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_qr_code_scanner);
 
+		welcome = (TextView) findViewById(R.id.welcome_text);
+		custName = (TextView) findViewById(R.id.selection_profile_name);
+		qrCodeButton = (Button) findViewById(R.id.qrscan_btn);
+		openRestMenuButton = (Button) findViewById(R.id.open_res_menu);
+
 		ApplicationState applicationContext = (ApplicationState) getApplicationContext();
-		TextView welcome = (TextView) findViewById(R.id.welcome_text);
-		TextView custName = (TextView) findViewById(R.id.selection_profile_name);
-		Button qrCodeButton = (Button) findViewById(R.id.qrscan_btn);
-		Button openRestMenuButton = (Button) findViewById(R.id.open_res_menu);
 		if(applicationContext.getUserName() != null && applicationContext.getUserName().trim() != "") {
 			custName.setText(applicationContext.getUserName());
 		}
+
+		if(applicationContext.getProfilePictureId() != null) {
+			profilePictureView = (ProfilePictureView) findViewById(R.id.selection_profile_pic);
+			profilePictureView.setProfileId(applicationContext.getProfilePictureId());
+		}
+
+		checkForActiveSessionAndUpdateUI();	
+	}
+
+	private void checkForActiveSessionAndUpdateUI() {
 		if(activeSessionPresent()) {
-			welcome.setText(" You are currently logged in " + activeRestName + " restaurant.");
+			welcome.setText("You are currently logged in " + activeRestName + " restaurant.");
 			qrCodeButton.setVisibility(View.GONE);
 			openRestMenuButton.setVisibility(View.VISIBLE);
 		} else {
@@ -53,20 +69,14 @@ public class QRCodeScannerActivity extends Activity {
 			qrCodeButton.setVisibility(View.VISIBLE);
 			openRestMenuButton.setVisibility(View.GONE);
 		}
-		
-		if(applicationContext.getProfilePictureId() != null) {
-			profilePictureView = (ProfilePictureView) findViewById(R.id.selection_profile_pic);
-			profilePictureView.setProfileId(applicationContext.getProfilePictureId());
-		}
-		
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.qr_page_menu, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -82,7 +92,7 @@ public class QRCodeScannerActivity extends Activity {
 		default:
 			return super.onOptionsItemSelected(item);
 		}
-		
+
 	}
 
 	private boolean activeSessionPresent() {
@@ -96,7 +106,8 @@ public class QRCodeScannerActivity extends Activity {
 		return false;
 	}
 
-	public void launchQRScanner(View v) {        
+	public void launchQRScanner(View v) {    
+
 		if (isCameraAvailable()) {
 			Intent intent = new Intent(this, ZBarScannerActivity.class);
 			intent.putExtra(ZBarConstants.SCAN_MODES, new int[]{Symbol.QRCODE});
@@ -105,8 +116,9 @@ public class QRCodeScannerActivity extends Activity {
 			Toast.makeText(this, "Rear Facing Camera Unavailable", Toast.LENGTH_SHORT).show();
 		}    	        
 	}
-	
+
 	public void openRestaurantMenu(View v) {
+
 		if(activeTableId != null && activeTableId.trim() != "") {
 			ApplicationState applicationContext = (ApplicationState) getApplicationContext();
 			ApplicationState.setTableId(applicationContext, activeTableId);
@@ -117,7 +129,6 @@ public class QRCodeScannerActivity extends Activity {
 
 			Intent intent = new Intent(this, FoodMenuActivity.class);
 			startActivity(intent);				
-			finish();				
 		} 
 	}
 
@@ -141,14 +152,13 @@ public class QRCodeScannerActivity extends Activity {
 				ApplicationState.setTableId(applicationContext, tableId);
 				ApplicationState.setRestaurantId(applicationContext, restId);
 				ApplicationState.setOpenCategoryDrawer(applicationContext, true);
-				
+
 				//clean order stuff if present
 				ApplicationState.cleanSubOrderList(applicationContext);
 				ApplicationState.cleanFoodMenuItemQuantityMap(applicationContext);				
 
 				Intent intent = new Intent(this, FoodMenuActivity.class);
 				startActivity(intent);				
-				finish();	
 			} else if(resultCode == RESULT_CANCELED && data != null) {
 				String error = data.getStringExtra(ZBarConstants.ERROR_INFO);
 				Utilities.error("Error Message: " + error);
@@ -157,5 +167,10 @@ public class QRCodeScannerActivity extends Activity {
 			break;
 		}
 	}
-	
+
+	@Override
+	protected void onResume() {
+		checkForActiveSessionAndUpdateUI();	
+		super.onResume();
+	}
 }
