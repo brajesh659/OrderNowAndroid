@@ -18,6 +18,7 @@ import com.data.menu.CustomerOrderWrapper;
 import com.dm.zbar.android.scanner.ZBarConstants;
 import com.dm.zbar.android.scanner.ZBarScannerActivity;
 import com.example.ordernowandroid.model.OrderNowConstants;
+import com.facebook.Session;
 import com.facebook.widget.ProfilePictureView;
 import com.util.OrderNowUtilities;
 import com.util.Utilities;
@@ -84,7 +85,14 @@ public class QRCodeScannerActivity extends Activity {
 			Toast.makeText(this, "All History Not Implemented yet", Toast.LENGTH_SHORT).show();
 			return true;
 		case R.id.signOut :
-			Toast.makeText(this, "Sign Out Not Implemented yet", Toast.LENGTH_SHORT).show();
+			Session session = Session.getActiveSession();
+			if (session != null && session.isOpened()) {
+				session.closeAndClearTokenInformation();
+			}
+			Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+			startActivity(intent);
+			finish();
+			Toast.makeText(this, "Signed Out Successfully", Toast.LENGTH_SHORT).show();
 			return true;
 		case R.id.sendAppFeedback :
 			Toast.makeText(this, "Send App Feedbak Not Implemented yet", Toast.LENGTH_SHORT).show();
