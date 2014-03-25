@@ -95,7 +95,12 @@ public class QRCodeScannerActivity extends Activity {
 			Toast.makeText(this, "Signed Out Successfully", Toast.LENGTH_SHORT).show();
 			return true;
 		case R.id.sendAppFeedback :
-			Toast.makeText(this, "Send App Feedbak Not Implemented yet", Toast.LENGTH_SHORT).show();
+			Intent Email = new Intent(Intent.ACTION_SEND);
+	        Email.setType("text/email");
+	        Email.putExtra(Intent.EXTRA_EMAIL, new String[] { "ordernowinfo@gmail.com" });
+	        Email.putExtra(Intent.EXTRA_SUBJECT, "Feedback For OrderNow Android");
+	        Email.putExtra(Intent.EXTRA_TEXT, "Hi ,\n" + "");
+	        startActivity(Intent.createChooser(Email, "Choose an Email Client "));
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
