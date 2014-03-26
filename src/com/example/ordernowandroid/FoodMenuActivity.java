@@ -70,6 +70,7 @@ import com.example.ordernowandroid.model.CategoryNavDrawerItem;
 import com.example.ordernowandroid.model.FoodMenuItem;
 import com.example.ordernowandroid.model.MyOrderItem;
 import com.example.ordernowandroid.model.OrderNowConstants;
+import com.parse.ParseAnalytics;
 import com.util.AsyncNetwork;
 import com.util.OrderNowUtilities;
 import com.util.URLBuilder;
@@ -98,7 +99,9 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.food_menu);
-
+		
+		ParseAnalytics.trackAppOpened(getIntent());
+		
 		ApplicationState applicationContext = (ApplicationState) getApplicationContext();
 
 		mTitle = getTitle();
@@ -460,7 +463,7 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 	    }
 	   // Toast.makeText(this, category.toString(), Toast.LENGTH_LONG).show();
 	    Fragment menuFragment = null;
-	    Log.i("FoodMenuActiviry.class", category.toString());
+	    Utilities.info("called displayView "+position + "  " + childPosition +" "+category.toString());
         if (category.getCategoryLevelFilter().getFilterName() == MenuPropertyKey.NULL) {
             menuFragment = IndividualMenuTabFragment.newInstance(category.getName(), OrderNowUtilities.getFoodMenuItems(category.getDishes()), new MenuFilter());
         } else {
@@ -869,18 +872,18 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 	public boolean onSuggestionSelect(int position) {
 		return false;
 	}
-	
+	 
 	@Override
-	protected void onResume() {
-		super.onResume();
-		invalidateOptionsMenu();
-		int position = ApplicationState.getCategoryId((ApplicationState)getApplicationContext());
-		int childPosition = ApplicationState.getChildCategoryId((ApplicationState)getApplicationContext());
-		Log.i("on resume", position + " " + childPosition);
-		
-		if(position > 0) {
-			displayView(position, childPosition);
-		}
-	}
-	
+    protected void onResume() {
+        super.onResume();
+        invalidateOptionsMenu();
+        int position = ApplicationState.getCategoryId((ApplicationState) getApplicationContext());
+        int childPosition = ApplicationState.getChildCategoryId((ApplicationState) getApplicationContext());
+        Utilities.info("on resume " + position + " " + childPosition);
+
+        if (position >= 0) {
+            displayView(position, childPosition);
+        }
+    }
+
 }

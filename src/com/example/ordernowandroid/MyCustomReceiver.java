@@ -8,6 +8,7 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -15,6 +16,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
+import android.widget.Toast;
 
 import com.data.menu.CustomerOrderWrapper;
 import com.example.ordernowandroid.model.Order;
@@ -27,6 +29,7 @@ public class MyCustomReceiver extends BroadcastReceiver {
     private ArrayList<String> unAvailableDishes = null;
     private Integer subOrderId;
     private String orderId;
+    private String message;
 
 	/*
 	 *  There are 5 events a restaurant can send to the Server which has to be communicated to the Client:
@@ -71,12 +74,13 @@ public class MyCustomReceiver extends BroadcastReceiver {
 //            String channel = intent.getExtras().getString("com.parse.Channel");
             JSONObject json = new JSONObject(intent.getExtras().getString("com.parse.Data"));
 
+//            Utilities.info("Channel + "+ channel);
             Utilities.info(json.toString());
 			Utilities.info("action recieved from server " +action);
+			
             Iterator itr = json.keys();
-           // Toast.makeText(context, "MyCustomerReciver", duration).show();
-			String message = null;
-			String subject = "";
+
+            String subject = "";
             while (itr.hasNext()) {
                 String key = (String) itr.next();
                 if (key.equals(OrderNowConstants.MESSAGE)) {
@@ -97,34 +101,58 @@ public class MyCustomReceiver extends BroadcastReceiver {
             
             Order order = new Order(orderId, subOrderId);
             
-           ArrayList<CustomerOrderWrapper> subOrderList = OrderNowUtilities.getObjectFromSharedPreferences(context, OrderNowConstants.KEY_ACTIVE_SUB_ORDER_LIST);
-           Utilities.info("Shared prefernece " + subOrderList.toString());
-           
-           for (CustomerOrderWrapper iCustomerOrderWrapper : subOrderList) {
-                if (order.getSubOrderId() == 0 && orderStatus.equals(OrderStatus.Complete)) { // Special case for order completion  
-                    iCustomerOrderWrapper.modifyItemStatus(orderStatus, unAvailableDishes);
-                } else {
-                    Utilities.info("Before order status modifcaition " + iCustomerOrderWrapper.getOrder().equals(order) + " OrderStatus "+  orderStatus);
-                    if (iCustomerOrderWrapper.getOrder().equals(order)) {
+            if (isStatusModificationRequired(action)) {
+                ArrayList<CustomerOrderWrapper> subOrderList = OrderNowUtilities.getObjectFromSharedPreferences(context, OrderNowConstants.KEY_ACTIVE_SUB_ORDER_LIST);
+
+                if(subOrderList == null){
+                    return ;
+                }
+
+                for (CustomerOrderWrapper iCustomerOrderWrapper : subOrderList) {
+                    if (order.getSubOrderId() == 0 && orderStatus.equals(OrderStatus.Complete)) { // Special case for order completion
                         iCustomerOrderWrapper.modifyItemStatus(orderStatus, unAvailableDishes);
+                    } else {
+                        if (iCustomerOrderWrapper.getOrder().equals(order)) {
+                            Utilities.info("Modify order" + order.toString() + " to OrderStatus " + orderStatus);
+                            iCustomerOrderWrapper.modifyItemStatus(orderStatus, unAvailableDishes);
+                        }
                     }
                 }
-            }
-            
-            OrderNowUtilities.putObjectToSharedPreferences(context, OrderNowConstants.KEY_ACTIVE_SUB_ORDER_LIST, subOrderList);
-            
 
-            notification(context, message);
+                OrderNowUtilities.putObjectToSharedPreferences(context, OrderNowConstants.KEY_ACTIVE_SUB_ORDER_LIST, subOrderList);
+
+                Intent i = new Intent(OrderNowConstants.ORDER_STATUS_RESET);
+                context.sendOrderedBroadcast(i, null, new BroadcastReceiver() {
+                    @Override
+                    public void onReceive(Context context, Intent intent) {
+                        int result = getResultCode();
+                        if (result != Activity.RESULT_CANCELED) {
+                            Utilities.info("MyParentOrderActivity caught the broadcast, result " + result);
+                            return; // Activity caught it
+                        }
+                        notification(context, message);
+                    }
+                }, null, Activity.RESULT_CANCELED, null, null);
+
+            } else {
+                Utilities.info("Action not implemented yet "+action);
+            }
 
         } catch (JSONException e) {
         }
     }
-    
-    
+
+    private boolean isStatusModificationRequired(String action) {
+        return action.equals(OrderNowConstants.ORDER_RECIEVED) ||
+               action.equals(OrderNowConstants.ORDER_ACCEPTED) ||
+               action.equals(OrderNowConstants.ORDER_COMPLETED) ||
+               action.equals(OrderNowConstants.MODIFY_ORDER);
+    }
+
     private void notification(Context context, String message) {
 
         Intent intent = new Intent(context, MyParentOrderActivity.class);
-        PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent, Intent.FLAG_ACTIVITY_NEW_TASK);
+        PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent, 0);
         Notification noti = new NotificationCompat.Builder(context)
         .setContentTitle(message)
         .setTicker("Notification!")
@@ -139,7 +167,7 @@ public class MyCustomReceiver extends BroadcastReceiver {
         // hide the notification after its selected
         noti.flags |= Notification.FLAG_AUTO_CANCEL;
 
-        notificationManager.notify(0, noti);
+        notificationManager.notify(OrderNowConstants.STATUS_CHANGE_NOTIFICATION_ID, noti);
  
     }
     

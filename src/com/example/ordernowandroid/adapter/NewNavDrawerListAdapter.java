@@ -34,7 +34,6 @@ public class NewNavDrawerListAdapter extends BaseExpandableListAdapter {
 
     public NewNavDrawerListAdapter(Context applicationContext, ArrayList<CategoryNavDrawerItem> navDrawerItems, Map<String, ArrayList<CategoryNavDrawerItem>> childDrawerItems) {
         this.applicationContext = applicationContext;
-        // TODO Auto-generated constructor stub
         this.navDrawerItems = navDrawerItems;
         this.childDrawerItems = childDrawerItems;
     }

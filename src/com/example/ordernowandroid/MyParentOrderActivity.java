@@ -5,8 +5,12 @@ import java.util.concurrent.ExecutionException;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.NotificationManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,18 +25,22 @@ import com.example.ordernowandroid.adapter.MyParentOrderAdapter;
 import com.example.ordernowandroid.model.MyOrderItem;
 import com.example.ordernowandroid.model.OrderNowConstants;
 import com.example.ordernowandroid.model.OrderStatus;
-import com.parse.ParseAnalytics;
 import com.util.AsyncNetwork;
 import com.util.OrderNowUtilities;
 import com.util.URLBuilder;
 import com.util.Utilities;
 
 public class MyParentOrderActivity extends Activity {
-	@Override
+
+    private MyParentOrderAdapter myParentOrderAdapter;
+    private IntentFilter filter;
+
+    @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-				
-		ParseAnalytics.trackAppOpened(getIntent());
+		
+		filter = new IntentFilter();
+		filter.addAction(OrderNowConstants.ORDER_STATUS_RESET);
 		
         Float totalOrderAmount = (float) 0.00;
         ApplicationState applicationContext = (ApplicationState)getApplicationContext();
@@ -63,8 +71,6 @@ public class MyParentOrderActivity extends Activity {
 		setTitle("Confirmed Order");
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 
-
-
 		for (CustomerOrderWrapper subOrder:subOrderList) {			
 			for (MyOrderItem myOrderItem: subOrder.getMyOrderItemList()) {
 				totalOrderAmount = totalOrderAmount + (myOrderItem.getQuantity() * myOrderItem.getFoodMenuItem().getItemPrice());
@@ -74,12 +80,11 @@ public class MyParentOrderActivity extends Activity {
 		totalAmount.setText(OrderNowConstants.INDIAN_RUPEE_UNICODE + " " + Float.toString(totalOrderAmount));
 
 		ListView subOrderListView = (ListView) findViewById(R.id.subOrderList);
-		MyParentOrderAdapter myParentOrderAdapter = new MyParentOrderAdapter(this, subOrderList);
+		myParentOrderAdapter = new MyParentOrderAdapter(this, subOrderList);
 		subOrderListView.setAdapter(myParentOrderAdapter);
 		myParentOrderAdapter.notifyDataSetChanged();
 		
 		requestBillButton.setOnClickListener(new View.OnClickListener() {
-
 			@Override
 			public void onClick(View v) {
 				AlertDialog.Builder builder = new AlertDialog.Builder(MyParentOrderActivity.this);
@@ -128,8 +133,65 @@ public class MyParentOrderActivity extends Activity {
 				alert.show();
 			}
 		});
+		
 	}
 
+    @Override
+    protected void onResume() {
+        if (statusResetreceiver != null) {
+            registerReceiver(statusResetreceiver, filter);
+            Utilities.info("On resume reciever");
+        } else {
+            Utilities.info("On resume null reciever");
+        }
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.cancel(OrderNowConstants.STATUS_CHANGE_NOTIFICATION_ID);
+        super.onResume();
+    }
+
+    @Override
+    protected void onStart() {
+        if (statusResetreceiver != null) {
+            registerReceiver(statusResetreceiver, filter);
+            Utilities.info("On start reciever");
+        } else {
+            Utilities.info("On start null reciever");
+        }
+        super.onStart();
+    }
+
+    @Override
+    protected void onRestart() {
+        if (statusResetreceiver != null) {
+            registerReceiver(statusResetreceiver, filter);
+            Utilities.info("On onRestart reciever");
+        } else {
+            Utilities.info("On onRestart null reciever");
+        }
+        super.onRestart();
+    }
+
+    @Override
+    protected void onPause() {
+        if (statusResetreceiver != null) {
+            unregisterReceiver(statusResetreceiver);
+            Utilities.info("On pause reciever");
+        } else {
+            Utilities.info("On pause null reciever");
+        }
+        super.onPause();
+    }
+	
+	@Override
+	protected void onNewIntent(Intent intent) {
+	    super.onNewIntent(intent);
+	    Utilities.info("on new intent "+intent.getAction());
+	    ArrayList<CustomerOrderWrapper> subOrderList = OrderNowUtilities.getObjectFromSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_SUB_ORDER_LIST);
+	    myParentOrderAdapter.clear();
+	    myParentOrderAdapter.addAll(subOrderList);
+	    myParentOrderAdapter.notifyDataSetChanged();
+	}
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -152,5 +214,16 @@ public class MyParentOrderActivity extends Activity {
 		startActivity(intent);
 		finish();		
 	}
+	
+    public BroadcastReceiver statusResetreceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            onNewIntent(intent);
+            NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            notificationManager.cancel(OrderNowConstants.STATUS_CHANGE_NOTIFICATION_ID);
+            this.setResultCode(Activity.RESULT_OK);
+        }
+    };
+
 	
 }
