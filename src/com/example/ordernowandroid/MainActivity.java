@@ -55,6 +55,7 @@ public class MainActivity extends FragmentActivity {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);            
 		builder.setTitle("Internet Connection Unavailable!");
 		builder.setMessage("Please check your connection and try again");
+		builder.setCancelable(false);
 		builder.setPositiveButton(R.string.retry, new OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
@@ -77,7 +78,6 @@ public class MainActivity extends FragmentActivity {
             @Override
             public boolean onKey(DialogInterface dialog, int keyCode,
                     KeyEvent event) {
-                // TODO Auto-generated method stub
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
                     finish();
                     dialog.dismiss();

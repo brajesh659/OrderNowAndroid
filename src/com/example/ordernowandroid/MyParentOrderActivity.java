@@ -59,11 +59,9 @@ public class MyParentOrderActivity extends Activity {
             subOrderList.add(customerOrderWrapper);
             ApplicationState.setCustomerOrderWrapper(applicationContext, null);
             
+            //Only update Shared Prefs Object when there is a new suborder
+            OrderNowUtilities.putObjectToSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_SUB_ORDER_LIST, subOrderList);
         }
-
-        //Only update Shared Prefs Object when there is a new suborder
-        OrderNowUtilities.putObjectToSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_SUB_ORDER_LIST, subOrderList);
-
 		
 		setContentView(R.layout.my_parent_order_summary);
 		TextView totalAmount = (TextView) findViewById(R.id.parentTotalAmount);

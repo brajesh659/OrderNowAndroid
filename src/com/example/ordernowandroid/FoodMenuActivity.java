@@ -11,6 +11,7 @@ import java.util.concurrent.ExecutionException;
 
 import android.app.ActionBar;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -70,7 +71,6 @@ import com.example.ordernowandroid.model.CategoryNavDrawerItem;
 import com.example.ordernowandroid.model.FoodMenuItem;
 import com.example.ordernowandroid.model.MyOrderItem;
 import com.example.ordernowandroid.model.OrderNowConstants;
-import com.parse.ParseAnalytics;
 import com.util.AsyncNetwork;
 import com.util.OrderNowUtilities;
 import com.util.URLBuilder;
@@ -79,6 +79,7 @@ import com.util.Utilities;
 public class FoodMenuActivity extends FragmentActivity implements numListener, AddNoteListener,
 SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 
+	private Context context;
     private static final int MY_ORDER_REQUEST_CODE = 1;
 	private DrawerLayout mDrawerLayout;
 	private ExpandableListView mDrawerList;
@@ -94,16 +95,16 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 	private SearchRecentSuggestions suggestionProvider;
 	private CursorAdapter suggestionAdapter;
 	private SearchView searchView;
+	private ApplicationState applicationContext; 
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.food_menu);
+		context = this;
 		
-		ParseAnalytics.trackAppOpened(getIntent());
+		applicationContext = (ApplicationState) getApplicationContext();
 		
-		ApplicationState applicationContext = (ApplicationState) getApplicationContext();
-
 		mTitle = getTitle();
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerList = (ExpandableListView) findViewById(R.id.list_slidermenu);
@@ -111,9 +112,9 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 		navDrawerItems = new ArrayList<CategoryNavDrawerItem>();
 		childDrawerItems = new HashMap<String, ArrayList<CategoryNavDrawerItem>>();
 
-		// setting the nav drawer list adapter
-		//adapter = new NewNavDrawerListAdapter(getApplicationContext(), navDrawerItems, childDrawerItems);
 		adapter = new NewNavDrawerListAdapter(getApplicationContext(), navDrawerItems,childDrawerItems);
+		mDrawerList.setOnGroupClickListener(new SlideMenuClickListener());
+		mDrawerList.setOnChildClickListener(new SlideMenuChildClickListener());
 		mDrawerList.setAdapter(adapter);
 
 		// enabling action bar app icon and behaving it as toggle button
@@ -141,72 +142,15 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 		};
 		
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
+		
+		suggestionProvider = new SearchRecentSuggestions(this, SearchSuggestionProvider.AUTHORITY,SearchSuggestionProvider.MODE);
+		getOverflowMenu();
+		
 		if(OrderNowConstants.IS_DEBUG_MODE && OrderNowConstants.IS_LOCAL_RESTURANT_ENABLED) {
 		    restaurant = getResturantLocaly();
-		} else {
-		    restaurant = getResturant(applicationContext.getTableId(), applicationContext.getRestaurantId());
+		} else { //Download the Restaurant Menu Asynchronously
+			new DownloadRestaurantTask(context).execute();
 		}
-
-		if (restaurant == null){
-			AlertDialog.Builder builder = new AlertDialog.Builder(FoodMenuActivity.this);            
-			builder.setTitle("Invalid QR code");
-			builder.setMessage("Please scan a valid QR code");
-			builder.setPositiveButton(R.string.ok, new OnClickListener() {                  
-				@Override
-				public void onClick(DialogInterface dialog, int which) {                                                
-					Intent intent = new Intent(getApplicationContext(), QRCodeScannerActivity.class);
-					startActivity(intent);                                              
-				}
-			});
-			AlertDialog alert = builder.create();
-			alert.show();
-			return ;
-		} else {
-			String resName = restaurant.getName();
-			mDrawerTitle = resName;
-			ApplicationState.setRestaurantName(applicationContext, resName);
-			OrderNowUtilities.putKeyToSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_RESTAURANT_NAME, resName);
-			
-			//save preferences
-			OrderNowUtilities.putKeyToSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_TABLE_ID, applicationContext.getTableId());
-			OrderNowUtilities.putKeyToSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_RESTAURANT_ID, applicationContext.getRestaurantId());
-			
-			if (savedInstanceState == null) {
-			    if (ApplicationState.getCategoryId(applicationContext)> 0) {
-			    	displayView(ApplicationState.getCategoryId(applicationContext), 0);	
-			    } else {
-			    	displayView(0, 0);
-			    }
-			}
-			mDrawerList.setOnGroupClickListener(new SlideMenuClickListener());
-			mDrawerList.setOnChildClickListener(new SlideMenuChildClickListener());
-
-            for (Category category : getCategories()) {
-                CategoryNavDrawerItem categoryNavDrawerItem = new CategoryNavDrawerItem(category);
-                navDrawerItems.add(categoryNavDrawerItem);
-                List<Category> childCategories = category.getCategories();
-                if (childCategories != null && !childCategories.isEmpty()) {
-                    ArrayList<CategoryNavDrawerItem> childArrayList = new ArrayList<CategoryNavDrawerItem>();
-                    for (Category childCategory : childCategories) {
-                        CategoryNavDrawerItem childCategoryNavDrawerItem = new CategoryNavDrawerItem(childCategory);
-                        childArrayList.add(childCategoryNavDrawerItem);
-                    }
-                    childDrawerItems.put(categoryNavDrawerItem.getTitle(), childArrayList);
-                }
-            }
-		}
-		if (applicationContext.isOpenCategoryDrawer()) {
-			mDrawerLayout.openDrawer(Gravity.LEFT);
-		}
-
-		CustomDbAdapter dbManager = CustomDbAdapter
-				.getInstance(getBaseContext());
-		dh = new RestaurantHelper(dbManager); 
-
-		suggestionProvider = new SearchRecentSuggestions(this, SearchSuggestionProvider.AUTHORITY,
-				SearchSuggestionProvider.MODE);
-
-		getOverflowMenu();
 	}
 	
 
@@ -225,6 +169,7 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 	}
 
 	private List<Category> getCategories() {
+		Utilities.info(restaurant.getMenu().toString());
 		return restaurant.getMenu().getCategories();
 	}
 
@@ -526,26 +471,6 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 		invalidateOptionsMenu();
 	}
 
-	public Restaurant getResturant(String tableId, String restaurantId) {
-		if(tableId == null || tableId.trim().length() == 0) {
-			return null;
-		}
-		//http://ordernow.herokuapp.com/serveTable?tableId=T1
-		Restaurant restaurant = null;
-		try {
-			restaurant =  new DownloadRestaurantTask().execute(tableId, restaurantId).get();
-			if (restaurant != null) {
-				loadRestaurantDishes(restaurant);
-				ApplicationState.setRestaurantId((ApplicationState)getApplicationContext(), restaurant.getrId());
-			} else {
-				throw new Exception("Server failed to load Menu for Table Id: " + tableId);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return restaurant;
-	}
-
     private void loadRestaurantDishes(final Restaurant restaurant) {
         Utilities.info("restaurant load " + restaurant.getName() + restaurantLoadedInDb);
         if (!restaurantLoadedInDb.containsKey(restaurant.getName())) {
@@ -555,9 +480,7 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
                 availableMenuFilter = new AvailableMenuFilter(restaurant.getAvailableFilters());
             } else {
                 Map<MenuPropertyKey, List<MenuPropertyValue>> dishProperties = new HashMap<MenuPropertyKey, List<MenuPropertyValue>>();
-                // dishProperties.put(MenuPropertyKey.FoodType,
-                // Arrays.asList(MenuPropertyValue.Veg,
-                // MenuPropertyValue.NonVeg));
+                //dishProperties.put(MenuPropertyKey.FoodType, Arrays.asList(MenuPropertyValue.Veg, MenuPropertyValue.NonVeg));
                 dishProperties.put(MenuPropertyKey.CousineType, Arrays.asList(MenuPropertyValue.NorthIndian, MenuPropertyValue.SouthIndian));
                 availableMenuFilter = new AvailableMenuFilter(dishProperties);
             }
@@ -583,7 +506,6 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
                             }
                         }
                         restaurantLoadedInDb.put(restaurant.getName(), true);
-                        // for(Res)
                     } catch (Exception e) {
                         Utilities.error("Failed to load into DB " + e);
                     }
@@ -802,12 +724,96 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 	}
 
 	private class DownloadRestaurantTask extends AsyncTask<String, Integer, Restaurant> {
+		private Context context;
+		private ProgressDialog progressDialog;
+		
+		public DownloadRestaurantTask(Context context) {
+	        this.context = context;
+	    }
+		
+		@Override
+		protected void onPreExecute() {
+			Utilities.info("inside PreExecute");
+			super.onPreExecute();
+			progressDialog = new ProgressDialog(context);
+			progressDialog.setTitle("Loading Menu...");
+			progressDialog.setMessage("Please wait.");
+			progressDialog.setCancelable(false);
+			progressDialog.setIndeterminate(true);
+			progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+			progressDialog.show();
+		}
+		
 		@Override
 		protected Restaurant doInBackground(String... params) {
-			// "http://www.creativefreedom.co.uk/icon-designers-blog/wp-content/uploads/2013/03/00-android-4-0_icons.png"
-			CustomDbAdapter dbManager = CustomDbAdapter.getInstance(getBaseContext());
+			CustomDbAdapter dbManager = CustomDbAdapter.getInstance(context);
 	        RestaurantHelper restHelper = new RestaurantHelper(dbManager);
-			return DownloadResturantMenu.getInstance().getResturant(params[0],params[1],restHelper);
+			return DownloadResturantMenu.getInstance().getResturant(applicationContext.getTableId(), applicationContext.getRestaurantId(),restHelper);
+		}
+		
+		@Override
+		protected void onPostExecute(Restaurant result) {
+			Utilities.info("inside PreExecute");
+			super.onPostExecute(result);
+			if (progressDialog!=null) {
+				progressDialog.dismiss();
+			}
+
+			restaurant = result;
+
+			if (restaurant == null){
+				AlertDialog.Builder builder = new AlertDialog.Builder(FoodMenuActivity.this);            
+				builder.setTitle("Invalid QR code");
+				builder.setMessage("Please scan a valid QR code");
+				builder.setCancelable(false);
+				builder.setPositiveButton(R.string.ok, new OnClickListener() {                  
+					@Override
+					public void onClick(DialogInterface dialog, int which) {                                                
+						Intent intent = new Intent(getApplicationContext(), QRCodeScannerActivity.class);
+						startActivity(intent); 
+						finish();
+					}
+				});
+				AlertDialog alert = builder.create();
+				alert.show();
+			} else {
+				ApplicationState.setRestaurantId((ApplicationState)getApplicationContext(), restaurant.getrId());
+				loadRestaurantDishes(restaurant);
+				
+				String restaurantName = restaurant.getName();
+				mDrawerTitle = restaurantName;
+				ApplicationState.setRestaurantName(applicationContext, restaurantName);
+				OrderNowUtilities.putKeyToSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_RESTAURANT_NAME, restaurantName);
+
+				//save preferences
+				OrderNowUtilities.putKeyToSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_TABLE_ID, applicationContext.getTableId());
+				OrderNowUtilities.putKeyToSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_RESTAURANT_ID, applicationContext.getRestaurantId());
+
+				if (ApplicationState.getCategoryId(applicationContext)> -1) {
+					displayView(ApplicationState.getCategoryId(applicationContext), 0);	
+				} else {
+					displayView(0, 0);
+				}
+
+				for (Category category : getCategories()) {
+					CategoryNavDrawerItem categoryNavDrawerItem = new CategoryNavDrawerItem(category);
+					navDrawerItems.add(categoryNavDrawerItem);
+					List<Category> childCategories = category.getCategories();
+					if (childCategories != null && !childCategories.isEmpty()) {
+						ArrayList<CategoryNavDrawerItem> childArrayList = new ArrayList<CategoryNavDrawerItem>();
+						for (Category childCategory : childCategories) {
+							CategoryNavDrawerItem childCategoryNavDrawerItem = new CategoryNavDrawerItem(childCategory);
+							childArrayList.add(childCategoryNavDrawerItem);
+						}
+						childDrawerItems.put(categoryNavDrawerItem.getTitle(), childArrayList);
+					}
+				}
+				
+				if (applicationContext.isOpenCategoryDrawer()) {
+					mDrawerLayout.openDrawer(Gravity.LEFT);
+				}
+			}
+
 		}
 	}
 
@@ -882,7 +888,8 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
         Utilities.info("on resume " + position + " " + childPosition);
 
         if (position >= 0) {
-            displayView(position, childPosition);
+        	//FIXME: Govind NPE on Restaurant Object
+            //displayView(position, childPosition);
         }
     }
 
