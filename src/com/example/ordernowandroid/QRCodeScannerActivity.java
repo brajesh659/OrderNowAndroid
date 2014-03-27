@@ -82,7 +82,8 @@ public class QRCodeScannerActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.allhistorybutton:
-			Toast.makeText(this, "All History Not Implemented yet", Toast.LENGTH_SHORT).show();
+			Intent historyintent = new Intent(getApplicationContext(), AllCustomerHistoryActivity.class);
+			startActivity(historyintent);
 			return true;
 		case R.id.signOut :
 			Session session = Session.getActiveSession();

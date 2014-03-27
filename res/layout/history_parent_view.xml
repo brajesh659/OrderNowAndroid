@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >    
+
+    <TextView
+        android:id="@+id/history_rest_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Rest Name "
+        android:textColor="@color/royalblue"
+        android:textSize="20sp"/>
+
+    <TextView
+        android:id="@+id/history_order_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/history_rest_name"
+        android:text="OrderId"
+        android:textColor="@color/dimgray"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/history_order_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/history_order_id"
+        android:layout_below="@+id/history_rest_name"
+        android:layout_toLeftOf="@+id/explist_indicator"
+        android:text="12 Feb 2014"
+        android:textColor="@color/red"
+        android:textSize="14sp" />
+
+    <ImageView
+        android:id="@+id/explist_indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/history_order_date"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:contentDescription="@string/desc_list_item_icon"
+        android:paddingRight="10dp"
+        android:src="@drawable/expander_group" />
+    
+</RelativeLayout>

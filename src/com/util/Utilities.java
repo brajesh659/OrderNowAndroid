@@ -38,7 +38,7 @@ import android.widget.Toast;
 public final class Utilities {
 	public static final String TRACE_TAG = "Ordernow_trace";
 	public static final String DEAL_MAKER_STORAGE = "OrderNowValues";
-	public static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
+	public static final String DEFAULT_DATE_FORMAT = "dd-MM-yyyy";
 	// android sqlite stores datetime as locale format
 	// EEE MMM dd HH:mm:ss zzz yyyy
 	// but still this might change in other countries
