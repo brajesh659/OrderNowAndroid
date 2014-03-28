@@ -26,6 +26,7 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.text.TextUtils;
 import android.util.Log;
@@ -388,7 +389,6 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 
         @Override
         public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-//            Toast.makeText(getApplicationContext(), "child selected" + groupPosition, Toast.LENGTH_LONG).show();
             displayView(groupPosition, childPosition);
             return true;
         }
@@ -396,33 +396,45 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
     }
 
 	private void displayView(int position, int childPosition) {
-	    Category category;
-	    Category parentCategory = getCategories().get(position);
-        category = parentCategory;
-	    if(childPosition>=0) {
-	        List<Category> categories = parentCategory.getCategories();
-	        if(categories!=null && !categories.isEmpty()) {
-	            ApplicationState.setChildCategoryId((ApplicationState)getApplicationContext(), childPosition);
-	            category = categories.get(childPosition);
-	        }
-	    }
-	   // Toast.makeText(this, category.toString(), Toast.LENGTH_LONG).show();
-	    Fragment menuFragment = null;
-	    Utilities.info("called displayView "+position + "  " + childPosition +" "+category.toString());
-        if (category.getCategoryLevelFilter().getFilterName() == MenuPropertyKey.NULL) {
-            menuFragment = IndividualMenuTabFragment.newInstance(category.getName(), OrderNowUtilities.getFoodMenuItems(category.getDishes()), new MenuFilter());
-        } else {
-            menuFragment = MenuFragment.newInstance(category);
-        }
-	    FragmentManager fragmentManager = getSupportFragmentManager();
-	    fragmentManager.beginTransaction().replace(R.id.frame_container, menuFragment).commit();
-	    CustomDbAdapter dbManager = CustomDbAdapter.getInstance(getBaseContext());
-		dh = new RestaurantHelper(dbManager); 	    
-	    mDrawerList.setItemChecked(position, true);
-        mDrawerList.setSelection(position);
-        ApplicationState.setCategoryId((ApplicationState)getApplicationContext(), position);
-        setTitle(category.getName());
-        mDrawerLayout.closeDrawer(mDrawerList);
+		Category parentCategory = getCategories().get(position);
+		Category category = parentCategory;
+
+		if(childPosition >= 0) {
+			List<Category> categories = parentCategory.getCategories();
+			if(categories != null && !categories.isEmpty()) {
+				ApplicationState.setChildCategoryId((ApplicationState)getApplicationContext(), childPosition);
+				category = categories.get(childPosition);
+			}
+		}
+
+		String categoryName = category.getName();
+		Fragment menuFragment = null;
+
+		if (category.getCategoryLevelFilter().getFilterName() == MenuPropertyKey.NULL) {
+			menuFragment = IndividualMenuTabFragment.newInstance(categoryName, OrderNowUtilities.getFoodMenuItems(category.getDishes()), new MenuFilter());
+		} else {
+			menuFragment = MenuFragment.newInstance(category);
+		}
+
+		FragmentManager fragmentManager = getSupportFragmentManager();
+		fragmentManager.beginTransaction().replace(R.id.frame_container, menuFragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).addToBackStack(null).commit();
+		/*fragmentManager.addOnBackStackChangedListener(
+				new FragmentManager.OnBackStackChangedListener() {
+					public void onBackStackChanged() {
+						updateActionBarTitle(); http://stackoverflow.com/questions/18305945/how-to-resume-fragment-from-backstack-if-exists/18306258#18306258
+					}
+				});*/
+
+
+		CustomDbAdapter dbManager = CustomDbAdapter.getInstance(getBaseContext());
+		dh = new RestaurantHelper(dbManager);
+
+		mDrawerList.setItemChecked(position, true);
+		mDrawerList.setSelection(position);
+
+		ApplicationState.setCategoryId((ApplicationState)getApplicationContext(), position);
+		setTitle(categoryName);
+		mDrawerLayout.closeDrawer(mDrawerList);
 	}
 
 	@Override
@@ -851,7 +863,7 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 			//IndividualMenuTabFragment.newInstance("Search", searchDishList);
 			Fragment fragment = IndividualMenuTabFragment.newInstance("Search", searchDishList, null);
 			FragmentManager fragmentManager = getSupportFragmentManager();
-			fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit();
+			fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).addToBackStack(null).commit();
 			setTitle(newText);
 			return true;
 		}
@@ -892,5 +904,15 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
             //displayView(position, childPosition);
         }
     }
+	
+	@Override
+	public void onBackPressed() {
+		if (getSupportFragmentManager().getBackStackEntryCount() == 1){
+			finish();
+		} else {
+			//FIXME: Govind Set Title here
+			super.onBackPressed();
+		}
+	}
 
 }
