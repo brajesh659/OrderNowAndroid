@@ -7,25 +7,25 @@
         android:id="@+id/dish_photo"
         android:layout_width="72dp"
         android:layout_height="72dp"
-        android:scaleType="fitXY"
-        android:contentDescription="@string/scan_qr_codes"
         android:adjustViewBounds="true"
+        android:contentDescription="@string/scan_qr_codes"
+        android:paddingBottom="5dp"
         android:paddingRight="15dp"
         android:paddingTop="5dp"
-        android:paddingBottom="5dp" />
-    
+        android:scaleType="fitXY" />
+
     <ImageView
         android:id="@+id/dish_cat_image"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:layout_alignLeft="@+id/dish_photo"
         android:layout_alignTop="@+id/dish_photo"
-        android:scaleType="fitXY"
-        android:contentDescription="@string/scan_qr_codes"
         android:adjustViewBounds="true"
+        android:contentDescription="@string/scan_qr_codes"
+        android:paddingBottom="1dp"
         android:paddingRight="1dp"
         android:paddingTop="1dp"
-        android:paddingBottom="1dp" />
+        android:scaleType="fitXY" />
 
     <TextView
         android:id="@+id/dish_quantity"
@@ -37,9 +37,9 @@
         android:layout_alignTop="@+id/dish_photo"
         android:layout_margin="1dp"
         android:gravity="center"
+        android:paddingBottom="5dp"
         android:paddingRight="5dp"
         android:paddingTop="5dp"
-        android:paddingBottom="5dp"
         android:textColor="#4f4667"
         android:textSize="50sp"
         android:textStyle="bold" />
@@ -53,25 +53,25 @@
         android:textColor="#F14F00"
         android:textSize="14sp"
         android:textStyle="bold" />
-    
+
     <ImageButton
-         android:id="@+id/addnote"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_alignParentRight="true"
-         android:layout_alignParentTop="true"
-         android:background="@color/white"
-         android:src="@drawable/ic_action_edit" />
-    
+        android:id="@+id/addnote"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:background="@color/white"
+        android:src="@drawable/ic_action_edit" />
+
     <TextView
         android:id="@+id/dish_category"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toLeftOf="@id/addnote"
-        android:paddingTop="8sp"
         android:paddingRight="6sp"
+        android:paddingTop="8sp"
         android:textColor="@color/dimgray"
-        android:textSize="10sp"/>    
+        android:textSize="10sp" />
 
     <TextView
         android:id="@+id/dish_description"
@@ -79,7 +79,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/dish_name"
         android:layout_toLeftOf="@id/addnote"
-        android:layout_toRightOf="@id/dish_photo"/>
+        android:layout_toRightOf="@id/dish_photo" />
 
     <TextView
         android:id="@+id/dish_price"
@@ -99,8 +99,6 @@
         android:layout_below="@id/dish_description"
         android:background="@color/white"
         android:src="@drawable/ic_action_new" />
-    
-   
 
     <ImageButton
         android:id="@+id/subbutton"
@@ -112,5 +110,4 @@
         android:background="@color/white"
         android:src="@drawable/ic_action_remove" />
 
-    
 </RelativeLayout>

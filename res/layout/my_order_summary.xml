@@ -12,7 +12,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:choiceMode="singleChoice"
-        android:divider="@color/red"
+        android:divider="@color/list_divider"
         android:dividerHeight="1dp" />
 
     <RelativeLayout
