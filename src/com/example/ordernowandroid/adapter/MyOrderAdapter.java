@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
+import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -80,13 +81,13 @@ public class MyOrderAdapter extends ArrayAdapter<MyOrderItem> {
 				final Float orderItemPrice = Float.parseFloat(orderItemPriceStr);
 
 				RelativeLayout r = (RelativeLayout) ((ViewGroup) parent).getParent(); // This is to get the Parent View of the List View
-				final TextView orderTotalPriceView = (TextView) r.findViewById(R.id.relativeBtnLayout).findViewById(R.id.totalAmount);
+				final TextSwitcher orderTotalPriceView = (TextSwitcher) r.findViewById(R.id.relativeBtnLayout).findViewById(R.id.totalAmount);
 
 				if (qty > 1) {
 					itemTotalPrice.setText(OrderNowConstants.INDIAN_RUPEE_UNICODE + " " + Float.toString((orderItemPrice/qty) * (qty - 1)));
 					quantity.setText(Float.toString(qty - 1));					
 
-					String orderTotalPriceStr = (String) orderTotalPriceView.getText();
+					String orderTotalPriceStr = (String) ((TextView)orderTotalPriceView.getCurrentView()).getText();
 					if (orderTotalPriceStr.indexOf(OrderNowConstants.INDIAN_RUPEE_UNICODE) != -1){
 						orderTotalPriceStr = orderTotalPriceStr.substring(orderTotalPriceStr.indexOf(OrderNowConstants.INDIAN_RUPEE_UNICODE) + 1).trim();
 					}
@@ -106,7 +107,7 @@ public class MyOrderAdapter extends ArrayAdapter<MyOrderItem> {
 							foodMenuItemQuantityMap.remove(getItem(position).getFoodMenuItem().getItemName());
 							remove(getItem(position));
 							notifyDataSetChanged();
-							String orderTotalPriceStr = (String) orderTotalPriceView.getText();
+							String orderTotalPriceStr = (String) ((TextView)orderTotalPriceView.getCurrentView()).getText();
 							if (orderTotalPriceStr.indexOf(OrderNowConstants.INDIAN_RUPEE_UNICODE) != -1){
 								orderTotalPriceStr = orderTotalPriceStr.substring(orderTotalPriceStr.indexOf(OrderNowConstants.INDIAN_RUPEE_UNICODE) + 1).trim();
 							}
@@ -137,7 +138,7 @@ public class MyOrderAdapter extends ArrayAdapter<MyOrderItem> {
 				Float orderItemPrice = Float.parseFloat(orderItemPriceStr);
 
 				RelativeLayout r = (RelativeLayout) ((ViewGroup) parent).getParent(); // This is to get the Parent View of the List View
-				final TextView orderTotalPriceView = (TextView) r.findViewById(R.id.relativeBtnLayout).findViewById(R.id.totalAmount);
+				final TextSwitcher orderTotalPriceView = (TextSwitcher) r.findViewById(R.id.relativeBtnLayout).findViewById(R.id.totalAmount);
 
 				if (qty == 0){
 					Toast.makeText(getContext(), "Cannot determine Unit Price if the Quantity is zero", Toast.LENGTH_SHORT).show();					
@@ -145,7 +146,7 @@ public class MyOrderAdapter extends ArrayAdapter<MyOrderItem> {
 					itemTotalPrice.setText(OrderNowConstants.INDIAN_RUPEE_UNICODE + " " + Float.toString((orderItemPrice/qty) * (qty + 1)));
 					quantity.setText(Float.toString(qty + 1));					
 
-					String orderTotalPriceStr = (String) orderTotalPriceView.getText();
+					String orderTotalPriceStr = (String) ((TextView)orderTotalPriceView.getCurrentView()).getText();
 					if (orderTotalPriceStr.indexOf(OrderNowConstants.INDIAN_RUPEE_UNICODE) != -1){
 						orderTotalPriceStr = orderTotalPriceStr.substring(orderTotalPriceStr.indexOf(OrderNowConstants.INDIAN_RUPEE_UNICODE) + 1).trim();
 					}

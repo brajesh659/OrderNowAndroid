@@ -17,10 +17,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewSwitcher.ViewFactory;
 
 import com.data.menu.CustomerOrderWrapper;
 import com.example.ordernowandroid.adapter.MyOrderAdapter;
@@ -46,8 +50,23 @@ public class MyOrderActivity extends Activity {
 
 		Button addMoreItemsBtn = (Button) findViewById(R.id.addMoreItemsButton);
 		Button cancelOrderBtn = (Button) findViewById(R.id.cancelOrderButton);
-		Button confirmOrderBtn = (Button) findViewById(R.id.confirmOrderButton);        
-		final TextView totalAmount = (TextView) findViewById(R.id.totalAmount);
+		Button confirmOrderBtn = (Button) findViewById(R.id.confirmOrderButton);
+		
+		Animation in = AnimationUtils.loadAnimation(this, android.R.anim.fade_in);
+        Animation out = AnimationUtils.loadAnimation(this, android.R.anim.fade_out);
+		final TextSwitcher totalAmount = (TextSwitcher) findViewById(R.id.totalAmount);
+		totalAmount.setFactory(new ViewFactory() {
+			@Override
+			public View makeView() {
+				TextView t = new TextView(MyOrderActivity.this);
+				t.setTextColor(getResources().getColor(R.color.green));
+				t.setTextSize(19);
+				return t;
+			}
+		});
+
+		totalAmount.setInAnimation(in);
+		totalAmount.setOutAnimation(out);
 
 		addMoreItemsBtn.setOnClickListener(new Button.OnClickListener() {           
 			@Override
