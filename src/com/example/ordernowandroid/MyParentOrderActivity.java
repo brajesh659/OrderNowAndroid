@@ -34,6 +34,7 @@ public class MyParentOrderActivity extends Activity {
 
     private MyParentOrderAdapter myParentOrderAdapter;
     private IntentFilter filter;
+    ArrayList<CustomerOrderWrapper> subOrderList = null;
 
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +45,7 @@ public class MyParentOrderActivity extends Activity {
 		
         Float totalOrderAmount = (float) 0.00;
         ApplicationState applicationContext = (ApplicationState)getApplicationContext();
-        ArrayList<CustomerOrderWrapper> subOrderList = OrderNowUtilities.getObjectFromSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_SUB_ORDER_LIST);
+        subOrderList = OrderNowUtilities.getObjectFromSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_SUB_ORDER_LIST);
         if(subOrderList==null){
             subOrderList = new ArrayList<CustomerOrderWrapper>();
         }
@@ -83,54 +84,58 @@ public class MyParentOrderActivity extends Activity {
 		myParentOrderAdapter.notifyDataSetChanged();
 		
 		requestBillButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				AlertDialog.Builder builder = new AlertDialog.Builder(MyParentOrderActivity.this);
-				builder.setTitle("Request Bill");
-				
-				final ApplicationState applicationContext = (ApplicationState) getApplicationContext();
-				if(ApplicationState.getFoodMenuItemQuantityMap(applicationContext) != null && ApplicationState.getFoodMenuItemQuantityMap(applicationContext).size() > 0){
-					builder.setMessage("You have items waiting to be ordered in the cart. Would you still like to request for the bill?");
-				} else {
-					builder.setMessage("Would you like to request for the bill?");
-				}
-				
-				builder.setPositiveButton(R.string.yes, new AlertDialog.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						String orderId = ApplicationState.getActiveOrderId(applicationContext);
-						String url = new URLBuilder()
-						.addPath(URLBuilder.Path.serveTable)
-						.addAction(URLBuilder.URLAction.requestBill)
-						.addParam(URLBuilder.URLParam.orderId,
-								orderId).build();
-						try {
-							new AsyncNetwork().execute(url).get();
-							
-							ArrayList<String> sharedPrefsToRemove = new ArrayList<String>();
-							sharedPrefsToRemove.add(OrderNowConstants.KEY_ACTIVE_RESTAURANT_ID);
-							sharedPrefsToRemove.add(OrderNowConstants.KEY_ACTIVE_TABLE_ID);
-							sharedPrefsToRemove.add(OrderNowConstants.KEY_ACTIVE_SUB_ORDER_LIST);
-							OrderNowUtilities.removeSharedPreferences(getApplicationContext(), sharedPrefsToRemove);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						} catch (ExecutionException e) {
-							e.printStackTrace();
-						}
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(MyParentOrderActivity.this);
+                builder.setTitle("Request Bill");
 
-						Toast.makeText(getApplicationContext(),
-								"You will be receiving the bill very shortly!",
-								Toast.LENGTH_LONG).show();
-						Intent intent = new Intent(getApplicationContext(),RestFeedbackActivity.class);
-						startActivity(intent);
-						finish();
-					}
-				});
-				builder.setNegativeButton(R.string.no, null);
-				AlertDialog alert = builder.create();
-				alert.show();
-			}
-		});
+                boolean orderAcknowledgement = true;
+                for (CustomerOrderWrapper customerOrderWrapper : subOrderList) {
+                    orderAcknowledgement = customerOrderWrapper.hasResturantacknowledged() && orderAcknowledgement;
+                }
+
+                if (orderAcknowledgement == false) {
+                    Toast.makeText(getApplicationContext(), "Please wait for resturant acknowledgment before requesting bill. ", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                final ApplicationState applicationContext = (ApplicationState) getApplicationContext();
+                if (ApplicationState.getFoodMenuItemQuantityMap(applicationContext) != null && ApplicationState.getFoodMenuItemQuantityMap(applicationContext).size() > 0) {
+                    builder.setMessage("You have items waiting to be ordered in the cart. Would you still like to request for the bill?");
+                } else {
+                    builder.setMessage("Would you like to request for the bill?");
+                }
+
+                builder.setPositiveButton(R.string.yes, new AlertDialog.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String orderId = ApplicationState.getActiveOrderId(applicationContext);
+                        String url = new URLBuilder().addPath(URLBuilder.Path.serveTable).addAction(URLBuilder.URLAction.requestBill).addParam(URLBuilder.URLParam.orderId, orderId).build();
+                        try {
+                            new AsyncNetwork().execute(url).get();
+
+                            ArrayList<String> sharedPrefsToRemove = new ArrayList<String>();
+                            sharedPrefsToRemove.add(OrderNowConstants.KEY_ACTIVE_RESTAURANT_ID);
+                            sharedPrefsToRemove.add(OrderNowConstants.KEY_ACTIVE_TABLE_ID);
+                            sharedPrefsToRemove.add(OrderNowConstants.KEY_ACTIVE_SUB_ORDER_LIST);
+                            OrderNowUtilities.removeSharedPreferences(getApplicationContext(), sharedPrefsToRemove);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        } catch (ExecutionException e) {
+                            e.printStackTrace();
+                        }
+
+                        Toast.makeText(getApplicationContext(), "You will be receiving the bill very shortly!", Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(getApplicationContext(), RestFeedbackActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                });
+                builder.setNegativeButton(R.string.no, null);
+                AlertDialog alert = builder.create();
+                alert.show();
+            }
+        });
 		
 	}
 

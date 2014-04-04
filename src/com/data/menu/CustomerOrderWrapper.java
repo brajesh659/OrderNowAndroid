@@ -27,6 +27,7 @@ public class CustomerOrderWrapper implements Serializable {
     private ArrayList<MyOrderItem> myOrderItemList;
     private String orderNote;
     private Order orderId;
+    private boolean resturantacknowledgement = false; 
 
     public CustomerOrderWrapper(ArrayList<MyOrderItem> myOrderItemList, String orderNote) {
         super();
@@ -80,6 +81,10 @@ public class CustomerOrderWrapper implements Serializable {
             }
             myOrderItem.setItemStatus(newStatus);
         }
+        
+        if(orderStatus == OrderStatus.Accepted || orderStatus == OrderStatus.ModifiedOrder || orderStatus == OrderStatus.Complete) {
+            setResturantacknowledgement(true);
+        }
     }
 
     public Order getOrder() {
@@ -88,5 +93,13 @@ public class CustomerOrderWrapper implements Serializable {
 
     public void setOrder(Order orderId) {
         this.orderId = orderId;
+    }
+
+    public boolean hasResturantacknowledged() {
+        return resturantacknowledgement;
+    }
+
+    public void setResturantacknowledgement(boolean resturantacknowledgement) {
+        this.resturantacknowledgement = resturantacknowledgement;
     }
 }
