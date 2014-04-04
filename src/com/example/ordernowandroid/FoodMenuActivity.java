@@ -103,6 +103,7 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.food_menu);
 		context = this;
+		Utilities.info("FoodMenuActivity object on create " + this);
 		
 		applicationContext = (ApplicationState) getApplicationContext();
 		
@@ -110,14 +111,7 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerList = (ExpandableListView) findViewById(R.id.list_slidermenu);
 
-		navDrawerItems = new ArrayList<CategoryNavDrawerItem>();
-		childDrawerItems = new HashMap<String, ArrayList<CategoryNavDrawerItem>>();
-
-		adapter = new NewNavDrawerListAdapter(getApplicationContext(), navDrawerItems,childDrawerItems);
-		mDrawerList.setOnGroupClickListener(new SlideMenuClickListener());
-		mDrawerList.setOnChildClickListener(new SlideMenuChildClickListener());
-		mDrawerList.setAdapter(adapter);
-
+		
 		// enabling action bar app icon and behaving it as toggle button
 		ActionBar actionBar = getActionBar();               
 		actionBar.setCustomView(R.layout.search_layout); //load your layout
@@ -147,13 +141,25 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 		suggestionProvider = new SearchRecentSuggestions(this, SearchSuggestionProvider.AUTHORITY,SearchSuggestionProvider.MODE);
 		getOverflowMenu();
 		
-		if(OrderNowConstants.IS_DEBUG_MODE && OrderNowConstants.IS_LOCAL_RESTURANT_ENABLED) {
-		    restaurant = getResturantLocaly();
-		} else { //Download the Restaurant Menu Asynchronously
-			new DownloadRestaurantTask(context).execute();
-		}
 	}
 	
+	@Override
+	protected void onStart() {
+	    super.onStart();
+	    navDrawerItems = new ArrayList<CategoryNavDrawerItem>();
+        childDrawerItems = new HashMap<String, ArrayList<CategoryNavDrawerItem>>();
+
+        adapter = new NewNavDrawerListAdapter(getApplicationContext(), navDrawerItems,childDrawerItems);
+        mDrawerList.setOnGroupClickListener(new SlideMenuClickListener());
+        mDrawerList.setOnChildClickListener(new SlideMenuChildClickListener());
+        mDrawerList.setAdapter(adapter);
+
+	    if(OrderNowConstants.IS_DEBUG_MODE && OrderNowConstants.IS_LOCAL_RESTURANT_ENABLED) {
+            restaurant = getResturantLocaly();
+        } else { //Download the Restaurant Menu Asynchronously
+            new DownloadRestaurantTask(context).execute();
+        }
+	}
 
 	private void getOverflowMenu() {
 
@@ -800,13 +806,13 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 				//save preferences
 				OrderNowUtilities.putKeyToSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_TABLE_ID, applicationContext.getTableId());
 				OrderNowUtilities.putKeyToSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_RESTAURANT_ID, applicationContext.getRestaurantId());
-
-				if (ApplicationState.getCategoryId(applicationContext)> -1) {
-					displayView(ApplicationState.getCategoryId(applicationContext), 0);	
+				Utilities.info("onPostExecute " + ApplicationState.getCategoryId(applicationContext) +" "+ApplicationState.getChildCategoryId(applicationContext));
+				if (ApplicationState.getCategoryId(applicationContext)> -1 && ApplicationState.getChildCategoryId(applicationContext) > -1) {
+					displayView(ApplicationState.getCategoryId(applicationContext), ApplicationState.getChildCategoryId(applicationContext));	
 				} else {
 					displayView(0, 0);
 				}
-
+				
 				for (Category category : getCategories()) {
 					CategoryNavDrawerItem categoryNavDrawerItem = new CategoryNavDrawerItem(category);
 					navDrawerItems.add(categoryNavDrawerItem);
@@ -895,14 +901,6 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
     protected void onResume() {
         super.onResume();
         invalidateOptionsMenu();
-        int position = ApplicationState.getCategoryId((ApplicationState) getApplicationContext());
-        int childPosition = ApplicationState.getChildCategoryId((ApplicationState) getApplicationContext());
-        Utilities.info("on resume " + position + " " + childPosition);
-
-        if (position >= 0) {
-        	//FIXME: Govind NPE on Restaurant Object
-            //displayView(position, childPosition);
-        }
     }
 	
 	@Override

@@ -32,7 +32,7 @@ public class ApplicationState extends Application {
 	private Map<String, List<IngredientOptionView>> dishIngredientMap;
 	private ArrayList<CustomerOrderWrapper> myOrderHistoryList;
 	private boolean openCategoryDrawer = true;
-	private int childCategoryId = -1;
+	private int childCategoryId = 0;
 
 	public ApplicationState() {
 		menuFilter = new MenuFilter();
