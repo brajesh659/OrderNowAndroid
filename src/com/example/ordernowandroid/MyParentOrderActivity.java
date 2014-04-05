@@ -1,7 +1,6 @@
 package com.example.ordernowandroid;
 
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -56,12 +55,7 @@ public class MyParentOrderActivity extends Activity {
         Utilities.info("Utilities + " + orderStatus.toString());
         
         if(customerOrderWrapper !=null) { 
-            customerOrderWrapper.modifyItemStatus(OrderStatus.Sent, null);
             subOrderList.add(customerOrderWrapper);
-            ApplicationState.setCustomerOrderWrapper(applicationContext, null);
-            
-            //Only update Shared Prefs Object when there is a new suborder
-            OrderNowUtilities.putObjectToSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_SUB_ORDER_LIST, subOrderList);
         }
 		
 		setContentView(R.layout.my_parent_order_summary);
@@ -112,18 +106,16 @@ public class MyParentOrderActivity extends Activity {
                         String orderId = ApplicationState.getActiveOrderId(applicationContext);
                         String url = new URLBuilder().addPath(URLBuilder.Path.serveTable).addAction(URLBuilder.URLAction.requestBill).addParam(URLBuilder.URLParam.orderId, orderId).build();
                         try {
-                            new AsyncNetwork().execute(url).get();
+                            new AsyncNetwork(null,MyParentOrderActivity.this).execute(url);
 
                             ArrayList<String> sharedPrefsToRemove = new ArrayList<String>();
                             sharedPrefsToRemove.add(OrderNowConstants.KEY_ACTIVE_RESTAURANT_ID);
                             sharedPrefsToRemove.add(OrderNowConstants.KEY_ACTIVE_TABLE_ID);
                             sharedPrefsToRemove.add(OrderNowConstants.KEY_ACTIVE_SUB_ORDER_LIST);
                             OrderNowUtilities.removeSharedPreferences(getApplicationContext(), sharedPrefsToRemove);
-                        } catch (InterruptedException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
-                        } catch (ExecutionException e) {
-                            e.printStackTrace();
-                        }
+                        } 
 
                         Toast.makeText(getApplicationContext(), "You will be receiving the bill very shortly!", Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(getApplicationContext(), RestFeedbackActivity.class);

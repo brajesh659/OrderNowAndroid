@@ -67,6 +67,7 @@
         <activity
             android:name="com.example.ordernowandroid.AllCustomerHistoryActivity"
             android:label="@string/app_name"
+            android:parentActivityName="com.example.ordernowandroid.QRCodeScannerActivity"
             android:theme="@android:style/Theme.Holo.Light" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -81,6 +82,7 @@
         <activity
             android:name="com.example.ordernowandroid.IngredientsActivity"
             android:label="@string/app_name"
+            android:parentActivityName="com.example.ordernowandroid.FoodMenuActivity"
             android:theme="@android:style/Theme.Holo.Light" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -89,6 +91,7 @@
         <activity
             android:name="com.example.ordernowandroid.IndividualIngredientActivity"
             android:label="@string/app_name"
+            android:parentActivityName="com.example.ordernowandroid.IngredientsActivity"
             android:theme="@android:style/Theme.Holo.Light" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

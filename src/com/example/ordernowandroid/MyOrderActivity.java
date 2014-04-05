@@ -4,7 +4,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.ExecutionException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,13 +31,16 @@ import com.example.ordernowandroid.fragments.ConfirmOrderDialogFragment;
 import com.example.ordernowandroid.model.MyOrderItem;
 import com.example.ordernowandroid.model.Order;
 import com.example.ordernowandroid.model.OrderNowConstants;
+import com.example.ordernowandroid.model.OrderStatus;
 import com.google.gson.Gson;
 import com.util.AsyncNetwork;
+import com.util.AsyncURLHandler;
+import com.util.OrderNowUtilities;
 import com.util.URLBuilder;
 import com.util.Utilities;
 
-public class MyOrderActivity extends Activity {
-	
+public class MyOrderActivity extends Activity implements AsyncURLHandler {
+		
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -123,13 +125,13 @@ public class MyOrderActivity extends Activity {
 	}
 
 	public void doPositiveClick(String orderNote) {
-		ArrayList<MyOrderItem> myOrderItemList = ApplicationState.getMyOrderItems((ApplicationState)getApplicationContext());
-		String restaurantId = ApplicationState.getRestaurantId((ApplicationState)getApplicationContext());
-		Log.i("MyOrderActivity ", restaurantId);
-
-		CustomerOrderWrapper customerOrderWrapper = new CustomerOrderWrapper(myOrderItemList, orderNote);
-
 		ApplicationState applicationContext = (ApplicationState)getApplicationContext();
+		ArrayList<MyOrderItem> myOrderItemList = ApplicationState.getMyOrderItems(applicationContext);
+		String restaurantId = ApplicationState.getRestaurantId(applicationContext);
+		Log.i("MyOrderActivity ", restaurantId);
+		
+		CustomerOrderWrapper customerOrderWrapper = new CustomerOrderWrapper(myOrderItemList, orderNote);
+		ApplicationState.setCustomerOrderWrapper(applicationContext, customerOrderWrapper);
 
 		Gson gs = new Gson();
 		String order = gs.toJson(customerOrderWrapper.getCustomerOrder(applicationContext));
@@ -142,33 +144,63 @@ public class MyOrderActivity extends Activity {
 		String url = new URLBuilder().addPath(URLBuilder.Path.order)
 				.addParam(URLBuilder.URLParam.order, encoded).build();
 
-		try {
-			String output = new AsyncNetwork().execute(url).get();
-			JSONObject json = new JSONObject(output);
-			String orderId = (String) json.get(URLBuilder.URLParam.orderId.toString());
-			ApplicationState.setActiveOrderId(applicationContext, orderId);
-			//subOrderId not used currently
-			Integer subOrderId = (Integer) json.get(URLBuilder.URLParam.subOrderId.toString());
-			customerOrderWrapper.setOrder(new Order(orderId, subOrderId));
-			Utilities.info("Order response: "+ output + " orderId "+ orderId + " subOrderId " + subOrderId);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			e.printStackTrace();
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-
-		ApplicationState.setCustomerOrderWrapper(applicationContext, customerOrderWrapper);
-
-		ApplicationState.cleanFoodMenuItemQuantityMap(applicationContext);
+		new AsyncNetwork(this, null).execute(url);
 		
+		//start other activity
 		Intent intent = new Intent(getApplicationContext(), MyParentOrderActivity.class);
-
 		startActivity(intent);
 		finish();
 	}
 
 	public void doNegativeClick() {}
+
+    @Override
+    public void handleException(Exception e) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void handleSuccess(String output) {
+        try {
+            Utilities.info("handleSuccess output " + output);
+            Toast.makeText(getApplicationContext(), "Order has been successfully sent.", Toast.LENGTH_LONG).show();
+            ApplicationState applicationContext = (ApplicationState) getApplicationContext();
+
+            CustomerOrderWrapper customerOrderWrapper = ApplicationState.getCustomerOrderWrapper(applicationContext);
+            Utilities.info("handleSuccess customerOrderWrapper " + customerOrderWrapper);
+
+            JSONObject json = new JSONObject(output);
+            String orderId = (String) json.get(URLBuilder.URLParam.orderId.toString());
+            ApplicationState.setActiveOrderId(applicationContext, orderId);
+            // subOrderId not used currently
+            Integer subOrderId = (Integer) json.get(URLBuilder.URLParam.subOrderId.toString());
+            customerOrderWrapper.setOrder(new Order(orderId, subOrderId));
+
+            Utilities.info("Order response: " + output + " orderId " + orderId + " subOrderId " + subOrderId);
+            ApplicationState.cleanFoodMenuItemQuantityMap(applicationContext);
+            ApplicationState.setCustomerOrderWrapper(applicationContext, customerOrderWrapper);
+            ApplicationState.cleanFoodMenuItemQuantityMap(applicationContext);
+
+            //cut from MyParentOrderActivity
+            ArrayList<CustomerOrderWrapper> subOrderList = OrderNowUtilities.getObjectFromSharedPreferences(
+                    getApplicationContext(), OrderNowConstants.KEY_ACTIVE_SUB_ORDER_LIST);
+            if (subOrderList == null) {
+                subOrderList = new ArrayList<CustomerOrderWrapper>();
+            }
+            if (customerOrderWrapper != null) {
+                customerOrderWrapper.modifyItemStatus(OrderStatus.Sent, null);
+                subOrderList.add(customerOrderWrapper);
+                ApplicationState.setCustomerOrderWrapper(applicationContext, null);
+
+                // Only update Shared Prefs Object when there is a new suborder
+                OrderNowUtilities.putObjectToSharedPreferences(getApplicationContext(),
+                        OrderNowConstants.KEY_ACTIVE_SUB_ORDER_LIST, subOrderList);
+            }
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
 
 }

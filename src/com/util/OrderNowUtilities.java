@@ -111,10 +111,10 @@ public class OrderNowUtilities {
 	public static ArrayList<CustomerOrderWrapper> getObjectFromSharedPreferences(Context context, String key) {
 		SharedPreferences preferences = getSharedPreferences(context);
 		String json = preferences.getString(key, "");
-		Utilities.info("SharedPrefs Object get key " + key);
 		Gson gson = new Gson();
 		Type type = new TypeToken<ArrayList<CustomerOrderWrapper>>(){}.getType();
 		ArrayList<CustomerOrderWrapper> subOrderList = gson.fromJson(json, type);
+		Utilities.info("SharedPrefs Object get key " + key + " value "+ json);
 		return subOrderList;
 	}
 

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.ExpandableListView;
 
 import com.example.ordernowandroid.adapter.AllHistoryAdapter;
@@ -63,6 +64,18 @@ public class AllCustomerHistoryActivity extends Activity {
 		allHistoryItems.add(allHistoryItem);
 		allHistoryItems.add(allHistoryItem2);
 		return allHistoryItems;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+
+		switch (item.getItemId()) {
+		// Respond to the action bar's Up/Home button
+		case android.R.id.home:
+			onBackPressed();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 }
