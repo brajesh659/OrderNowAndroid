@@ -423,7 +423,7 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 		}
 
 		FragmentManager fragmentManager = getSupportFragmentManager();
-		fragmentManager.beginTransaction().replace(R.id.frame_container, menuFragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).addToBackStack(null).commit();
+		fragmentManager.beginTransaction().replace(R.id.frame_container, menuFragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
 		/*fragmentManager.addOnBackStackChangedListener(
 				new FragmentManager.OnBackStackChangedListener() {
 					public void onBackStackChanged() {
@@ -869,7 +869,7 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 			//IndividualMenuTabFragment.newInstance("Search", searchDishList);
 			Fragment fragment = IndividualMenuTabFragment.newInstance("Search", searchDishList, null);
 			FragmentManager fragmentManager = getSupportFragmentManager();
-			fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).addToBackStack(null).commit();
+			fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
 			setTitle(newText);
 			return true;
 		}
@@ -908,7 +908,6 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 		if (getSupportFragmentManager().getBackStackEntryCount() == 1){
 			finish();
 		} else {
-			//FIXME: Govind Set Title here
 			super.onBackPressed();
 		}
 	}
