@@ -16,7 +16,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.data.menu.FoodType;
 import com.data.menu.MenuPropertyKey;
 import com.data.menu.MenuPropertyValue;
 import com.example.ordernowandroid.IngredientsActivity;
