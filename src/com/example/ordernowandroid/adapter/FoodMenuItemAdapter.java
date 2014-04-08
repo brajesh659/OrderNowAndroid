@@ -17,6 +17,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.data.menu.FoodType;
+import com.data.menu.MenuPropertyKey;
+import com.data.menu.MenuPropertyValue;
 import com.example.ordernowandroid.IngredientsActivity;
 import com.example.ordernowandroid.R;
 import com.example.ordernowandroid.filter.MenuFilter;
@@ -25,6 +27,7 @@ import com.example.ordernowandroid.fragments.IndividualMenuTabFragment.numListen
 import com.example.ordernowandroid.model.FoodMenuItem;
 import com.example.ordernowandroid.model.OrderNowConstants;
 import com.google.gson.Gson;
+import com.util.Utilities;
 
 public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements Filterable {
 
@@ -81,10 +84,12 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
         } else {
         	holder.txt_itemCategory.setVisibility(View.INVISIBLE);
         }
-        if(foodItem.getFoodType().equals(FoodType.Veg)) {
+        
+        Utilities.info("FoodMenuItemAdapter" + foodItem.getItemName());
+        if(foodItem.getDishFilterProperties().get(MenuPropertyKey.FoodType).equals(MenuPropertyValue.Veg)) {
         	holder.catImage.setVisibility(View.VISIBLE);
         	holder.catImage.setImageResource(R.drawable.veg);
-        } else if(foodItem.getFoodType().equals(FoodType.NonVeg)){
+        } else if(foodItem.getDishFilterProperties().get(MenuPropertyKey.FoodType).equals(MenuPropertyValue.NonVeg)){
         	holder.catImage.setVisibility(View.VISIBLE);
         	holder.catImage.setImageResource(R.drawable.non_veg);
         } else {

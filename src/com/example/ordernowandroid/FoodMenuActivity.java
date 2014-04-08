@@ -51,7 +51,6 @@ import com.data.menu.CategoryLevelFilter;
 import com.data.menu.CustomerOrderWrapper;
 import com.data.menu.Dish;
 import com.data.menu.DishIngredients;
-import com.data.menu.FoodType;
 import com.data.menu.Ingredient;
 import com.data.menu.IngredientOption;
 import com.data.menu.MenuPropertyKey;
@@ -146,6 +145,7 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 	@Override
 	protected void onStart() {
 	    super.onStart();
+	    Utilities.info("FoodMenuActivity onStart called");
 	    navDrawerItems = new ArrayList<CategoryNavDrawerItem>();
         childDrawerItems = new HashMap<String, ArrayList<CategoryNavDrawerItem>>();
 
@@ -417,7 +417,7 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 		Fragment menuFragment = null;
 
 		if (category.getCategoryLevelFilter().getFilterName() == MenuPropertyKey.NULL) {
-			menuFragment = IndividualMenuTabFragment.newInstance(categoryName, OrderNowUtilities.getFoodMenuItems(category.getDishes()), new MenuFilter());
+			menuFragment = IndividualMenuTabFragment.newInstance(categoryName, OrderNowUtilities.getFoodMenuItems(null), new MenuFilter());
 		} else {
 			menuFragment = MenuFragment.newInstance(category);
 		}
@@ -490,7 +490,7 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 	}
 
     private void loadRestaurantDishes(final Restaurant restaurant) {
-        Utilities.info("restaurant load " + restaurant.getName() + restaurantLoadedInDb);
+        Utilities.info("restaurant load " + restaurant.getName() + restaurantLoadedInDb + restaurant.toString());
         if (!restaurantLoadedInDb.containsKey(restaurant.getName())) {
             // load filter first time
             AvailableMenuFilter availableMenuFilter = null;
@@ -499,7 +499,7 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
             } else {
                 Map<MenuPropertyKey, List<MenuPropertyValue>> dishProperties = new HashMap<MenuPropertyKey, List<MenuPropertyValue>>();
                 //dishProperties.put(MenuPropertyKey.FoodType, Arrays.asList(MenuPropertyValue.Veg, MenuPropertyValue.NonVeg));
-                dishProperties.put(MenuPropertyKey.CousineType, Arrays.asList(MenuPropertyValue.NorthIndian, MenuPropertyValue.SouthIndian));
+                dishProperties.put(MenuPropertyKey.CuisineType, Arrays.asList(MenuPropertyValue.NorthIndian, MenuPropertyValue.SouthIndian));
                 availableMenuFilter = new AvailableMenuFilter(dishProperties);
             }
             ApplicationState.setAvailableMenuFilter((ApplicationState) getApplicationContext(), availableMenuFilter);
@@ -580,14 +580,14 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
             category.setCategoryLevelFilter(categoryProperty );
 			getCategory(categoryNames[i], categoryItemName.get(i),
 					categoryItemPrice.get(i), categoryItemID.get(i), imageId.get(i), category);
-			if(category.getName().equals("Soups")) {
-			    Category category1 = new Category();
-			    List<Category> categories1 = new ArrayList<Category>();
-			    categories1.add(category);
-                category1.setCategories(categories1);
-                category1.setName("Chinese");
-                category = category1;
-			}
+//			if(category.getName().equals("Soups")) {
+//			    Category category1 = new Category();
+//			    List<Category> categories1 = new ArrayList<Category>();
+//			    categories1.add(category);
+//                category1.setCategories(categories1);
+//                category1.setName("Chinese");
+//                category = category1;
+//			}
             categories.add(category);
         }
         Category category = new Category();
@@ -600,7 +600,47 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
         Restaurant restaurant = new Restaurant();
         restaurant.setName("Eat 3");
         restaurant.setMenu(menu);
+        Map<MenuPropertyKey, List<MenuPropertyValue>> availableFilters = new HashMap<MenuPropertyKey, List<MenuPropertyValue>>();
+        List<MenuPropertyValue> cuisineTypeAvailableFilter = new ArrayList<MenuPropertyValue>((Arrays.asList(MenuPropertyValue.NorthIndian, MenuPropertyValue.SouthIndian)));
+        availableFilters.put(MenuPropertyKey.CuisineType, cuisineTypeAvailableFilter );
+        restaurant.setAvailableFilters(availableFilters );
+        Utilities.info("FoodMenuActivity " + restaurant.toString());
         loadRestaurantDishes(restaurant);
+        
+        this.restaurant = restaurant;
+
+        String restaurantName = restaurant.getName();
+        mDrawerTitle = restaurantName;
+        ApplicationState.setRestaurantName(applicationContext, restaurantName);
+        OrderNowUtilities.putKeyToSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_RESTAURANT_NAME, restaurantName);
+
+        //save preferences
+        OrderNowUtilities.putKeyToSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_TABLE_ID, applicationContext.getTableId());
+        OrderNowUtilities.putKeyToSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_RESTAURANT_ID, applicationContext.getRestaurantId());
+        Utilities.info("onPostExecute " + ApplicationState.getCategoryId(applicationContext) +" "+ApplicationState.getChildCategoryId(applicationContext));
+        if (ApplicationState.getCategoryId(applicationContext)> -1 && ApplicationState.getChildCategoryId(applicationContext) > -1) {
+            displayView(ApplicationState.getCategoryId(applicationContext), ApplicationState.getChildCategoryId(applicationContext));   
+        } else {
+            displayView(0, 0);
+        }
+        
+        for (Category iCategory : getCategories()) {
+            CategoryNavDrawerItem categoryNavDrawerItem = new CategoryNavDrawerItem(iCategory);
+            navDrawerItems.add(categoryNavDrawerItem);
+            List<Category> childCategories = iCategory.getCategories();
+            if (childCategories != null && !childCategories.isEmpty()) {
+                ArrayList<CategoryNavDrawerItem> childArrayList = new ArrayList<CategoryNavDrawerItem>();
+                for (Category childCategory : childCategories) {
+                    CategoryNavDrawerItem childCategoryNavDrawerItem = new CategoryNavDrawerItem(childCategory);
+                    childArrayList.add(childCategoryNavDrawerItem);
+                }
+                childDrawerItems.put(categoryNavDrawerItem.getTitle(), childArrayList);
+            }
+        }
+        
+        if (applicationContext.isOpenCategoryDrawer()) {
+            mDrawerLayout.openDrawer(Gravity.LEFT);
+        }
         return restaurant;
     }
 
@@ -637,9 +677,11 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
             //dish.setImg(itemImages[i]);
             dish.setImg("");
             if (i % 2 == 0) {
-                dish.setType(FoodType.Veg);
+                Map<MenuPropertyKey, MenuPropertyValue> dishProperties = dish.getDishProperties();
+                dishProperties.put(MenuPropertyKey.FoodType, MenuPropertyValue.Veg);
             } else {
-                dish.setType(FoodType.NonVeg);
+                Map<MenuPropertyKey, MenuPropertyValue> dishProperties = dish.getDishProperties();
+                dishProperties.put(MenuPropertyKey.FoodType, MenuPropertyValue.NonVeg);
             }
 
             dish.setDescription("item description comes here");
@@ -663,11 +705,15 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
             dish.setPrice(itemPrices[i]);
             //dish.setImg(itemImages[i]);
             dish.setImg("");
+            
             if (i % 2 == 0) {
-                dish.setType(FoodType.Veg);
+                Map<MenuPropertyKey, MenuPropertyValue> dishProperties = dish.getDishProperties();
+                dishProperties.put(MenuPropertyKey.FoodType, MenuPropertyValue.Veg);
             } else {
-                dish.setType(FoodType.NonVeg);
+                Map<MenuPropertyKey, MenuPropertyValue> dishProperties = dish.getDishProperties();
+                dishProperties.put(MenuPropertyKey.FoodType, MenuPropertyValue.NonVeg);
             }
+            
             dish.setDescription("item description comes here");
 			dish.setDishId(itemids[i]);
 			dish.setDishIngredients(constructDishIngredients());
@@ -681,11 +727,15 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
         dish.setPrice(itemPrices[i]);
         //dish.setImg(itemImages[i]);
         dish.setImg("");
+        
         if (i % 2 == 0) {
-            dish.setType(FoodType.Veg);
+            Map<MenuPropertyKey, MenuPropertyValue> dishProperties = dish.getDishProperties();
+            dishProperties.put(MenuPropertyKey.FoodType, MenuPropertyValue.Veg);
         } else {
-            dish.setType(FoodType.NonVeg);
+            Map<MenuPropertyKey, MenuPropertyValue> dishProperties = dish.getDishProperties();
+            dishProperties.put(MenuPropertyKey.FoodType, MenuPropertyValue.NonVeg);
         }
+        
         dish.setDescription("item description comes here");
 		dish.setDishId(itemids[i]);
 		dish.setDishIngredients(constructDishIngredients());
@@ -900,6 +950,7 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 	@Override
     protected void onResume() {
         super.onResume();
+        Utilities.info("FoodMenuActivity onResume called");
         invalidateOptionsMenu();
     }
 	

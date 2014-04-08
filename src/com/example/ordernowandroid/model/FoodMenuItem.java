@@ -2,20 +2,17 @@ package com.example.ordernowandroid.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 
 import com.data.menu.Dish;
-import com.data.menu.FoodType;
 import com.data.menu.Ingredient;
 import com.data.menu.IngredientOption;
 import com.data.menu.MenuPropertyKey;
 import com.data.menu.MenuPropertyValue;
 import com.example.ordernowandroid.adapter.ImageService;
-import com.util.Utilities;
 
 /**
  * 
@@ -93,10 +90,6 @@ public class FoodMenuItem implements Serializable {
 
 	public Float getItemPrice() {
 		return dish.getPrice();
-	}
-
-	public FoodType getFoodType() {
-		return dish.getType();
 	}
 
 	public String getDescription() {
@@ -187,36 +180,7 @@ public class FoodMenuItem implements Serializable {
 	}
 
 	public Map<MenuPropertyKey, MenuPropertyValue> getDishFilterProperties() {
-		Map<MenuPropertyKey, MenuPropertyValue> dishProperties = dish
-				.getDishProperties();
-		if (dishProperties == null) {
-			dishProperties = new HashMap<MenuPropertyKey, MenuPropertyValue>();
-
-			if (dish.getPrice() % 25 == 0) {
-				dishProperties.put(MenuPropertyKey.CousineType,
-						MenuPropertyValue.NorthIndian);
-			} else {
-				dishProperties.put(MenuPropertyKey.CousineType,
-						MenuPropertyValue.SouthIndian);
-				dishProperties.put(MenuPropertyKey.DrinkType,
-                        MenuPropertyValue.Whisky);
-			}
-            if (dish.getName().length() % 4 == 0) {
-                dishProperties.put(MenuPropertyKey.DrinkType, MenuPropertyValue.Beer);
-            } else if (dish.getName().length() % 4 == 1) {
-                dishProperties.put(MenuPropertyKey.DrinkType, MenuPropertyValue.Whisky);
-            } else if (dish.getName().length() % 4 == 2) {
-                dishProperties.put(MenuPropertyKey.DrinkType, MenuPropertyValue.Scotch);
-            } else {
-                dishProperties.put(MenuPropertyKey.DrinkType, MenuPropertyValue.Wine);
-            }
-			
-		}
-		Utilities.info("getDishFilterProperties " + dishProperties);
-		dishProperties.put(MenuPropertyKey.FoodType,
-				MenuPropertyValue.valueOf(getFoodType().toString()));
-		return dishProperties;
-
+		return dish.getDishProperties();
 	}
 
 	public String getCategory() {

@@ -2,6 +2,7 @@ package com.data.menu;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -12,13 +13,12 @@ public class Dish implements Serializable {
      */
     private static final long serialVersionUID = 1L;
 
-    public Dish(String dishId, String name, String description, String img, float price, FoodType type, boolean available) {
+    public Dish(String dishId, String name, String description, String img, float price, boolean available) {
         this.dishId = dishId;
         this.name = name;
         this.description = description;
         this.img = img;
         this.price = price;
-        this.type = type;
         this.available = available;
     };
 
@@ -30,7 +30,6 @@ public class Dish implements Serializable {
     private String description;
     private String img;
     private Float price;
-    private FoodType type; // Veg or non-veg
     private Map<MenuPropertyKey, MenuPropertyValue> dishProperties;
 	private DishIngredients ingredients;
 	private String dishIngredientId;
@@ -48,6 +47,9 @@ public class Dish implements Serializable {
     private boolean isIngredientCustomizable = false;
     
 	public Map<MenuPropertyKey, MenuPropertyValue> getDishProperties() {
+	    if(dishProperties==null) {
+	        dishProperties = new HashMap<MenuPropertyKey, MenuPropertyValue>();
+	    }
         return dishProperties;
     }
 
@@ -95,17 +97,9 @@ public class Dish implements Serializable {
         this.price = price;
     }
 
-    public FoodType getType() {
-        return type;
-    }
-
-    public void setType(FoodType type) {
-        this.type = type;
-    }
-
     @Override
     public String toString() {
-        return "Name : " + getName() + " Price : " + getPrice();
+        return "Name : " + getName() + " Price : " + getPrice() + " keys " + getDishProperties().keySet() + " values "+ getDishProperties().values() ;
     }
     
     @Override
