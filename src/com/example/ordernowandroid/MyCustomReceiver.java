@@ -121,18 +121,7 @@ public class MyCustomReceiver extends BroadcastReceiver {
 
                 OrderNowUtilities.putObjectToSharedPreferences(context, OrderNowConstants.KEY_ACTIVE_SUB_ORDER_LIST, subOrderList);
 
-                Intent i = new Intent(OrderNowConstants.ORDER_STATUS_RESET);
-                context.sendOrderedBroadcast(i, null, new BroadcastReceiver() {
-                    @Override
-                    public void onReceive(Context context, Intent intent) {
-                        int result = getResultCode();
-                        if (result != Activity.RESULT_CANCELED) {
-                            Utilities.info("MyParentOrderActivity caught the broadcast, result " + result);
-                            return; // Activity caught it
-                        }
-                        notification(context, message);
-                    }
-                }, null, Activity.RESULT_CANCELED, null, null);
+                OrderNowUtilities.orderStatusResetReceiver(context, message);
 
             } else {
                 Utilities.info("Action not implemented yet "+action);
@@ -142,33 +131,12 @@ public class MyCustomReceiver extends BroadcastReceiver {
         }
     }
 
+
     private boolean isStatusModificationRequired(String action) {
         return action.equals(OrderNowConstants.ORDER_RECIEVED) ||
                action.equals(OrderNowConstants.ORDER_ACCEPTED) ||
                action.equals(OrderNowConstants.ORDER_COMPLETED) ||
                action.equals(OrderNowConstants.MODIFY_ORDER);
-    }
-
-    private void notification(Context context, String message) {
-
-        Intent intent = new Intent(context, MyParentOrderActivity.class);
-        PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent, 0);
-        Notification noti = new NotificationCompat.Builder(context)
-        .setContentTitle(message)
-        .setTicker("Notification!")
-        .setWhen(System.currentTimeMillis())
-        .setContentIntent(pIntent)
-        .setDefaults(Notification.DEFAULT_SOUND)
-        .setAutoCancel(true)
-        .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
-        .setSmallIcon(R.drawable.ic_category)
-        .build();
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        // hide the notification after its selected
-        noti.flags |= Notification.FLAG_AUTO_CANCEL;
-
-        notificationManager.notify(OrderNowConstants.STATUS_CHANGE_NOTIFICATION_ID, noti);
- 
     }
     
 }

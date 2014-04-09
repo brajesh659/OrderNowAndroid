@@ -141,6 +141,11 @@ public class MyParentOrderActivity extends Activity {
         }
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         notificationManager.cancel(OrderNowConstants.STATUS_CHANGE_NOTIFICATION_ID);
+        ApplicationState applicationContext = (ApplicationState) getApplicationContext();
+        //if application context is null that means its safe to refresh view from the prefernece storage
+        if (ApplicationState.getCustomerOrderWrapper(applicationContext) == null) {
+            refreshConfirmedOrderView();
+        }
         super.onResume();
     }
 
@@ -181,20 +186,27 @@ public class MyParentOrderActivity extends Activity {
 	protected void onNewIntent(Intent intent) {
 	    super.onNewIntent(intent);
 	    Utilities.info("on new intent "+intent.getAction());
-	    ArrayList<CustomerOrderWrapper> subOrderList = OrderNowUtilities.getObjectFromSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_SUB_ORDER_LIST);
+	    refreshConfirmedOrderView();
+	}
+
+    private void refreshConfirmedOrderView() {
+        ArrayList<CustomerOrderWrapper> subOrderList = OrderNowUtilities.getObjectFromSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_SUB_ORDER_LIST);
 	    myParentOrderAdapter.clear();
 	    myParentOrderAdapter.addAll(subOrderList);
 	    myParentOrderAdapter.notifyDataSetChanged();
-	}
+    }
 	
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.waiter:
-			FoodMenuActivity.callWaiterFunction(MyParentOrderActivity.this);			
-		}
-		return super.onOptionsItemSelected(item);
-	}
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+        case android.R.id.home:
+            onBackPressed();
+            return true;
+        case R.id.waiter:
+            FoodMenuActivity.callWaiterFunction(MyParentOrderActivity.this);
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

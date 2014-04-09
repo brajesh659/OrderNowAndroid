@@ -15,6 +15,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -40,6 +41,18 @@ import com.util.URLBuilder;
 import com.util.Utilities;
 
 public class MyOrderActivity extends Activity implements AsyncURLHandler {
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+        // Respond to the action bar's Up/Home button
+        case android.R.id.home:
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 		
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -156,12 +169,14 @@ public class MyOrderActivity extends Activity implements AsyncURLHandler {
 
     @Override
     public void handleException(Exception e) {
-        // TODO Auto-generated method stub
-
+        OrderNowUtilities.generateNotification(getApplicationContext(), "Your Order was not Sent", MyOrderActivity.class);
+        ApplicationState applicationContext = (ApplicationState) getApplicationContext();
+        ApplicationState.setCustomerOrderWrapper(applicationContext, null);
     }
 
     @Override
     public void handleSuccess(String output) {
+        
         try {
             Utilities.info("handleSuccess output " + output);
             Toast.makeText(getApplicationContext(), "Order has been successfully sent.", Toast.LENGTH_LONG).show();
@@ -196,11 +211,13 @@ public class MyOrderActivity extends Activity implements AsyncURLHandler {
                 // Only update Shared Prefs Object when there is a new suborder
                 OrderNowUtilities.putObjectToSharedPreferences(getApplicationContext(),
                         OrderNowConstants.KEY_ACTIVE_SUB_ORDER_LIST, subOrderList);
+                OrderNowUtilities.orderStatusResetReceiver(getApplicationContext(), "Order Sent");
             }
         } catch (JSONException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+        
     }
 
 }

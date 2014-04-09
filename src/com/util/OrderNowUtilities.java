@@ -4,18 +4,27 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.Activity;
 import android.app.Dialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
+import android.support.v4.app.NotificationCompat;
 import android.view.View;
 import android.widget.LinearLayout;
 
 import com.data.menu.CustomerOrderWrapper;
 import com.data.menu.Dish;
+import com.example.ordernowandroid.MyParentOrderActivity;
 import com.example.ordernowandroid.R;
 import com.example.ordernowandroid.model.FoodMenuItem;
+import com.example.ordernowandroid.model.OrderNowConstants;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -117,6 +126,44 @@ public class OrderNowUtilities {
 		Utilities.info("SharedPrefs Object get key " + key + " value "+ json);
 		return subOrderList;
 	}
+	
+
+    public static void generateNotification(Context context, String message, Class<?> activityClass) {
+
+        Intent intent = new Intent(context, activityClass );
+        PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent, 0);
+        Notification noti = new NotificationCompat.Builder(context)
+        .setContentTitle(message)
+        .setTicker("Notification!")
+        .setWhen(System.currentTimeMillis())
+        .setContentIntent(pIntent)
+        .setDefaults(Notification.DEFAULT_SOUND)
+        .setAutoCancel(true)
+        .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
+        .setSmallIcon(R.drawable.ic_category)
+        .build();
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        // hide the notification after its selected
+        noti.flags |= Notification.FLAG_AUTO_CANCEL;
+
+        notificationManager.notify(OrderNowConstants.STATUS_CHANGE_NOTIFICATION_ID, noti);
+ 
+    }
+    
+    public static void orderStatusResetReceiver(Context context, final String message) {
+        Intent i = new Intent(OrderNowConstants.ORDER_STATUS_RESET);
+        context.sendOrderedBroadcast(i, null, new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                int result = getResultCode();
+                if (result != Activity.RESULT_CANCELED) {
+                    Utilities.info("MyParentOrderActivity caught the broadcast, result " + result);
+                    return; // Activity caught it
+                }
+                OrderNowUtilities.generateNotification(context, message, MyParentOrderActivity.class);
+            }
+        }, null, Activity.RESULT_CANCELED, null, null);
+    }
 
 }
 
