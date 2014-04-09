@@ -611,7 +611,6 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 
         String restaurantName = restaurant.getName();
         mDrawerTitle = restaurantName;
-        ApplicationState.setRestaurantName(applicationContext, restaurantName);
         OrderNowUtilities.putKeyToSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_RESTAURANT_NAME, restaurantName);
 
         //save preferences
@@ -850,7 +849,6 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 				
 				String restaurantName = restaurant.getName();
 				mDrawerTitle = restaurantName;
-				ApplicationState.setRestaurantName(applicationContext, restaurantName);
 				OrderNowUtilities.putKeyToSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_RESTAURANT_NAME, restaurantName);
 
 				//save preferences

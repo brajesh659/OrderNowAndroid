@@ -85,14 +85,15 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
         }
         
         Utilities.info("FoodMenuItemAdapter" + foodItem.getItemName());
-        if(foodItem.getDishFilterProperties().get(MenuPropertyKey.FoodType).equals(MenuPropertyValue.Veg)) {
-        	holder.catImage.setVisibility(View.VISIBLE);
-        	holder.catImage.setImageResource(R.drawable.veg);
-        } else if(foodItem.getDishFilterProperties().get(MenuPropertyKey.FoodType).equals(MenuPropertyValue.NonVeg)){
-        	holder.catImage.setVisibility(View.VISIBLE);
-        	holder.catImage.setImageResource(R.drawable.non_veg);
+        MenuPropertyValue foodTypeValue = foodItem.getDishFilterProperties().get(MenuPropertyKey.FoodType);
+        if (foodTypeValue != null && foodTypeValue.equals(MenuPropertyValue.Veg)) {
+            holder.catImage.setVisibility(View.VISIBLE);
+            holder.catImage.setImageResource(R.drawable.veg);
+        } else if (foodTypeValue != null && foodTypeValue.equals(MenuPropertyValue.NonVeg)) {
+            holder.catImage.setVisibility(View.VISIBLE);
+            holder.catImage.setImageResource(R.drawable.non_veg);
         } else {
-        	holder.catImage.setVisibility(View.INVISIBLE);
+            holder.catImage.setVisibility(View.INVISIBLE);
         }
         Bitmap bitmap = foodItem.getImage();
         if (bitmap == null) {
