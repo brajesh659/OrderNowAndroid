@@ -50,7 +50,7 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/dish_photo"
         android:paddingTop="5sp"
-        android:textColor="#F14F00"
+        android:textColor="@color/itemNameColor"
         android:textSize="14sp"
         android:textStyle="bold" />
 
@@ -87,7 +87,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/dish_description"
         android:layout_toRightOf="@id/dish_photo"
-        android:textColor="#32cd32"
+        android:textColor="@color/itemPriceColor"
         android:textSize="19sp"
         android:textStyle="bold" />
 

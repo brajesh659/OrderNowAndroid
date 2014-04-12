@@ -190,5 +190,9 @@ public class FoodMenuItem implements Serializable {
 	public void setCategory(String category) {
 		this.category = category;
 	}
+	
+	public boolean isAvailable() {
+	    return dish.isAvailable();
+	}
 
 }

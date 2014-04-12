@@ -15,6 +15,7 @@ import android.widget.Filterable;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.data.menu.MenuPropertyKey;
 import com.data.menu.MenuPropertyValue;
@@ -101,23 +102,33 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
         } else {
             holder.itemImage.setImageBitmap(bitmap);
         }
-
-        if (numCallBack.getQuantity(foodItem) == 0) {
-            holder.subItem.setVisibility(View.INVISIBLE);
-            holder.addNote.setVisibility(View.INVISIBLE);
-            holder.txt_itemQuantity.setText("");
-            holder.itemImage.setAlpha(1f);
+        
+        
+        if(!foodItem.isAvailable()) {
+            holder.itemImage.setImageResource(R.drawable.not_available);
+            hideButtonsFromFoodItem(holder);
+            View.OnClickListener ingredientOnClickListener = new View.OnClickListener() {
+                
+                @Override
+                public void onClick(View arg0) {
+                    Toast.makeText(context.getApplicationContext(), "This item is currently unavailable", Toast.LENGTH_SHORT).show();             
+                }
+            };
+            holder.itemImage.setOnClickListener(ingredientOnClickListener);
+            holder.txt_itemDescription.setOnClickListener(ingredientOnClickListener);
+            holder.txt_itemDescription.setText("Currently Unavailable");
+            holder.txt_itemName.setOnClickListener(ingredientOnClickListener);
+            holder.txt_itemPrice.setOnClickListener(ingredientOnClickListener);
+            
+            holder.txt_itemName.setTextColor(context.getResources().getColor(R.color.gray));
+            holder.txt_itemPrice.setTextColor(context.getResources().getColor(R.color.gray));
         } else {
-            final Float quantity = numCallBack.getQuantity(foodItem);
-            if (quantity - quantity.intValue() == 0)
-                holder.txt_itemQuantity.setText(quantity.intValue() + "");
-            else
-                holder.txt_itemQuantity.setText(quantity + "");
-
-            holder.subItem.setVisibility(View.VISIBLE);
-            holder.addNote.setVisibility(View.VISIBLE);
-            holder.itemImage.setAlpha(0.3f);
+            //TODO without this first item view is screwed, look is it the right approach
+            holder.addItem.setVisibility(View.VISIBLE);
+            holder.txt_itemName.setTextColor(context.getResources().getColor(R.color.itemNameColor));
+            holder.txt_itemPrice.setTextColor(context.getResources().getColor(R.color.itemPriceColor));
         }
+        
 
         holder.addItem.setOnClickListener(new View.OnClickListener() {
 
@@ -171,9 +182,7 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
 
         if(foodItem.isItemCustomizable()) {
         	holder.itemImage.setImageResource(R.drawable.ic_category);
-        	holder.addItem.setVisibility(View.INVISIBLE);
-        	holder.subItem.setVisibility(View.INVISIBLE);
-        	holder.addNote.setVisibility(View.INVISIBLE);
+        	hideButtonsFromFoodItem(holder);
         	View.OnClickListener ingredientOnClickListener = new View.OnClickListener() {
 				
 				@Override
@@ -190,10 +199,35 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
 			holder.txt_itemDescription.setOnClickListener(ingredientOnClickListener);
 			holder.txt_itemName.setOnClickListener(ingredientOnClickListener);
 			holder.txt_itemPrice.setOnClickListener(ingredientOnClickListener);
+			
         }
+        
+        if (numCallBack.getQuantity(foodItem) == 0) {
+            holder.subItem.setVisibility(View.INVISIBLE);
+            holder.addNote.setVisibility(View.INVISIBLE);
+            holder.txt_itemQuantity.setText("");
+            holder.itemImage.setAlpha(1f);
+        } else {
+            final Float quantity = numCallBack.getQuantity(foodItem);
+            if (quantity - quantity.intValue() == 0)
+                holder.txt_itemQuantity.setText(quantity.intValue() + "");
+            else
+                holder.txt_itemQuantity.setText(quantity + "");
+
+            holder.subItem.setVisibility(View.VISIBLE);
+            holder.addNote.setVisibility(View.VISIBLE);
+            holder.itemImage.setAlpha(0.3f);
+        }
+        
         return convertView;
     }
 
+    private void hideButtonsFromFoodItem(final ViewHolder holder) {
+        holder.addItem.setVisibility(View.INVISIBLE);
+        holder.subItem.setVisibility(View.INVISIBLE);
+        holder.addNote.setVisibility(View.INVISIBLE);
+    }
+    
     static class ViewHolder {
         TextView txt_itemName;
         TextView txt_itemCategory;
