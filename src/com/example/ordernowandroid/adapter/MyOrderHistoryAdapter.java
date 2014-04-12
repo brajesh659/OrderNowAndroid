@@ -1,6 +1,7 @@
 package com.example.ordernowandroid.adapter;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -21,6 +22,7 @@ import com.example.ordernowandroid.MyOrderActivity;
 import com.example.ordernowandroid.R;
 import com.example.ordernowandroid.model.FoodMenuItem;
 import com.example.ordernowandroid.model.MyOrderItem;
+import com.util.Utilities;
 
 public class MyOrderHistoryAdapter extends ArrayAdapter<RestaurantOrder> {
 
@@ -41,7 +43,11 @@ public class MyOrderHistoryAdapter extends ArrayAdapter<RestaurantOrder> {
 		final ApplicationState applicationContext = (ApplicationState) getContext().getApplicationContext();
 		TextView orderIdView = (TextView) convertView.findViewById(R.id.orderId);
 		String orderId = myOrderHistoryList.get(position).getOrderId();
-		orderIdView.setText(orderId);
+		orderIdView.setText("OrderId " + orderId);
+		
+		TextView orderDateView = (TextView) convertView.findViewById(R.id.orderDate);
+		String orderDate = Utilities.defaultDateFormat(new Date(myOrderHistoryList.get(position).getCreatedAt()));
+		orderDateView.setText(orderDate);
 		
 		Button reorderNowBtn = (Button) convertView.findViewById(R.id.reorderNowBtn);
 		

@@ -24,7 +24,7 @@ public class MyOrderHistoryActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setTitle("Past Orders");
+		setTitle("Restaurant Past Orders");
 
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		setContentView(R.layout.activity_my_order_history);

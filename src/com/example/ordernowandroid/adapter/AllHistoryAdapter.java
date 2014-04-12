@@ -111,7 +111,7 @@ public class AllHistoryAdapter extends BaseExpandableListAdapter {
 
 		AllHistoryViewItem item = this.allHistoryItems.get(position);
 		restNameView.setText(item.getRestName());
-		orderIdView.setText("OrderID " + item.getOrderId());
+		orderIdView.setText("OrderId " + item.getOrderId());
 		String orderDate = Utilities.defaultDateFormat(item.getOrderDate());
 		orderDateView.setText(orderDate);
 

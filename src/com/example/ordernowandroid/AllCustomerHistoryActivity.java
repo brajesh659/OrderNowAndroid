@@ -33,7 +33,7 @@ public class AllCustomerHistoryActivity extends Activity implements AsyncURLHand
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTitle("Past Orders");
+        setTitle("Customer Past Orders");
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.expandable_list_view);
