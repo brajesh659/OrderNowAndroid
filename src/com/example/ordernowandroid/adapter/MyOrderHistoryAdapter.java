@@ -2,6 +2,7 @@ package com.example.ordernowandroid.adapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,19 +13,20 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.data.menu.CustomerOrderWrapper;
 import com.data.menu.Dish;
+import com.data.restaurant.OrderedDish;
+import com.data.restaurant.RestaurantOrder;
 import com.example.ordernowandroid.ApplicationState;
 import com.example.ordernowandroid.MyOrderActivity;
 import com.example.ordernowandroid.R;
 import com.example.ordernowandroid.model.FoodMenuItem;
 import com.example.ordernowandroid.model.MyOrderItem;
 
-public class MyOrderHistoryAdapter extends ArrayAdapter<CustomerOrderWrapper> {
+public class MyOrderHistoryAdapter extends ArrayAdapter<RestaurantOrder> {
 
-	private ArrayList<CustomerOrderWrapper> myOrderHistoryList;
+	private ArrayList<RestaurantOrder> myOrderHistoryList;
 
-	public MyOrderHistoryAdapter(Context context, ArrayList<CustomerOrderWrapper> myOrderHistoryList) {
+	public MyOrderHistoryAdapter(Context context, ArrayList<RestaurantOrder> myOrderHistoryList) {
 		super(context, R.layout.my_order_history_item, myOrderHistoryList);
 		this.myOrderHistoryList = myOrderHistoryList;
 	}
@@ -37,9 +39,9 @@ public class MyOrderHistoryAdapter extends ArrayAdapter<CustomerOrderWrapper> {
 		}
 		
 		final ApplicationState applicationContext = (ApplicationState) getContext().getApplicationContext();
-		TextView orderDateView = (TextView) convertView.findViewById(R.id.orderDate);
-		String orderDate = myOrderHistoryList.get(position).getCustomerOrder(applicationContext).getOrderNote(); //TODO: Change this to Order Date
-		orderDateView.setText(orderDate);
+		TextView orderIdView = (TextView) convertView.findViewById(R.id.orderId);
+		String orderId = myOrderHistoryList.get(position).getOrderId();
+		orderIdView.setText(orderId);
 		
 		Button reorderNowBtn = (Button) convertView.findViewById(R.id.reorderNowBtn);
 		
@@ -47,8 +49,18 @@ public class MyOrderHistoryAdapter extends ArrayAdapter<CustomerOrderWrapper> {
 			@Override
 			public void onClick(View v) {
 				HashMap<String, MyOrderItem> foodItemQtyMap = new HashMap<String, MyOrderItem>();
-				foodItemQtyMap.put("Cream of Veg", new MyOrderItem(new FoodMenuItem(new Dish("d0", "Cream of Veg", null, null, 95, true)), 2));
-				foodItemQtyMap.put("Roasted Bell Pepper Soup", new MyOrderItem(new FoodMenuItem(new Dish("d1", "Roasted Bell Pepper Soup", null, null, 115, true)), 3));
+				List<OrderedDish> orderedDish = myOrderHistoryList.get(position).getDishes();
+				
+				String dishName,dishId;
+				float dishPrice;
+				Float dishQty;
+				for(int i = 0; i < orderedDish.size(); i++) {
+					dishName = orderedDish.get(i).getName();
+					dishId = orderedDish.get(i).getDishId();
+					dishPrice = (float) orderedDish.get(i).getPrice();
+					dishQty = orderedDish.get(i).getDishQty();
+					foodItemQtyMap.put(dishName, new MyOrderItem(new FoodMenuItem(new Dish(dishId, dishName, null, null, dishPrice, true)), dishQty));
+				}
 				
 				ApplicationState.setFoodMenuItemQuantityMap(applicationContext, foodItemQtyMap);
 				Intent intent = new Intent(getContext(), MyOrderActivity.class);

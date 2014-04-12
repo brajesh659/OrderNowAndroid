@@ -1,20 +1,25 @@
 package com.example.ordernowandroid;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.widget.ListView;
 
-import com.data.menu.CustomerOrderWrapper;
-import com.data.menu.Dish;
+import com.data.restaurant.RestaurantOrder;
 import com.example.ordernowandroid.adapter.MyOrderHistoryAdapter;
-import com.example.ordernowandroid.model.FoodMenuItem;
-import com.example.ordernowandroid.model.MyOrderItem;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.parse.ParseInstallation;
+import com.util.AsyncNetwork;
+import com.util.URLBuilder;
+import com.util.Utilities;
 
 public class MyOrderHistoryActivity extends Activity {
 
-	private ArrayList<CustomerOrderWrapper> myOrderHistoryList = new ArrayList<CustomerOrderWrapper>();
+	private ArrayList<RestaurantOrder> myOrderHistoryList = new ArrayList<RestaurantOrder>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -25,8 +30,26 @@ public class MyOrderHistoryActivity extends Activity {
 		setContentView(R.layout.activity_my_order_history);
 
 		ApplicationState applicationContext = (ApplicationState) getApplicationContext();
-		if(applicationContext.getMyOrderHistoryList() == null) { //TODO: Make call to Server by providing Table Id and Customer Id and remove the next LOC
-			populateOrderHistoryLocally();		
+		if(applicationContext.getMyOrderHistoryList() == null) {
+				String url = new URLBuilder()
+				.addPath(URLBuilder.Path.serveTable)
+				.addAction(URLBuilder.URLAction.custHistory)
+				.addParam(URLBuilder.URLParam.customerId, ParseInstallation.getCurrentInstallation().getObjectId().toString())//TODO: Add param for Rest Id
+				.build();
+				
+				Utilities.info("URL: " + url);
+				try {
+					String myOrderHistoryJson = new AsyncNetwork().execute(url).get();
+					Utilities.info("myOrderHistoryJson: " + myOrderHistoryJson);
+					
+					Gson gs = new Gson();
+					Type type = new TypeToken<ArrayList<RestaurantOrder>>(){}.getType();
+					myOrderHistoryList = gs.fromJson(myOrderHistoryJson, type);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				} catch (ExecutionException e) {
+					e.printStackTrace();
+				}
 			ApplicationState.setMyOrderHistoryList(applicationContext, myOrderHistoryList);
 		} else {
 			myOrderHistoryList = ApplicationState.getMyOrderHistoryList(applicationContext);
@@ -37,17 +60,4 @@ public class MyOrderHistoryActivity extends Activity {
 		myOrderHistoryListView.setAdapter(myOrderHistoryAdapter);
 	}
 
-	private void populateOrderHistoryLocally() {
-		
-		ArrayList<MyOrderItem> myOrderItemList = new ArrayList<MyOrderItem>();
-		myOrderItemList.add(new MyOrderItem(new FoodMenuItem(new Dish("d0", "Cream of Veg", null, null, 95, true)), 2));
-		myOrderItemList.add(new MyOrderItem(new FoodMenuItem(new Dish("d1", "Roasted Bell Pepper Soup", null, null, 115, true)), 3));
-		
-		CustomerOrderWrapper customerOrderWrapper1 = new CustomerOrderWrapper(myOrderItemList, "First Order");
-		CustomerOrderWrapper customerOrderWrapper2 = new CustomerOrderWrapper(myOrderItemList, "Second Order");
-		
-		myOrderHistoryList.add(customerOrderWrapper1);
-		myOrderHistoryList.add(customerOrderWrapper2);
-	}
-	
 }

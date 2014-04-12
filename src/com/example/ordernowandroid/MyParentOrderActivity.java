@@ -113,6 +113,9 @@ public class MyParentOrderActivity extends Activity {
                             sharedPrefsToRemove.add(OrderNowConstants.KEY_ACTIVE_TABLE_ID);
                             sharedPrefsToRemove.add(OrderNowConstants.KEY_ACTIVE_SUB_ORDER_LIST);
                             OrderNowUtilities.removeSharedPreferences(getApplicationContext(), sharedPrefsToRemove);
+                            
+                            //Clear the Cached History List
+                            ApplicationState.setMyOrderHistoryList(applicationContext, null);
                         } catch (Exception e) {
                             e.printStackTrace();
                         } 

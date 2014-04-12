@@ -6,9 +6,9 @@ import java.util.List;
 public class OrderDish implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private Float dishQty;
-	private String dishNote;
-	private String spiceLevel;
+	protected Float dishQty;
+	protected String dishNote;
+	protected String spiceLevel;
 	private List<IngredientOption> selectedOptions;
 	
 	public OrderDish (Float dishQty, String dishNote, String spiceLevel) {
@@ -21,6 +21,12 @@ public class OrderDish implements Serializable {
 		this.dishQty = dishQty;
 		this.dishNote = null;
 		this.spiceLevel = null;
+	};
+	
+	public OrderDish(OrderDish orderDish) {
+		this.dishQty = orderDish.getDishQty();
+		this.dishNote = orderDish.getDishNote();
+		this.spiceLevel = orderDish.getSpiceLevel();
 	}
 
 	public Float getDishQty() {

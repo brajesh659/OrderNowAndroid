@@ -7,11 +7,13 @@
     android:orientation="horizontal" >
 
     <TextView
-        android:id="@+id/orderDate"
+        android:id="@+id/orderId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
+        android:layout_marginLeft="10sp"
+        android:layout_marginRight="10sp"
         android:textColor="@color/red"
         android:textStyle="bold" />
 
@@ -20,7 +22,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:text="@string/reordernow"
-        android:textStyle="bold" />
+        android:layout_marginLeft="10sp"
+        android:layout_marginRight="10sp"
+        android:text="@string/reordernow" />
 
 </RelativeLayout>

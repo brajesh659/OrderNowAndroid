@@ -8,6 +8,7 @@ import java.util.Map;
 import android.app.Application;
 
 import com.data.menu.CustomerOrderWrapper;
+import com.data.restaurant.RestaurantOrder;
 import com.example.ordernowandroid.filter.AvailableMenuFilter;
 import com.example.ordernowandroid.filter.MenuFilter;
 import com.example.ordernowandroid.model.IngredientOptionView;
@@ -30,7 +31,7 @@ public class ApplicationState extends Application {
 	private CustomerOrderWrapper customerOrderWrapper;
 	private ArrayList<CustomerOrderWrapper> subOrderList;
 	private Map<String, List<IngredientOptionView>> dishIngredientMap;
-	private ArrayList<CustomerOrderWrapper> myOrderHistoryList;
+	private ArrayList<RestaurantOrder> myOrderHistoryList;
 	private boolean openCategoryDrawer = true;
 	private int childCategoryId = 0;
 
@@ -264,20 +265,20 @@ public class ApplicationState extends Application {
 		applicationContext.cleanDishSelectedIngredients(dishName);
 	}
 
-	public ArrayList<CustomerOrderWrapper> getMyOrderHistoryList() {
+	public ArrayList<RestaurantOrder> getMyOrderHistoryList() {
 		return myOrderHistoryList;
 	}
 
-	public void setMyOrderHistoryList(ArrayList<CustomerOrderWrapper> myOrderHistoryList) {
+	public void setMyOrderHistoryList(ArrayList<RestaurantOrder> myOrderHistoryList) {
 		this.myOrderHistoryList = myOrderHistoryList;
 	}
 
-	public static ArrayList<CustomerOrderWrapper> getMyOrderHistoryList(ApplicationState applicationContext) {
+	public static ArrayList<RestaurantOrder> getMyOrderHistoryList(ApplicationState applicationContext) {
 		return applicationContext.getMyOrderHistoryList();
 	}
 
 	public static void setMyOrderHistoryList(ApplicationState applicationContext,
-			ArrayList<CustomerOrderWrapper> myOrderHistoryList) {
+			ArrayList<RestaurantOrder> myOrderHistoryList) {
 		applicationContext.setMyOrderHistoryList(myOrderHistoryList);
 	}
 
