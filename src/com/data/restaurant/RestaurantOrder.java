@@ -13,6 +13,7 @@ public class RestaurantOrder {
 	private int subOrderId;
 	private String orderState;
 	private long createdAt;
+	private String restaurantName;
 
 	public int getTableNo() {
 		return tableNo;
@@ -85,5 +86,13 @@ public class RestaurantOrder {
 	public void setCreatedAt(long createdAt) {
 		this.createdAt = createdAt;
 	}
+
+    public String getRestaurantName() {
+        return restaurantName;
+    }
+
+    public void setRestaurantName(String restaurantName) {
+        this.restaurantName = restaurantName;
+    }
 
 }

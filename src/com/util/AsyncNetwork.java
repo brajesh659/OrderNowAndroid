@@ -32,7 +32,7 @@ public class AsyncNetwork extends AsyncTask<String, Void, String> {
 		super.onPreExecute();
 		if (context != null) {
 			Utilities.info("inside AsyncNetwork ProgressDialog");
-			ProgressDialog progressDialog = new ProgressDialog(context);
+			progressDialog = new ProgressDialog(context);
 			progressDialog.setTitle("Loading ...");
 			progressDialog.setMessage("Please wait.");
 			progressDialog.setCancelable(false);
@@ -66,10 +66,10 @@ public class AsyncNetwork extends AsyncTask<String, Void, String> {
 	@Override
 	protected void onPostExecute(String result)  {
 		Utilities.info("inside  AsyncNetwork onPostExecute");
+	    super.onPostExecute(result);
 		if (progressDialog!=null) {
 			progressDialog.dismiss();
 		}
-		super.onPostExecute(result);
 		if(handler != null) {
 			if(exceptionToBeThrown != null ) {
 				handler.handleException(exceptionToBeThrown);
