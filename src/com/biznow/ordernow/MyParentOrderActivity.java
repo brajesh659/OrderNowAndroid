@@ -85,8 +85,10 @@ public class MyParentOrderActivity extends Activity {
                 builder.setTitle("Request Bill");
 
                 boolean orderAcknowledgement = true;
-                for (CustomerOrderWrapper customerOrderWrapper : subOrderList) {
-                    orderAcknowledgement = customerOrderWrapper.hasResturantacknowledged() && orderAcknowledgement;
+                if (!OrderNowConstants.IS_PRODUCTION_SAMPLE_MODE) {
+                    for (CustomerOrderWrapper customerOrderWrapper : subOrderList) {
+                        orderAcknowledgement = customerOrderWrapper.hasResturantacknowledged() && orderAcknowledgement;
+                    }
                 }
 
                 if (orderAcknowledgement == false) {
@@ -109,14 +111,7 @@ public class MyParentOrderActivity extends Activity {
                         try {
                             new AsyncNetwork(null,getApplicationContext()).execute(url);
 
-                            ArrayList<String> sharedPrefsToRemove = new ArrayList<String>();
-                            sharedPrefsToRemove.add(OrderNowConstants.KEY_ACTIVE_RESTAURANT_ID);
-                            sharedPrefsToRemove.add(OrderNowConstants.KEY_ACTIVE_TABLE_ID);
-                            sharedPrefsToRemove.add(OrderNowConstants.KEY_ACTIVE_SUB_ORDER_LIST);
-                            OrderNowUtilities.removeSharedPreferences(getApplicationContext(), sharedPrefsToRemove);
-                            
-                            //Clear the Cached History List
-                            ApplicationState.setMyOrderHistoryList(applicationContext, null);
+                            OrderNowUtilities.sessionClean(applicationContext);
                         } catch (Exception e) {
                             e.printStackTrace();
                         } 

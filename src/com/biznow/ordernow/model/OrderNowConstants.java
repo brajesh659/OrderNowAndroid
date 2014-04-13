@@ -13,6 +13,7 @@ public class OrderNowConstants {
 
     public static boolean IS_DEBUG_MODE = false;
     public static boolean IS_LOCAL_RESTURANT_ENABLED = false;
+    public static boolean IS_PRODUCTION_SAMPLE_MODE = true;
 
     public static final String ORDER_STATUS_RESET = "com.example.orderstatusreset";
     public static final String TEXT_COMMENT = "TextComment"; // FIXME: Make the

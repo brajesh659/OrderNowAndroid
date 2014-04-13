@@ -19,12 +19,13 @@ import android.support.v4.app.NotificationCompat;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import com.data.menu.CustomerOrderWrapper;
-import com.data.menu.Dish;
+import com.biznow.ordernow.ApplicationState;
 import com.biznow.ordernow.MyParentOrderActivity;
 import com.biznow.ordernow.R;
 import com.biznow.ordernow.model.FoodMenuItem;
 import com.biznow.ordernow.model.OrderNowConstants;
+import com.data.menu.CustomerOrderWrapper;
+import com.data.menu.Dish;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -163,6 +164,18 @@ public class OrderNowUtilities {
                 OrderNowUtilities.generateNotification(context, message, MyParentOrderActivity.class);
             }
         }, null, Activity.RESULT_CANCELED, null, null);
+    }
+    
+    
+    public static void sessionClean(final ApplicationState applicationContext) {
+        ArrayList<String> sharedPrefsToRemove = new ArrayList<String>();
+        sharedPrefsToRemove.add(OrderNowConstants.KEY_ACTIVE_RESTAURANT_ID);
+        sharedPrefsToRemove.add(OrderNowConstants.KEY_ACTIVE_TABLE_ID);
+        sharedPrefsToRemove.add(OrderNowConstants.KEY_ACTIVE_SUB_ORDER_LIST);
+        OrderNowUtilities.removeSharedPreferences(applicationContext.getApplicationContext(), sharedPrefsToRemove);
+        
+        //Clear the Cached History List
+        ApplicationState.setMyOrderHistoryList(applicationContext, null);
     }
 
 }

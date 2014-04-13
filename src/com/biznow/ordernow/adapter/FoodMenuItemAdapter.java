@@ -45,7 +45,9 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
         this.context = context;
         this.addNoteListener = addNoteListener;
         allfoodMenuItems = new ArrayList<FoodMenuItem>();
-        allfoodMenuItems.addAll(foodMenuItems);
+        if (foodMenuItems != null) {
+            allfoodMenuItems.addAll(foodMenuItems);
+        }
         this.foodMenuItems = foodMenuItems;
         this.numCallBack = numCallBack;
     }
