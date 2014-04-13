@@ -107,7 +107,7 @@ public class MyParentOrderActivity extends Activity {
                         String orderId = ApplicationState.getActiveOrderId(applicationContext);
                         String url = new URLBuilder().addPath(URLBuilder.Path.serveTable).addAction(URLBuilder.URLAction.requestBill).addParam(URLBuilder.URLParam.orderId, orderId).build();
                         try {
-                            new AsyncNetwork(null,MyParentOrderActivity.this).execute(url);
+                            new AsyncNetwork(null,null).execute(url);
 
                             ArrayList<String> sharedPrefsToRemove = new ArrayList<String>();
                             sharedPrefsToRemove.add(OrderNowConstants.KEY_ACTIVE_RESTAURANT_ID);
