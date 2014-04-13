@@ -141,7 +141,7 @@ public class MyOrderActivity extends Activity implements AsyncURLHandler {
 	public void doPositiveClick(String orderNote) {
 		ApplicationState applicationContext = (ApplicationState)getApplicationContext();
 		ArrayList<MyOrderItem> myOrderItemList = ApplicationState.getMyOrderItems(applicationContext);
-		String restaurantId = ApplicationState.getRestaurantId(applicationContext);
+		String restaurantId = OrderNowUtilities.getKeyFromSharedPreferences(applicationContext.getApplicationContext(), OrderNowConstants.KEY_ACTIVE_RESTAURANT_ID);
 		Log.i("MyOrderActivity ", restaurantId);
 		
 		CustomerOrderWrapper customerOrderWrapper = new CustomerOrderWrapper(myOrderItemList, orderNote);

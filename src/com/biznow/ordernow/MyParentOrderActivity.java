@@ -109,9 +109,8 @@ public class MyParentOrderActivity extends Activity {
                         String orderId = ApplicationState.getActiveOrderId(applicationContext);
                         String url = new URLBuilder().addPath(URLBuilder.Path.serveTable).addAction(URLBuilder.URLAction.requestBill).addParam(URLBuilder.URLParam.orderId, orderId).build();
                         try {
+                            OrderNowUtilities.sessionClean(getApplicationContext());
                             new AsyncNetwork(null,getApplicationContext()).execute(url);
-
-                            OrderNowUtilities.sessionClean(applicationContext);
                         } catch (Exception e) {
                             e.printStackTrace();
                         } 

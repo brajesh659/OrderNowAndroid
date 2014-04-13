@@ -55,6 +55,7 @@ import android.view.accessibility.AccessibilityEvent;
 import android.widget.ListAdapter;
 
 import com.biznow.ordernow.R;
+import com.util.Utilities;
 
 /**
  * ListView and GridView just not complex enough? Try StaggeredGridView!
@@ -413,9 +414,7 @@ public class StaggeredGridView extends ViewGroup {
             case MotionEvent.ACTION_MOVE: {
                 final int index = MotionEventCompat.findPointerIndex(ev, mActivePointerId);
                 if (index < 0) {
-                    Log.e(TAG, "onInterceptTouchEvent could not find pointer with id " +
-                            mActivePointerId + " - did StaggeredGridView receive an inconsistent " +
-                            "event stream?");
+                Utilities.error(TAG + " onInterceptTouchEvent could not find pointer with id " + mActivePointerId + " - did StaggeredGridView receive an inconsistent " + "event stream?");
                     return false;
                 }
                 final float y = MotionEventCompat.getY(ev, index);
@@ -479,7 +478,7 @@ public class StaggeredGridView extends ViewGroup {
 
                 final int index = MotionEventCompat.findPointerIndex(ev, mActivePointerId);
                 if (index < 0) {
-                    Log.e(TAG, "onInterceptTouchEvent could not find pointer with id " +
+                    Utilities.error(TAG + "onInterceptTouchEvent could not find pointer with id " +
                             mActivePointerId + " - did StaggeredGridView receive an inconsistent " +
                             "event stream?");
                     return false;

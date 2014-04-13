@@ -83,7 +83,7 @@ public class DownloadResturantMenu {
 				lruResturant.put(tableId, restaurant);
 			} catch (Exception ex) {
 				ex.printStackTrace();
-				Log.e("DownloadResturantMenu", ex.getMessage()
+				Utilities.error("DownloadResturantMenu" + ex.getMessage()
 						+ "got exception");
 			}
 		} else {
