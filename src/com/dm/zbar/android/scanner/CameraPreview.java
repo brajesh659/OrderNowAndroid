@@ -3,6 +3,8 @@ package com.dm.zbar.android.scanner;
 import java.io.IOException;
 import java.util.List;
 
+import com.util.Utilities;
+
 import android.content.Context;
 import android.hardware.Camera;
 import android.hardware.Camera.AutoFocusCallback;
@@ -106,7 +108,7 @@ class CameraPreview extends ViewGroup implements SurfaceHolder.Callback {
                 mCamera.setPreviewDisplay(holder);
             }
         } catch (IOException exception) {
-            Log.e(TAG, "IOException caused by setPreviewDisplay()", exception);
+            Utilities.error(TAG + "IOException caused by setPreviewDisplay()"+ exception);
         }
     }
 

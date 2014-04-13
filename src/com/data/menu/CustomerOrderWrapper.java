@@ -53,11 +53,12 @@ public class CustomerOrderWrapper implements Serializable {
             dishes.put(myOrderItem.getFoodMenuItem().getDishId(), orderDish);
         }
 
-        String restaurantId = ApplicationState.getRestaurantId(applicationContext);
+        String restaurantId = OrderNowUtilities.getKeyFromSharedPreferences(applicationContext.getApplicationContext(), OrderNowConstants.KEY_ACTIVE_RESTAURANT_ID);
         String restaurantName = OrderNowUtilities.getKeyFromSharedPreferences(
                 applicationContext.getApplicationContext(), OrderNowConstants.KEY_ACTIVE_RESTAURANT_NAME);
         CharSequence text = ParseInstallation.getCurrentInstallation().getObjectId();
-        CustomerOrder customerOrder = new CustomerOrder(dishes, restaurantId, restaurantName, text.toString(), ApplicationState.getTableId(applicationContext), orderNote);
+        String tableId = OrderNowUtilities.getKeyFromSharedPreferences(applicationContext.getApplicationContext(), OrderNowConstants.KEY_ACTIVE_TABLE_ID);
+        CustomerOrder customerOrder = new CustomerOrder(dishes, restaurantId, restaurantName, text.toString(), tableId, orderNote);
         return customerOrder;
     }
 

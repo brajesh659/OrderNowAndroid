@@ -7,7 +7,6 @@ import java.util.Map;
 
 import android.app.Application;
 
-import com.biznow.ordernow.R;
 import com.biznow.ordernow.filter.AvailableMenuFilter;
 import com.biznow.ordernow.filter.MenuFilter;
 import com.biznow.ordernow.model.IngredientOptionView;
@@ -19,8 +18,6 @@ import com.parse.PushService;
 import com.util.Utilities;
 
 public class ApplicationState extends Application {
-	private String tableId;
-	private String restaurantId;
 	private String restaurantName;
 	private String activeOrderId;
 	private String userName;
@@ -30,7 +27,6 @@ public class ApplicationState extends Application {
 	private AvailableMenuFilter menuFilterAvailable;
 	private HashMap<String, MyOrderItem> foodMenuItemQuantityMap;
 	private CustomerOrderWrapper customerOrderWrapper;
-	private ArrayList<CustomerOrderWrapper> subOrderList;
 	private Map<String, List<IngredientOptionView>> dishIngredientMap;
 	private ArrayList<RestaurantOrder> myOrderHistoryList;
 	private boolean openCategoryDrawer = true;
@@ -48,22 +44,6 @@ public class ApplicationState extends Application {
         Parse.initialize(this, getString(R.string.parse_app_id), getString(R.string.parse_client_key));
         PushService.setDefaultPushCallback(this, MyParentOrderActivity.class);
     }
-
-	public String getTableId() {
-		return tableId;
-	}
-
-	public static String getTableId(ApplicationState applicationContext) {
-		return applicationContext.getTableId();
-	}
-
-	public static void setTableId(ApplicationState applicationContext, String tableId) {
-		applicationContext.setTableId(tableId);
-	}
-
-	public void setTableId(String tableId) {
-		this.tableId = tableId;
-	}
 
 	public int getCategoryId() {
 		return categoryId;
@@ -156,30 +136,6 @@ public class ApplicationState extends Application {
 	public static void setCustomerOrderWrapper(ApplicationState applicationContext,
 			CustomerOrderWrapper customerOrderWrapper) {
 		applicationContext.setCustomerOrderWrapper(customerOrderWrapper);
-	}
-
-	public ArrayList<CustomerOrderWrapper> getSubOrderList() {
-		if (subOrderList == null) {
-			subOrderList = new ArrayList<CustomerOrderWrapper>();
-		}
-		return subOrderList;
-	}
-
-	public static ArrayList<CustomerOrderWrapper> getSubOrderList(ApplicationState applicationContext) {
-		return applicationContext.getSubOrderList();
-	}
-
-	public void setSubOrderList(ArrayList<CustomerOrderWrapper> subOrderList) {
-		this.subOrderList = subOrderList;
-	}
-
-	public static void setSubOrderList(ApplicationState applicationContext,
-			ArrayList<CustomerOrderWrapper> subOrderList) {
-		applicationContext.setSubOrderList(subOrderList);
-	}
-
-	public static void cleanSubOrderList(ApplicationState applicationContext) {
-		applicationContext.setSubOrderList(new ArrayList<CustomerOrderWrapper>());
 	}
 
 	public static void cleanFoodMenuItemQuantityMap(ApplicationState applicationContext) {
@@ -322,22 +278,6 @@ public class ApplicationState extends Application {
 
 	public void setRestaurantName(String restaurantName) {
 		this.restaurantName = restaurantName;
-	}
-
-	public String getRestaurantId() {
-		return restaurantId;
-	}
-
-	public void setRestaurantId(String restaurantId) {
-		this.restaurantId = restaurantId;
-	}
-
-	public static String getRestaurantId(ApplicationState applicationContext) {
-		return applicationContext.getRestaurantId();
-	}
-
-	public static void setRestaurantId(ApplicationState applicationContext, String restId) {
-		applicationContext.setRestaurantId(restId);
 	}
 
 	public String getActiveOrderId() {

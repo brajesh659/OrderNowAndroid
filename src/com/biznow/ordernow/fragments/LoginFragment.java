@@ -20,6 +20,7 @@ import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
+import com.util.OrderNowUtilities;
 
 public class LoginFragment extends Fragment {
 
@@ -46,44 +47,45 @@ public class LoginFragment extends Fragment {
 		return view;
 	}
 
-	private void onSessionStateChange(final Session session, SessionState state, Exception exception) {
-		final ApplicationState applicationContext = (ApplicationState) getActivity().getApplicationContext();
-		final Activity activityInstance = getActivity();
-		if (state.isOpened()) {
-			Request request = Request.newMeRequest(session, new Request.GraphUserCallback() {
-				// callback after Graph API response with user object
-				@Override
-				public void onCompleted(GraphUser user, Response response) {
-					if (session == Session.getActiveSession()) {
-						if (user != null) {
-							applicationContext.setUserName(user.getFirstName() + " " + user.getLastName());
-							applicationContext.setProfilePictureId(user.getId());
+    private void onSessionStateChange(final Session session, SessionState state, Exception exception) {
+        final ApplicationState applicationContext = (ApplicationState) getActivity().getApplicationContext();
+        final Activity activityInstance = getActivity();
+        if (state.isOpened()) {
+            Request request = Request.newMeRequest(session, new Request.GraphUserCallback() {
+                // callback after Graph API response with user object
+                @Override
+                public void onCompleted(GraphUser user, Response response) {
+                    if (session == Session.getActiveSession()) {
+                        if (user != null) {
+                            applicationContext.setUserName(user.getFirstName() + " " + user.getLastName());
+                            applicationContext.setProfilePictureId(user.getId());
 
-							if (!OrderNowConstants.IS_DEBUG_MODE){
-								Intent intent = new Intent(applicationContext, QRCodeScannerActivity.class);
-								activityInstance.startActivity(intent);
-								activityInstance.finish();
-							} else {
-								ApplicationState.setTableId(applicationContext, "T1");
-								ApplicationState.setRestaurantId(applicationContext, "R1");
-								Intent intent = new Intent(applicationContext, FoodMenuActivity.class);
-								activityInstance.startActivity(intent);				
-								activityInstance.finish();
-							}
-						}
-					}
-					if (response.getError() != null) {
-						// Handle errors, will do so later.
-					}
-				}
-			});
-			//Execute the Request for User Details
-			request.executeAsync();
+                            if (!OrderNowConstants.IS_DEBUG_MODE) {
+                                Intent intent = new Intent(applicationContext, QRCodeScannerActivity.class);
+                                activityInstance.startActivity(intent);
+                                activityInstance.finish();
+                            } else {
+                                OrderNowUtilities.putKeyToSharedPreferences(applicationContext, OrderNowConstants.KEY_ACTIVE_TABLE_ID, "T1");
+                                OrderNowUtilities.putKeyToSharedPreferences(applicationContext, OrderNowConstants.KEY_ACTIVE_RESTAURANT_ID, "R1");
+                                Intent intent = new Intent(applicationContext, FoodMenuActivity.class);
+                                activityInstance.startActivity(intent);
+                                activityInstance.finish();
+                            }
+                        }
+                    }
+                    if (response.getError() != null) {
+                        // Handle errors, will do so later.
+                    }
+                }
+            });
+            // Execute the Request for User Details
+            request.executeAsync();
 
-		} else if (state.isClosed()) {
-			//Toast.makeText(getActivity(), "Logged out successfully", Toast.LENGTH_SHORT).show();
-		}
-	}
+        } else if (state.isClosed()) {
+            // Toast.makeText(getActivity(), "Logged out successfully",
+            // Toast.LENGTH_SHORT).show();
+        }
+    }
 
 	@Override
 	public void onResume() {

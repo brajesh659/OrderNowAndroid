@@ -1,0 +1,391 @@
+{
+  _id: "R3",
+  address: "Bangalore",
+  img: "i1",
+  menu: {
+    categories: [
+      {
+        dishes: [
+          {
+            description: "",
+            dishId: "11d0",
+            name: "Chicken Kebab-regular",
+            price: 149,
+            img: "http://www.fabregion.ca/wp-content/uploads/2011/11/105797-3d-glossy-orange-orb-icon-food-beverage-knife-fork-sc44.png",
+            dishProperties: {
+              FoodType: "NonVeg"
+            },
+            available: true
+          },
+          {
+            description: "",
+            dishId: "11d1",
+            name: "Chicken Kebab-wings",
+            price: 199,
+            img: "http://www.fabregion.ca/wp-content/uploads/2011/11/105797-3d-glossy-orange-orb-icon-food-beverage-knife-fork-sc44.png",
+            dishProperties: {
+              FoodType: "NonVeg"
+            },
+            available: true
+          },
+          {
+            description: "",
+            dishId: "11d2",
+            name: "Chicken Kebab-Boneless",
+            price: 199,
+            img: "http://www.fabregion.ca/wp-content/uploads/2011/11/105797-3d-glossy-orange-orb-icon-food-beverage-knife-fork-sc44.png",
+            dishProperties: {
+              FoodType: "NonVeg"
+            },
+            available: true
+          },
+          {
+            description: "",
+            dishId: "11d3",
+            name: "Chicken Kebab-kheema",
+            price: 199,
+            img: "http://www.fabregion.ca/wp-content/uploads/2011/11/105797-3d-glossy-orange-orb-icon-food-beverage-knife-fork-sc44.png",
+            dishProperties: {
+              FoodType: "NonVeg"
+            },
+            available: true
+          },
+          {
+            description: "",
+            dishId: "11d4",
+            name: "Mutton Kebab-Kheema",
+            price: 249,
+            img: "http://www.fabregion.ca/wp-content/uploads/2011/11/105797-3d-glossy-orange-orb-icon-food-beverage-knife-fork-sc44.png",
+            dishProperties: {
+              FoodType: "NonVeg"
+            },
+            available: true
+          },
+          {
+            description: "",
+            dishId: "11d5",
+            name: "Mutton Kebab-Boneless",
+            price: 249,
+            img: "http://www.fabregion.ca/wp-content/uploads/2011/11/105797-3d-glossy-orange-orb-icon-food-beverage-knife-fork-sc44.png",
+            dishProperties: {
+              FoodType: "NonVeg"
+            },
+            available: true
+          },
+          {
+            description: "",
+            dishId: "11d6",
+            name: "Mutton Kebab-Chops",
+            price: 249,
+            img: "http://www.fabregion.ca/wp-content/uploads/2011/11/105797-3d-glossy-orange-orb-icon-food-beverage-knife-fork-sc44.png",
+            dishProperties: {
+              FoodType: "NonVeg"
+            },
+            available: true
+          },
+          {
+            description: "",
+            dishId: "11d7",
+            name: "Chicken Kebab-Kheema",
+            price: 249,
+            img: "http://www.fabregion.ca/wp-content/uploads/2011/11/105797-3d-glossy-orange-orb-icon-food-beverage-knife-fork-sc44.png",
+            dishProperties: {
+              FoodType: "NonVeg"
+            },
+            available: true
+          },
+          {
+            description: "",
+            dishId: "11d8",
+            name: "Kebab-Paneer",
+            price: 189,
+            img: "http://www.fabregion.ca/wp-content/uploads/2011/11/105797-3d-glossy-orange-orb-icon-food-beverage-knife-fork-sc44.png",
+            dishProperties: {
+              FoodType: "Veg"
+            },
+            available: true
+          },
+          {
+            description: "",
+            dishId: "11d9",
+            name: "Kebab - Kheema Vegetables",
+            price: 139,
+            img: "http://www.fabregion.ca/wp-content/uploads/2011/11/105797-3d-glossy-orange-orb-icon-food-beverage-knife-fork-sc44.png",
+            dishProperties: {
+              FoodType: "Veg"
+            },
+            available: true
+          },
+          {
+            description: "",
+            dishId: "11d10",
+            name: "Kebab-Mushrooms",
+            price: 139,
+            img: "http://www.fabregion.ca/wp-content/uploads/2011/11/105797-3d-glossy-orange-orb-icon-food-beverage-knife-fork-sc44.png",
+            dishProperties: {
+              FoodType: "Veg"
+            },
+            available: true
+          },
+          {
+            description: "",
+            dishId: "11d11",
+            name: "Grill-Fish(Basa)",
+            price: 229,
+            img: "http://www.fabregion.ca/wp-content/uploads/2011/11/105797-3d-glossy-orange-orb-icon-food-beverage-knife-fork-sc44.png",
+            dishProperties: {
+              FoodType: "NonVeg"
+            },
+            available: true
+          },
+          {
+            description: "",
+            dishId: "11d12",
+            name: "Grill-Prawns",
+            price: 269,
+            img: "http://www.fabregion.ca/wp-content/uploads/2011/11/105797-3d-glossy-orange-orb-icon-food-beverage-knife-fork-sc44.png",
+            dishProperties: {
+              FoodType: "NonVeg"
+            },
+            available: true
+          },
+          {
+            description: "Prawns, Fish, Mutton, Chicken, Paneer Kebabs & Gadwal Dhal with 4 Rumali Roti",
+            dishId: "11d13",
+            name: "Palamuru Special Kebab Platter",
+            price: 899,
+            img: "http://www.fabregion.ca/wp-content/uploads/2011/11/105797-3d-glossy-orange-orb-icon-food-beverage-knife-fork-sc44.png",
+            dishProperties: {
+              FoodType: "NonVeg"
+            },
+            available: true
+          }
+        ],
+        name: "Palamuru Charcoal Grill",
+        categoryLevelFilter: {
+          filterName: "FoodType",
+          filterValue: [
+            "All",
+            "Veg",
+            "NonVeg"
+          ]
+        }
+      },
+      {
+        dishes: [
+          {
+            description: "",
+            dishId: "11d14",
+            name: "Veg Kebab - Paneer",
+            price: 189,
+            img: "http://www.fabregion.ca/wp-content/uploads/2011/11/105797-3d-glossy-orange-orb-icon-food-beverage-knife-fork-sc44.png",
+            dishProperties: {
+              FoodType: "Veg"
+            },
+            available: true
+          },
+          {
+            description: "",
+            dishId: "11d15",
+            name: "Veg Kebab - Kheema Veg",
+            price: 149,
+            img: "http://www.fabregion.ca/wp-content/uploads/2011/11/105797-3d-glossy-orange-orb-icon-food-beverage-knife-fork-sc44.png",
+            dishProperties: {
+              FoodType: "Veg"
+            },
+            available: true
+          },
+          {
+            description: "",
+            dishId: "11d16",
+            name: "Veg Kebab - Mushroom",
+            price: 169,
+            img: "http://www.fabregion.ca/wp-content/uploads/2011/11/105797-3d-glossy-orange-orb-icon-food-beverage-knife-fork-sc44.png",
+            dishProperties: {
+              FoodType: "Veg"
+            },
+            available: true
+          },
+          {
+            description: "",
+            dishId: "11d17",
+            name: "Veg Kebab - Hara Bhara",
+            price: 149,
+            img: "http://www.fabregion.ca/wp-content/uploads/2011/11/105797-3d-glossy-orange-orb-icon-food-beverage-knife-fork-sc44.png",
+            dishProperties: {
+              FoodType: "Veg"
+            },
+            available: true
+          },
+          {
+            description: "",
+            dishId: "11d18",
+            name: "Chicken Kebab - Tangdi",
+            price: 249,
+            img: "http://www.fabregion.ca/wp-content/uploads/2011/11/105797-3d-glossy-orange-orb-icon-food-beverage-knife-fork-sc44.png",
+            dishProperties: {
+              FoodType: "NonVeg"
+            },
+            available: true
+          },
+          {
+            description: "",
+            dishId: "11d19",
+            name: "Chicken Kebab - Murgh Malai",
+            price: 229,
+            img: "http://www.fabregion.ca/wp-content/uploads/2011/11/105797-3d-glossy-orange-orb-icon-food-beverage-knife-fork-sc44.png",
+            dishProperties: {
+              FoodType: "NonVeg"
+            },
+            available: true
+          },
+          {
+            description: "",
+            dishId: "11d19",
+            name: "Chicken Kebab - Kamju(Qualis)",
+            price: 299,
+            img: "http://www.fabregion.ca/wp-content/uploads/2011/11/105797-3d-glossy-orange-orb-icon-food-beverage-knife-fork-sc44.png",
+            dishProperties: {
+              FoodType: "NonVeg"
+            },
+            available: true
+          }
+        ],
+        name: "Tandoor (Charcoal)",
+        categoryLevelFilter: {
+          filterName: "FoodType",
+          filterValue: [
+            "All",
+            "Veg",
+            "NonVeg"
+          ]
+        }
+      },
+      {
+        dishes: [
+          {
+            description: "",
+            dishId: "11d20",
+            name: "Johnnie Walker Blue Label",
+            img: "http://dashwith.me/wp-content/themes/dash/img/icons/drink.png",
+            price: 3000,
+            dishProperties: {
+              DrinkType: "Whisky"
+            },
+            available: true
+          },
+          {
+            description: "",
+            dishId: "11d21",
+            name: "Johnnie Walker Blue Label",
+            img: "http://dashwith.me/wp-content/themes/dash/img/icons/drink.png",
+            price: 1200,
+            dishProperties: {
+              DrinkType: "Whisky"
+            },
+            available: true
+          },
+          {
+            description: "",
+            dishId: "11d22",
+            name: "Kingfisher Ultra (330ml)",
+            img: "http://dashwith.me/wp-content/themes/dash/img/icons/drink.png",
+            price: 185,
+            dishProperties: {
+              DrinkType: "Beer"
+            },
+            available: true
+          },
+          {
+            description: "",
+            dishId: "11d23",
+            name: "Kingfisher Ultra (650ml)",
+            img: "http://dashwith.me/wp-content/themes/dash/img/icons/drink.png",
+            price: 275,
+            dishProperties: {
+              DrinkType: "Beer"
+            },
+            available: true
+          },
+          {
+            description: "",
+            dishId: "11d24",
+            name: "Heineken (330 ml)",
+            img: "http://dashwith.me/wp-content/themes/dash/img/icons/drink.png",
+            price: 249,
+            dishProperties: {
+              DrinkType: "Beer"
+            },
+            available: true
+          },
+          {
+            description: "",
+            dishId: "11d25",
+            name: "Tequila-Gold",
+            img: "http://dashwith.me/wp-content/themes/dash/img/icons/drink.png",
+            price: 510,
+            dishProperties: {
+              DrinkType: "Wine"
+            },
+            available: true
+          },
+          {
+            description: "",
+            dishId: "11d26",
+            name: "Tequila-Silver",
+            img: "http://dashwith.me/wp-content/themes/dash/img/icons/drink.png",
+            price: 510,
+            dishProperties: {
+              DrinkType: "Wine"
+            },
+            available: true
+          },
+          {
+            description: "",
+            dishId: "11d27",
+            name: "JW Blue Label",
+            img: "http://dashwith.me/wp-content/themes/dash/img/icons/drink.png",
+            price: 2100,
+            dishProperties: {
+              DrinkType: "Scotch"
+            },
+            available: true
+          },
+          {
+            description: "",
+            dishId: "11d28",
+            name: "Whyte & Mackay",
+            img: "http://dashwith.me/wp-content/themes/dash/img/icons/drink.png",
+            price: 330,
+            dishProperties: {
+              DrinkType: "Scotch"
+            },
+            available: true
+          }
+        ],
+        name: "Liquor",
+        categoryLevelFilter: {
+          filterName: "DrinkType",
+          filterValue: [
+            "All",
+            "Beer",
+            "Whisky",
+            "Scotch",
+            "Wine"
+          ]
+        }
+      }
+    ]
+  },
+  tableInformation: {
+    T20: 1,
+    T21: 2,
+    T22: 3,
+    T23: 4,
+    T24: 5,
+    T25: 6
+  },
+  name: "Sample Restaurant",
+  contactInfo: 232131,
+  lastUpdatedAt: 1393519173230
+}

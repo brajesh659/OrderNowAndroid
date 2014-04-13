@@ -237,8 +237,7 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 					public void onClick(DialogInterface dialog,
 							int which) {
 						ApplicationState applicationContext = (ApplicationState) context.getApplicationContext();
-						String tableId = applicationContext
-								.getTableId();
+						String tableId = OrderNowUtilities.getKeyFromSharedPreferences(applicationContext.getApplicationContext(), OrderNowConstants.KEY_ACTIVE_TABLE_ID);
 						String url = new URLBuilder()
 								.addPath(URLBuilder.Path.serveTable)
 								.addAction(URLBuilder.URLAction.callWaiter)
@@ -615,8 +614,6 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
         OrderNowUtilities.putKeyToSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_RESTAURANT_NAME, restaurantName);
 
         //save preferences
-        OrderNowUtilities.putKeyToSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_TABLE_ID, applicationContext.getTableId());
-        OrderNowUtilities.putKeyToSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_RESTAURANT_ID, applicationContext.getRestaurantId());
         Utilities.info("onPostExecute " + ApplicationState.getCategoryId(applicationContext) +" "+ApplicationState.getChildCategoryId(applicationContext));
         if (ApplicationState.getCategoryId(applicationContext)> -1 && ApplicationState.getChildCategoryId(applicationContext) > -1) {
             displayView(ApplicationState.getCategoryId(applicationContext), ApplicationState.getChildCategoryId(applicationContext));   
@@ -816,7 +813,9 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 		protected Restaurant doInBackground(String... params) {
 			CustomDbAdapter dbManager = CustomDbAdapter.getInstance(context);
 	        RestaurantHelper restHelper = new RestaurantHelper(dbManager);
-			return DownloadResturantMenu.getInstance().getResturant(applicationContext.getTableId(), applicationContext.getRestaurantId(),restHelper);
+			String tableId = OrderNowUtilities.getKeyFromSharedPreferences(applicationContext.getApplicationContext(), OrderNowConstants.KEY_ACTIVE_TABLE_ID);
+            String resturantId = OrderNowUtilities.getKeyFromSharedPreferences(applicationContext.getApplicationContext(), OrderNowConstants.KEY_ACTIVE_RESTAURANT_ID);
+            return DownloadResturantMenu.getInstance().getResturant(tableId, resturantId,restHelper);
 		}
 		
 		@Override
@@ -836,7 +835,8 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 				builder.setCancelable(false);
 				builder.setPositiveButton(R.string.ok, new OnClickListener() {                  
 					@Override
-					public void onClick(DialogInterface dialog, int which) {                                                
+					public void onClick(DialogInterface dialog, int which) {
+					    OrderNowUtilities.sessionClean(applicationContext);
 						Intent intent = new Intent(getApplicationContext(), QRCodeScannerActivity.class);
 						startActivity(intent); 
 						finish();
@@ -845,7 +845,6 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 				AlertDialog alert = builder.create();
 				alert.show();
 			} else {
-				ApplicationState.setRestaurantId((ApplicationState)getApplicationContext(), restaurant.getrId());
 				loadRestaurantDishes(restaurant);
 				
 				String restaurantName = restaurant.getName();
@@ -853,8 +852,7 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 				OrderNowUtilities.putKeyToSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_RESTAURANT_NAME, restaurantName);
 
 				//save preferences
-				OrderNowUtilities.putKeyToSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_TABLE_ID, applicationContext.getTableId());
-				OrderNowUtilities.putKeyToSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_RESTAURANT_ID, applicationContext.getRestaurantId());
+				OrderNowUtilities.putKeyToSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_RESTAURANT_ID, restaurant.getrId());
 				Utilities.info("onPostExecute " + ApplicationState.getCategoryId(applicationContext) +" "+ApplicationState.getChildCategoryId(applicationContext));
 				if (ApplicationState.getCategoryId(applicationContext)> -1 && ApplicationState.getChildCategoryId(applicationContext) > -1) {
 					displayView(ApplicationState.getCategoryId(applicationContext), ApplicationState.getChildCategoryId(applicationContext));	

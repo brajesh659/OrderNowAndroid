@@ -167,7 +167,7 @@ public class OrderNowUtilities {
     }
     
     
-    public static void sessionClean(final ApplicationState applicationContext) {
+    public static void sessionClean(final Context applicationContext) {
         ArrayList<String> sharedPrefsToRemove = new ArrayList<String>();
         sharedPrefsToRemove.add(OrderNowConstants.KEY_ACTIVE_RESTAURANT_ID);
         sharedPrefsToRemove.add(OrderNowConstants.KEY_ACTIVE_TABLE_ID);
@@ -175,7 +175,7 @@ public class OrderNowUtilities {
         OrderNowUtilities.removeSharedPreferences(applicationContext.getApplicationContext(), sharedPrefsToRemove);
         
         //Clear the Cached History List
-        ApplicationState.setMyOrderHistoryList(applicationContext, null);
+        ApplicationState.setMyOrderHistoryList((ApplicationState)applicationContext, null);
     }
 
 }

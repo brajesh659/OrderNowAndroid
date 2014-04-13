@@ -26,8 +26,8 @@ import com.util.Utilities;
 
 public class QRCodeScannerActivity extends Activity {
 
-	private static final String SAMPLE_REST_ID = "R3";
-    private static final String SAMPLE_TABLE_ID = "T20";
+	private static final String SAMPLE_REST_ID = "R1";
+    private static final String SAMPLE_TABLE_ID = "T3";
     private static final int ZBAR_QR_SCANNER_REQUEST = 1;
 	private ProfilePictureView profilePictureView;
 	private TextView welcome;
@@ -148,9 +148,6 @@ public class QRCodeScannerActivity extends Activity {
 	public void openRestaurantMenu(View v) {
 		if(activeTableId != null && activeTableId.trim() != "") {
 			ApplicationState applicationContext = (ApplicationState) getApplicationContext();
-			ApplicationState.setTableId(applicationContext, activeTableId);
-			ApplicationState.setRestaurantId(applicationContext, activeRestId);
-			ApplicationState.setSubOrderList(applicationContext, activeSubOrderList);
 			ApplicationState.setOpenCategoryDrawer(applicationContext, true);
 			Toast.makeText(this, "Session Table Id = " + activeTableId + " Rest Id = " + activeRestId, Toast.LENGTH_SHORT).show();
 
@@ -175,8 +172,8 @@ public class QRCodeScannerActivity extends Activity {
 				String tableId = scanResultStrings[0];
 				String restId = (scanResultStrings.length > 1)? scanResultStrings[1] : "";
 				//Toast.makeText(this, "Table Id = " + tableId + " Rest Id = " + restId, Toast.LENGTH_SHORT).show();
-
 				loadRestaurantTable(applicationContext, tableId, restId);				
+
 			} else if(resultCode == RESULT_CANCELED && data != null) {
 				String error = data.getStringExtra(ZBarConstants.ERROR_INFO);
 				Utilities.error("Error Message: " + error);
@@ -187,15 +184,15 @@ public class QRCodeScannerActivity extends Activity {
 	}
 
     private void loadRestaurantTable(ApplicationState applicationContext, String tableId, String restId) {
-        ApplicationState.setTableId(applicationContext, tableId);
-        ApplicationState.setRestaurantId(applicationContext, restId);
-        ApplicationState.setOpenCategoryDrawer(applicationContext, true);
 
         //clean order stuff if present
-        ApplicationState.cleanSubOrderList(applicationContext);
         ApplicationState.cleanFoodMenuItemQuantityMap(applicationContext);
         //clean any previous session if present and start fresh
         OrderNowUtilities.sessionClean(applicationContext);
+
+        OrderNowUtilities.putKeyToSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_TABLE_ID, tableId);
+        OrderNowUtilities.putKeyToSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_RESTAURANT_ID, restId);
+        ApplicationState.setOpenCategoryDrawer(applicationContext, true);
 
         Intent intent = new Intent(this, FoodMenuActivity.class);
         startActivity(intent);
