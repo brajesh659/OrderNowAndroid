@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.30"
             android:background="@color/white"
-            android:src="@drawable/sub" />
+            android:src="@drawable/ic_action_remove" />
 
         <TextView
             android:id="@+id/quantity"
@@ -48,7 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.30"
             android:background="@color/white"
-            android:src="@drawable/add" />
+            android:src="@drawable/ic_action_new" />
 
         <View
             android:id="@+id/margin"
