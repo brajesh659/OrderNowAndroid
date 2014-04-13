@@ -37,7 +37,7 @@ import android.widget.Adapter;
 import android.widget.AdapterView;
 
 import com.aphidmobile.utils.AphidLog;
-import com.example.ordernowandroid.R;
+import com.biznow.ordernow.R;
 
 
 import junit.framework.Assert;

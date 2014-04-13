@@ -9,11 +9,11 @@ import java.util.Map;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import com.biznow.ordernow.model.FoodMenuItem;
 import com.data.menu.Dish;
 import com.data.menu.MenuPropertyKey;
 import com.data.menu.MenuPropertyValue;
 import com.data.menu.Restaurant;
-import com.example.ordernowandroid.model.FoodMenuItem;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.util.Utilities;

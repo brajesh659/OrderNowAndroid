@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.ordernowandroid"
+    package="com.biznow.ordernow"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -23,27 +23,27 @@
         android:targetSdkVersion="18" />
 
     <application
-        android:name=".ApplicationState"
+        android:name="com.biznow.ordernow.ApplicationState"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" >
         <meta-data
             android:name="android.app.default_searchable"
-            android:value="com.example.ordernowandroid.FoodMenuActivity" />
+            android:value="com.biznow.ordernow.FoodMenuActivity" />
 
         <activity
             android:name="com.facebook.LoginActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.example.ordernowandroid.FilterMenuActivity"
+            android:name="com.biznow.ordernow.FilterMenuActivity"
             android:label="@string/app_name"
-            android:parentActivityName="com.example.ordernowandroid.FoodMenuActivity"
+            android:parentActivityName="com.biznow.ordernow.FoodMenuActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Holo.Light" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.ordernowandroid.FoodMenuActivity" />
+                android:value="com.biznow.ordernow.FoodMenuActivity" />
         </activity>
 
         <meta-data
@@ -51,7 +51,7 @@
             android:value="@string/facebook_app_id" />
 
         <activity
-            android:name="com.example.ordernowandroid.MainActivity"
+            android:name="com.biznow.ordernow.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Holo.Light" >
@@ -62,56 +62,56 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.ordernowandroid.QRCodeScannerActivity"
+            android:name="com.biznow.ordernow.QRCodeScannerActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Holo.Light" >
         </activity>
         <activity
-            android:name="com.example.ordernowandroid.AllCustomerHistoryActivity"
+            android:name="com.biznow.ordernow.AllCustomerHistoryActivity"
             android:label="@string/app_name"
-            android:parentActivityName="com.example.ordernowandroid.QRCodeScannerActivity"
+            android:parentActivityName="com.biznow.ordernow.QRCodeScannerActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Holo.Light" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.ordernowandroid.QRCodeScannerActivity" />
+                android:value="com.biznow.ordernow.QRCodeScannerActivity" />
         </activity>
         <activity
-            android:name="com.example.ordernowandroid.RestFeedbackActivity"
+            android:name="com.biznow.ordernow.RestFeedbackActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Holo.Light" >
         </activity>
         <activity
-            android:name="com.example.ordernowandroid.IngredientsActivity"
+            android:name="com.biznow.ordernow.IngredientsActivity"
             android:label="@string/app_name"
-            android:parentActivityName="com.example.ordernowandroid.FoodMenuActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Holo.Light" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.ordernowandroid.FoodMenuActivity" />
-        </activity>
-        <activity
-            android:name="com.example.ordernowandroid.IndividualIngredientActivity"
-            android:label="@string/app_name"
-            android:parentActivityName="com.example.ordernowandroid.IngredientsActivity"
+            android:parentActivityName="com.biznow.ordernow.FoodMenuActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Holo.Light" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.ordernowandroid.IngredientsActivity" />
+                android:value="com.biznow.ordernow.FoodMenuActivity" />
+        </activity>
+        <activity
+            android:name="com.biznow.ordernow.IndividualIngredientActivity"
+            android:label="@string/app_name"
+            android:parentActivityName="com.biznow.ordernow.IngredientsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Holo.Light" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.biznow.ordernow.IngredientsActivity" />
         </activity>
         <activity
             android:name="com.dm.zbar.android.scanner.ZBarScannerActivity"
             android:label="@string/app_name"
             android:screenOrientation="landscape" />
         <activity
-            android:name="com.example.ordernowandroid.FoodMenuActivity"
+            android:name="com.biznow.ordernow.FoodMenuActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop"
-            android:parentActivityName="com.example.ordernowandroid.MainActivity"
+            android:parentActivityName="com.biznow.ordernow.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/StyledIndicators"
             android:uiOptions="splitActionBarWhenNarrow" >
@@ -124,40 +124,40 @@
                 android:resource="@xml/searchable" />
         </activity>
         <activity
-            android:name="com.example.ordernowandroid.MyOrderActivity"
+            android:name="com.biznow.ordernow.MyOrderActivity"
             android:label="@string/app_name"
-            android:parentActivityName="com.example.ordernowandroid.FoodMenuActivity"
+            android:parentActivityName="com.biznow.ordernow.FoodMenuActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Holo.Light" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.ordernowandroid.FoodMenuActivity" />
+                android:value="com.biznow.ordernow.FoodMenuActivity" />
         </activity>
         <activity
-            android:name="com.example.ordernowandroid.MyParentOrderActivity"
+            android:name="com.biznow.ordernow.MyParentOrderActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop"
-            android:parentActivityName="com.example.ordernowandroid.FoodMenuActivity"
+            android:parentActivityName="com.biznow.ordernow.FoodMenuActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Holo.Light" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.ordernowandroid.FoodMenuActivity" />
+                android:value="com.biznow.ordernow.FoodMenuActivity" />
         </activity>
         <activity
-            android:name="com.example.ordernowandroid.MyOrderHistoryActivity"
+            android:name="com.biznow.ordernow.MyOrderHistoryActivity"
             android:label="@string/app_name"
-            android:parentActivityName="com.example.ordernowandroid.FoodMenuActivity"
+            android:parentActivityName="com.biznow.ordernow.FoodMenuActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Holo.Light" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.ordernowandroid.FoodMenuActivity" />
+                android:value="com.biznow.ordernow.FoodMenuActivity" />
         </activity>
 
         <provider
-            android:name=".SearchSuggestionProvider"
-            android:authorities="com.example.ordernowandroid.SearchSuggestionProvider" />
+            android:name="com.biznow.ordernow.SearchSuggestionProvider"
+            android:authorities="com.biznow.ordernow.SearchSuggestionProvider" />
 
         <!--
              <service android:name="com.parse.PushService" />
@@ -169,7 +169,7 @@
             </intent-filter>
         </receiver>
         
-        <receiver android:name="com.example.ordernowandroid.MyParentOrderActivity.TickReceiver" >
+        <receiver android:name="com.biznow.ordernow.MyParentOrderActivity.TickReceiver" >
             <intent-filter>
                 <action android:name="com.example.orderReceived" />
                 <action android:name="com.example.orderAccepted" />
@@ -189,7 +189,7 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name="com.example.ordernowandroid.MyCustomReceiver"
+            android:name="com.biznow.ordernow.MyCustomReceiver"
             android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
                 <action android:name="com.example.orderReceived" />
@@ -203,7 +203,7 @@
 				  change "com.parse.tutorials.pushnotifications" in the lines
 				  below to match the new package name.
                 -->
-                <category android:name="com.example.ordernowandroid" />
+                <category android:name="com.biznow.ordernow" />
             </intent-filter>
         </receiver>
     </application>

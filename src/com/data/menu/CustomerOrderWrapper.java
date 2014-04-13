@@ -6,11 +6,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.example.ordernowandroid.ApplicationState;
-import com.example.ordernowandroid.model.MyOrderItem;
-import com.example.ordernowandroid.model.Order;
-import com.example.ordernowandroid.model.OrderNowConstants;
-import com.example.ordernowandroid.model.OrderStatus;
+import com.biznow.ordernow.ApplicationState;
+import com.biznow.ordernow.model.MyOrderItem;
+import com.biznow.ordernow.model.Order;
+import com.biznow.ordernow.model.OrderNowConstants;
+import com.biznow.ordernow.model.OrderStatus;
 import com.parse.ParseInstallation;
 import com.util.OrderNowUtilities;
 

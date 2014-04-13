@@ -21,10 +21,10 @@ import android.widget.LinearLayout;
 
 import com.data.menu.CustomerOrderWrapper;
 import com.data.menu.Dish;
-import com.example.ordernowandroid.MyParentOrderActivity;
-import com.example.ordernowandroid.R;
-import com.example.ordernowandroid.model.FoodMenuItem;
-import com.example.ordernowandroid.model.OrderNowConstants;
+import com.biznow.ordernow.MyParentOrderActivity;
+import com.biznow.ordernow.R;
+import com.biznow.ordernow.model.FoodMenuItem;
+import com.biznow.ordernow.model.OrderNowConstants;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
