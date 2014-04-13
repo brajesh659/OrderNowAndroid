@@ -80,7 +80,12 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
         holder.itemImage.setTag(foodItem);
         
         holder.txt_itemName.setText(foodItem.getItemName());
-        holder.txt_itemDescription.setText(foodItem.getDescription());
+        if (foodItem.getDescription() == null || foodItem.getDescription().isEmpty()) {
+            holder.txt_itemDescription.setVisibility(View.GONE);
+        } else {
+            holder.txt_itemDescription.setVisibility(View.VISIBLE);
+            holder.txt_itemDescription.setText(foodItem.getDescription());
+        }
         holder.txt_itemPrice.setText(OrderNowConstants.INDIAN_RUPEE_UNICODE + " " + foodItem.getItemPrice().toString());
 
         if(foodItem.getCategory()!= null && !foodItem.getCategory().isEmpty()) {

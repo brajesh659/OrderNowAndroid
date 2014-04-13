@@ -96,7 +96,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_below="@id/dish_description"
+        android:layout_below="@id/addnote"
         android:background="@color/white"
         android:paddingRight="2dp"
         android:src="@drawable/ic_action_new" />
@@ -105,7 +105,7 @@
         android:id="@+id/subbutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/dish_description"
+        android:layout_below="@id/addnote"
         android:layout_marginRight="1sp"
         android:layout_toLeftOf="@id/addbutton"
         android:background="@color/white"
