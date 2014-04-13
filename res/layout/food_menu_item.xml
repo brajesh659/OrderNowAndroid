@@ -98,6 +98,7 @@
         android:layout_alignParentRight="true"
         android:layout_below="@id/dish_description"
         android:background="@color/white"
+        android:paddingRight="2dp"
         android:src="@drawable/ic_action_new" />
 
     <ImageButton

@@ -74,6 +74,11 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
         holder.addItem.setTag(foodItem);
         holder.subItem.setTag(foodItem);
         holder.addNote.setTag(foodItem);
+        holder.txt_itemName.setTag(foodItem);
+        holder.txt_itemDescription.setTag(foodItem);
+        holder.txt_itemPrice.setTag(foodItem);
+        holder.itemImage.setTag(foodItem);
+        
         holder.txt_itemName.setText(foodItem.getItemName());
         holder.txt_itemDescription.setText(foodItem.getDescription());
         holder.txt_itemPrice.setText(OrderNowConstants.INDIAN_RUPEE_UNICODE + " " + foodItem.getItemPrice().toString());
@@ -98,39 +103,12 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
         }
         Bitmap bitmap = foodItem.getImage();
         if (bitmap == null) {
-            holder.itemImage.setImageResource(R.drawable.bb1);
+            holder.itemImage.setImageResource(R.drawable.default_food_icon);
         } else {
             holder.itemImage.setImageBitmap(bitmap);
         }
-        
-        
-        if(!foodItem.isAvailable()) {
-            holder.itemImage.setImageResource(R.drawable.not_available);
-            hideButtonsFromFoodItem(holder);
-            View.OnClickListener ingredientOnClickListener = new View.OnClickListener() {
-                
-                @Override
-                public void onClick(View arg0) {
-                    Toast.makeText(context.getApplicationContext(), "This item is currently unavailable", Toast.LENGTH_SHORT).show();             
-                }
-            };
-            holder.itemImage.setOnClickListener(ingredientOnClickListener);
-            holder.txt_itemDescription.setOnClickListener(ingredientOnClickListener);
-            holder.txt_itemDescription.setText("Currently Unavailable");
-            holder.txt_itemName.setOnClickListener(ingredientOnClickListener);
-            holder.txt_itemPrice.setOnClickListener(ingredientOnClickListener);
-            
-            holder.txt_itemName.setTextColor(context.getResources().getColor(R.color.gray));
-            holder.txt_itemPrice.setTextColor(context.getResources().getColor(R.color.gray));
-        } else {
-            //TODO without this first item view is screwed, look is it the right approach
-            holder.addItem.setVisibility(View.VISIBLE);
-            holder.txt_itemName.setTextColor(context.getResources().getColor(R.color.itemNameColor));
-            holder.txt_itemPrice.setTextColor(context.getResources().getColor(R.color.itemPriceColor));
-        }
-        
 
-        holder.addItem.setOnClickListener(new View.OnClickListener() {
+        View.OnClickListener addOnClickListener = new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -145,8 +123,13 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
                     holder.txt_itemQuantity.setText(quantity + "");
                 holder.itemImage.setAlpha(0.3f);
             }
-        });
-
+        };
+        holder.addItem.setOnClickListener(addOnClickListener);
+        holder.itemImage.setOnClickListener(addOnClickListener);
+        holder.txt_itemDescription.setOnClickListener(addOnClickListener);
+        holder.txt_itemName.setOnClickListener(addOnClickListener);
+        holder.txt_itemPrice.setOnClickListener(addOnClickListener);
+        
         holder.subItem.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -176,6 +159,33 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
                 addNoteListener.showNote(foodItem);
             }
         });
+
+
+        if(!foodItem.isAvailable()) {
+            holder.itemImage.setImageResource(R.drawable.not_available);
+            hideButtonsFromFoodItem(holder);
+            View.OnClickListener ingredientOnClickListener = new View.OnClickListener() {
+                
+                @Override
+                public void onClick(View arg0) {
+                    Toast.makeText(context.getApplicationContext(), "This item is currently unavailable", Toast.LENGTH_SHORT).show();             
+                }
+            };
+            holder.itemImage.setOnClickListener(ingredientOnClickListener);
+            holder.txt_itemDescription.setOnClickListener(ingredientOnClickListener);
+            holder.txt_itemDescription.setText("Currently Unavailable");
+            holder.txt_itemName.setOnClickListener(ingredientOnClickListener);
+            holder.txt_itemPrice.setOnClickListener(ingredientOnClickListener);
+            
+            holder.txt_itemName.setTextColor(context.getResources().getColor(R.color.gray));
+            holder.txt_itemPrice.setTextColor(context.getResources().getColor(R.color.gray));
+        } else {
+            //TODO without this first item view is screwed, look is it the right approach
+            holder.addItem.setVisibility(View.VISIBLE);
+            holder.txt_itemName.setTextColor(context.getResources().getColor(R.color.itemNameColor));
+            holder.txt_itemPrice.setTextColor(context.getResources().getColor(R.color.itemPriceColor));
+        }
+        
 
         // imageLoader.DisplayImage("http://192.168.1.28:8082/ANDROID/images/BEVE.jpeg",
         // holder.itemImage);
