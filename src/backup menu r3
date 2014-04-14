@@ -161,7 +161,132 @@
             available: true
           }
         ],
-        name: "Palamuru Charcoal Grill",
+        name: "Charcoal Grill",
+        categoryLevelFilter: {
+          filterName: "FoodType",
+          filterValue: [
+            "All",
+            "Veg",
+            "NonVeg"
+          ]
+        }
+      },
+      {
+        dishes: [
+          {
+            description: "A tanggy lemon soup cooked with beans and tofu flavoured with garlic and coriander",
+            dishId: "11d29",
+            name: "Lemon Coriander Soup - Veg",
+            price: 145,
+            img: "http://www.fabregion.ca/wp-content/uploads/2011/11/105797-3d-glossy-orange-orb-icon-food-beverage-knife-fork-sc44.png",
+            dishProperties: {
+              FoodType: "Veg"
+            },
+            available: true
+          },
+          {
+            description: "A tanggy lemon soup cooked with beans, chicken and tofu flavoured with garlic and coriander",
+            dishId: "11d30",
+            name: "Lemon Coriander Soup - NonVeg",
+            price: 145,
+            img: "http://www.fabregion.ca/wp-content/uploads/2011/11/105797-3d-glossy-orange-orb-icon-food-beverage-knife-fork-sc44.png",
+            dishProperties: {
+              FoodType: "NonVeg"
+            },
+            available: true
+          },
+          {
+            description: "",
+            dishId: "11d31",
+            name: "Fresh Onion Soup",
+            price: 160,
+            img: "http://www.fabregion.ca/wp-content/uploads/2011/11/105797-3d-glossy-orange-orb-icon-food-beverage-knife-fork-sc44.png",
+            dishProperties: {
+              FoodType: "Veg"
+            },
+            available: true
+          },
+          {
+            description: "",
+            dishId: "11d32",
+            name: "American Golden Corn",
+            price: 155,
+            img: "http://www.fabregion.ca/wp-content/uploads/2011/11/105797-3d-glossy-orange-orb-icon-food-beverage-knife-fork-sc44.png",
+            dishProperties: {
+              FoodType: "Veg"
+            },
+            available: true
+          },
+          {
+            description: "",
+            dishId: "11d33",
+            name: "Wonton Soup - Veg",
+            price: 155,
+            img: "http://www.fabregion.ca/wp-content/uploads/2011/11/105797-3d-glossy-orange-orb-icon-food-beverage-knife-fork-sc44.png",
+            dishProperties: {
+              FoodType: "Veg"
+            },
+            available: true
+          },
+          {
+            description: "",
+            dishId: "11d34",
+            name: "Wonton Soup - NonVeg",
+            price: 155,
+            img: "http://www.fabregion.ca/wp-content/uploads/2011/11/105797-3d-glossy-orange-orb-icon-food-beverage-knife-fork-sc44.png",
+            dishProperties: {
+              FoodType: "NonVeg"
+            },
+            available: true
+          }
+        ],
+        name: "Soups",
+        categoryLevelFilter: {
+          filterName: "FoodType",
+          filterValue: [
+            "All",
+            "Veg",
+            "NonVeg"
+          ]
+        }
+      },
+      {
+        dishes: [
+          {
+            description: "Roman lettuce, iceberg lettuce and sundried tomatoes tossed with garlic and herbs",
+            dishId: "11d35",
+            name: "Caesar Salad-Veg",
+            price: 195,
+            img: "http://www.fabregion.ca/wp-content/uploads/2011/11/105797-3d-glossy-orange-orb-icon-food-beverage-knife-fork-sc44.png",
+            dishProperties: {
+              FoodType: "Veg"
+            },
+            available: true
+          },
+          {
+            description: "Roman lettuce, iceberg lettuce and sundried tomatoes tossed with garlic and herbs",
+            dishId: "11d36",
+            name: "Caesar Salad-NonVeg",
+            price: 145,
+            img: "http://www.fabregion.ca/wp-content/uploads/2011/11/105797-3d-glossy-orange-orb-icon-food-beverage-knife-fork-sc44.png",
+            dishProperties: {
+              FoodType: "NonVeg"
+            },
+            available: true
+          },
+          {
+            description: "",
+            dishId: "11d37",
+            name: "Greek Salad",
+            price: 195,
+            img: "http://www.fabregion.ca/wp-content/uploads/2011/11/105797-3d-glossy-orange-orb-icon-food-beverage-knife-fork-sc44.png",
+            dishProperties: {
+              FoodType: "Veg"
+            },
+            available: true
+          }
+        ],
+        name: "Salads",
         categoryLevelFilter: {
           filterName: "FoodType",
           filterValue: [
@@ -251,7 +376,7 @@
             available: true
           }
         ],
-        name: "Tandoor (Charcoal)",
+        name: "Tandoor",
         categoryLevelFilter: {
           filterName: "FoodType",
           filterValue: [
@@ -387,5 +512,5 @@
   },
   name: "Sample Restaurant",
   contactInfo: 232131,
-  lastUpdatedAt: 1393519173230
+  lastUpdatedAt: 1393519173250
 }

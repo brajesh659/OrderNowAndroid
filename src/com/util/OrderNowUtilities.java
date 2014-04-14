@@ -151,7 +151,7 @@ public class OrderNowUtilities {
  
     }
     
-    public static void orderStatusResetReceiver(Context context, final String message) {
+    public static void orderStatusResetReceiver(Context context, final String message, final boolean isNotificationRequired) {
         Intent i = new Intent(OrderNowConstants.ORDER_STATUS_RESET);
         context.sendOrderedBroadcast(i, null, new BroadcastReceiver() {
             @Override
@@ -161,7 +161,10 @@ public class OrderNowUtilities {
                     Utilities.info("MyParentOrderActivity caught the broadcast, result " + result);
                     return; // Activity caught it
                 }
-                OrderNowUtilities.generateNotification(context, message, MyParentOrderActivity.class);
+
+                if(isNotificationRequired) {
+                    OrderNowUtilities.generateNotification(context, message, MyParentOrderActivity.class);
+                }
             }
         }, null, Activity.RESULT_CANCELED, null, null);
     }

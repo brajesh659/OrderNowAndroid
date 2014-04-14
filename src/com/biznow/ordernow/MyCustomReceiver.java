@@ -100,7 +100,7 @@ public class MyCustomReceiver extends BroadcastReceiver {
 			}
             
             Order order = new Order(orderId, subOrderId);
-            
+            boolean isNotificationRequired = true;
             if (isStatusModificationRequired(action)) {
                 ArrayList<CustomerOrderWrapper> subOrderList = OrderNowUtilities.getObjectFromSharedPreferences(context, OrderNowConstants.KEY_ACTIVE_SUB_ORDER_LIST);
 
@@ -110,8 +110,10 @@ public class MyCustomReceiver extends BroadcastReceiver {
 
                 for (CustomerOrderWrapper iCustomerOrderWrapper : subOrderList) {
                     if (order.getSubOrderId() == 0 && orderStatus.equals(OrderStatus.Complete)) { // Special case for order completion
+                        isNotificationRequired = false;
                         iCustomerOrderWrapper.modifyItemStatus(orderStatus, unAvailableDishes);
                     } else {
+                        isNotificationRequired = true;
                         if (iCustomerOrderWrapper.getOrder().equals(order)) {
                             Utilities.info("Modify order" + order.toString() + " to OrderStatus " + orderStatus);
                             iCustomerOrderWrapper.modifyItemStatus(orderStatus, unAvailableDishes);
@@ -121,7 +123,7 @@ public class MyCustomReceiver extends BroadcastReceiver {
 
                 OrderNowUtilities.putObjectToSharedPreferences(context, OrderNowConstants.KEY_ACTIVE_SUB_ORDER_LIST, subOrderList);
 
-                OrderNowUtilities.orderStatusResetReceiver(context, message);
+                OrderNowUtilities.orderStatusResetReceiver(context, message, isNotificationRequired);
 
             } else {
                 Utilities.info("Action not implemented yet "+action);

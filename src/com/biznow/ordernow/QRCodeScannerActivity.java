@@ -26,8 +26,8 @@ import com.util.Utilities;
 
 public class QRCodeScannerActivity extends Activity {
 
-	private static final String SAMPLE_REST_ID = "R1";
-    private static final String SAMPLE_TABLE_ID = "T3";
+	private static final String SAMPLE_REST_ID = "R3";
+    private static final String SAMPLE_TABLE_ID = "T20";
     private static final int ZBAR_QR_SCANNER_REQUEST = 1;
 	private ProfilePictureView profilePictureView;
 	private TextView welcome;

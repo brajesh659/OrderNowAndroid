@@ -212,7 +212,7 @@ public class MyOrderActivity extends Activity implements AsyncURLHandler {
                 // Only update Shared Prefs Object when there is a new suborder
                 OrderNowUtilities.putObjectToSharedPreferences(getApplicationContext(),
                         OrderNowConstants.KEY_ACTIVE_SUB_ORDER_LIST, subOrderList);
-                OrderNowUtilities.orderStatusResetReceiver(getApplicationContext(), "Order Sent");
+                OrderNowUtilities.orderStatusResetReceiver(getApplicationContext(), "Order Sent", true);
             }
         } catch (JSONException e) {
             // TODO Auto-generated catch block
