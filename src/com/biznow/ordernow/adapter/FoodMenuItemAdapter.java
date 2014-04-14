@@ -97,7 +97,6 @@ public class FoodMenuItemAdapter extends ArrayAdapter<FoodMenuItem> implements F
         	holder.txt_itemCategory.setVisibility(View.INVISIBLE);
         }
         
-        Utilities.info("FoodMenuItemAdapter" + foodItem.getItemName());
         MenuPropertyValue foodTypeValue = foodItem.getDishFilterProperties().get(MenuPropertyKey.FoodType);
         if (foodTypeValue != null && foodTypeValue.equals(MenuPropertyValue.Veg)) {
             holder.catImage.setVisibility(View.VISIBLE);
