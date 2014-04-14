@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.data.database.RestaurantHelper;
 import com.data.menu.Restaurant;
+import com.data.menu.RestaurantWrapper;
 import com.google.gson.Gson;
 import com.util.URLBuilder;
 import com.util.URLBuilder.URLParam;
@@ -31,7 +32,9 @@ public class DownloadResturantMenu {
 	public Restaurant getResturant(String tableId, String restaurantId,
 			RestaurantHelper restHelper) {
 
+	    Utilities.info("getResturant " + tableId+restaurantId);
 		Restaurant restaurant = null;
+		RestaurantWrapper restWrapper = null;
 		Restaurant restaurantFromDB = null;
 		if (lruResturant.get(tableId) == null) {
 			String lastUpdatedAt = "";
@@ -42,9 +45,6 @@ public class DownloadResturantMenu {
 				if (restaurantFromDB != null) {
 					lastUpdatedAt = Long.toString(restaurantFromDB
 							.getLastUpdatedAt());
-					//TODO remove this once lastUpdated is implemented on server. 
-					return restaurantFromDB;
-					
 				}
 			}
 
@@ -55,7 +55,7 @@ public class DownloadResturantMenu {
 			
 			try {
 				URL url = new URL(urlString);
-				Log.i("DownloadResturantMenu", urlString);
+				Utilities.info("DownloadResturantMenu " + urlString);
 				URLConnection connection = url.openConnection();
 				connection.setDoOutput(true);
 				InputStream in = connection.getInputStream();
@@ -68,17 +68,24 @@ public class DownloadResturantMenu {
 				res.close();
 
 				Gson gs = new Gson();
-				restaurant = gs.fromJson(sBuffer.toString(), Restaurant.class);
+				restWrapper = gs.fromJson(sBuffer.toString(), RestaurantWrapper.class);
 				//pull from DB/update DB if needed
-				if(restaurant == null && !lastUpdatedAt.isEmpty()) {
-					restaurant = restaurantFromDB;
-				} else if(restaurant != null && !lastUpdatedAt.isEmpty()) {
-					Utilities.info("DBRestaurant add and delete " + restaurant.getrId() + " " + restaurant.getName());
-					restHelper.addAndDeleteRestaurant(restaurant);
-				} else if(restaurant != null && lastUpdatedAt.isEmpty()) {
-					Utilities.info("DBRestaurant add " + restaurant.getrId() + " " + restaurant.getName());
-					restHelper.addRestaurant(restaurant);
-				}
+				
+                if (restWrapper.isUpdated()) {
+                    Utilities.info("DBRestaurant restWrapper updated " + restWrapper.getRestaurant());
+                    restaurant = restWrapper.getRestaurant();
+                    if (!lastUpdatedAt.isEmpty()) {
+                        Utilities.info("DBRestaurant add and delete " + restaurant.getrId() + " "
+                                + restaurant.getName() + "lastupdatedtime " + restaurant.getLastUpdatedAt());
+                        restHelper.addAndDeleteRestaurant(restaurant);
+                    } else {
+                        Utilities.info("DBRestaurant add " + restaurant.getrId() + " " + restaurant.getName());
+                        restHelper.addRestaurant(restaurant);
+                    }
+                } else if (!restWrapper.isUpdated()) {
+                    Utilities.info("DBRestaurant restWrapper notupdated");
+                    restaurant = restaurantFromDB;
+                }
 				
 				lruResturant.put(tableId, restaurant);
 			} catch (Exception ex) {
