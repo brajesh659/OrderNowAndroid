@@ -67,16 +67,16 @@ public class AsyncNetwork extends AsyncTask<String, Void, String> {
 	protected void onPostExecute(String result)  {
 		Utilities.info("inside  AsyncNetwork onPostExecute");
 	    super.onPostExecute(result);
-		if (progressDialog!=null) {
-			progressDialog.dismiss();
-		}
-		if(handler != null) {
-			if(exceptionToBeThrown != null ) {
-				handler.handleException(exceptionToBeThrown);
-			} else {
-				handler.handleSuccess(result);
-			}
-		}
+        if (handler != null) {
+            if (exceptionToBeThrown != null) {
+                handler.handleException(exceptionToBeThrown);
+            } else {
+                handler.handleSuccess(result);
+            }
+        }
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
 	}
 
 }

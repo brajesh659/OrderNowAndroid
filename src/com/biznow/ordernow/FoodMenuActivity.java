@@ -822,9 +822,7 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 		protected void onPostExecute(Restaurant result) {
 			Utilities.info("inside PreExecute");
 			super.onPostExecute(result);
-			if (progressDialog!=null) {
-				progressDialog.dismiss();
-			}
+
 
 			restaurant = result;
 
@@ -878,6 +876,9 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 					mDrawerLayout.openDrawer(Gravity.LEFT);
 				}
 			}
+            if (progressDialog != null) {
+                progressDialog.dismiss();
+            }
 
 		}
 	}
