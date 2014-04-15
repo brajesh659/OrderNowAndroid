@@ -18,8 +18,6 @@ import java.util.Map;
 import java.util.Random;
 import java.util.regex.Pattern;
 
-import com.biznow.ordernow.model.OrderNowConstants;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -414,9 +412,7 @@ public final class Utilities {
 	}
 
 	public static void info(String message) {
-		if(!OrderNowConstants.IS_PRODUCTION_SAMPLE_MODE) {
-			Log.i(TRACE_TAG, message);
-		}
+		Log.i(TRACE_TAG, message);
 	}
 
 	public static void error(String message) {
