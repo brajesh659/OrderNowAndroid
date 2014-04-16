@@ -86,7 +86,7 @@ public class CustomDbAdapter implements DatabaseManager {
 			mDb = mDbHelper.getWritableDatabase();
 			try {
 			    //TODO Currently added to reflect sql changes
-			    readAndRunSqlScriptAlways(mDb, R.raw.db_script);
+			    //readAndRunSqlScriptAlways(mDb, R.raw.db_script);
             } catch (Exception e) {
                 throw new RuntimeException("!Err when executing sql file + e");
             }
