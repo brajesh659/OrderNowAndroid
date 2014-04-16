@@ -26,20 +26,25 @@ import com.biznow.ordernow.model.OrderNowConstants;
 import com.biznow.ordernow.model.OrderStatus;
 import com.data.menu.CustomerOrderWrapper;
 import com.util.AsyncNetwork;
+import com.util.AsyncURLHandler;
 import com.util.OrderNowUtilities;
 import com.util.URLBuilder;
 import com.util.Utilities;
 
-public class MyParentOrderActivity extends Activity {
+public class MyParentOrderActivity extends Activity implements AsyncURLHandler {
 
     private MyParentOrderAdapter myParentOrderAdapter;
     private IntentFilter filter;
     ArrayList<CustomerOrderWrapper> subOrderList = null;
+    
+    private AsyncURLHandler urlHandler;
+    private Context context;
 
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+		context = this;
+		urlHandler = this;
 		filter = new IntentFilter();
 		filter.addAction(OrderNowConstants.ORDER_STATUS_RESET);
 		
@@ -110,15 +115,10 @@ public class MyParentOrderActivity extends Activity {
                         String url = new URLBuilder().addPath(URLBuilder.Path.serveTable).addAction(URLBuilder.URLAction.requestBill).addParam(URLBuilder.URLParam.orderId, orderId).build();
                         try {
                             OrderNowUtilities.sessionClean(getApplicationContext());
-                            new AsyncNetwork(null,getApplicationContext()).execute(url);
+                            new AsyncNetwork(urlHandler, context).execute(url);
                         } catch (Exception e) {
                             e.printStackTrace();
                         } 
-
-                        Toast.makeText(getApplicationContext(), "You will be receiving the bill very shortly!", Toast.LENGTH_LONG).show();
-                        Intent intent = new Intent(getApplicationContext(), RestFeedbackActivity.class);
-                        startActivity(intent);
-                        finish();
                     }
                 });
                 builder.setNegativeButton(R.string.no, null);
@@ -229,6 +229,20 @@ public class MyParentOrderActivity extends Activity {
             this.setResultCode(Activity.RESULT_OK);
         }
     };
+
+    @Override
+    public void handleException(Exception e) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void handleSuccess(String result) {
+        Toast.makeText(getApplicationContext(), "You will be receiving the bill very shortly!", Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(getApplicationContext(), RestFeedbackActivity.class);
+        startActivity(intent);
+        finish();
+    }
 
 	
 }

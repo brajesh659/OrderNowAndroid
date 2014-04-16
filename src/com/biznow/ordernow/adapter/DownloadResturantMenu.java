@@ -37,7 +37,7 @@ public class DownloadResturantMenu {
 		RestaurantWrapper restWrapper = null;
 		Restaurant restaurantFromDB = null;
 		if (lruResturant.get(tableId) == null) {
-			String lastUpdatedAt = "";
+			String lastUpdatedAt = "-1";
 
 			// get details from db if present and pass that
 			if (restHelper != null) {

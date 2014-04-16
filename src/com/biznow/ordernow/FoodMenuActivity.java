@@ -21,6 +21,7 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.SearchRecentSuggestions;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
@@ -842,6 +843,9 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 				});
 				AlertDialog alert = builder.create();
 				alert.show();
+				if (progressDialog != null) {
+                    progressDialog.dismiss();
+                }
 			} else {
 				loadRestaurantDishes(restaurant);
 				
@@ -852,34 +856,46 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 				//save preferences
 				OrderNowUtilities.putKeyToSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_RESTAURANT_ID, restaurant.getrId());
 				Utilities.info("onPostExecute " + ApplicationState.getCategoryId(applicationContext) +" "+ApplicationState.getChildCategoryId(applicationContext));
+				
+                for (Category category : getCategories()) {
+                    CategoryNavDrawerItem categoryNavDrawerItem = new CategoryNavDrawerItem(category);
+                    navDrawerItems.add(categoryNavDrawerItem);
+                    List<Category> childCategories = category.getCategories();
+                    if (childCategories != null && !childCategories.isEmpty()) {
+                        ArrayList<CategoryNavDrawerItem> childArrayList = new ArrayList<CategoryNavDrawerItem>();
+                        for (Category childCategory : childCategories) {
+                            CategoryNavDrawerItem childCategoryNavDrawerItem = new CategoryNavDrawerItem(childCategory);
+                            childArrayList.add(childCategoryNavDrawerItem);
+                        }
+                        childDrawerItems.put(categoryNavDrawerItem.getTitle(), childArrayList);
+                    }
+                }  
+
 				if (ApplicationState.getCategoryId(applicationContext)> -1 && ApplicationState.getChildCategoryId(applicationContext) > -1) {
 					displayView(ApplicationState.getCategoryId(applicationContext), ApplicationState.getChildCategoryId(applicationContext));	
 				} else {
 					displayView(0, 0);
 				}
-				
-				for (Category category : getCategories()) {
-					CategoryNavDrawerItem categoryNavDrawerItem = new CategoryNavDrawerItem(category);
-					navDrawerItems.add(categoryNavDrawerItem);
-					List<Category> childCategories = category.getCategories();
-					if (childCategories != null && !childCategories.isEmpty()) {
-						ArrayList<CategoryNavDrawerItem> childArrayList = new ArrayList<CategoryNavDrawerItem>();
-						for (Category childCategory : childCategories) {
-							CategoryNavDrawerItem childCategoryNavDrawerItem = new CategoryNavDrawerItem(childCategory);
-							childArrayList.add(childCategoryNavDrawerItem);
-						}
-						childDrawerItems.put(categoryNavDrawerItem.getTitle(), childArrayList);
-					}
-				}
-				
-				if (applicationContext.isOpenCategoryDrawer()) {
-					mDrawerLayout.openDrawer(Gravity.LEFT);
-				}
+                if (applicationContext.isOpenCategoryDrawer()) {
+                    mDrawerLayout.openDrawer(mDrawerList);
+                    new Handler().postDelayed(new Runnable() {
+                        
+                        @Override
+                        public void run() {
+                            if (progressDialog != null) {
+                                progressDialog.dismiss();
+                            }
+                            
+                        }
+                    }, 100);
+                } else {
+                    if (progressDialog != null) {
+                        progressDialog.dismiss();
+                    }
+                }
+                
 			}
-            if (progressDialog != null) {
-                progressDialog.dismiss();
-            }
-
+			
 		}
 	}
 
