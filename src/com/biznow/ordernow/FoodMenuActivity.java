@@ -887,7 +887,7 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
                             }
                             
                         }
-                    }, 100);
+                    }, 50);
                 } else {
                     if (progressDialog != null) {
                         progressDialog.dismiss();
