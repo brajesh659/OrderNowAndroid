@@ -69,12 +69,13 @@ public class QRCodeScannerActivity extends Activity {
 			qrCodeButton.setVisibility(View.GONE);
 			openRestMenuButton.setVisibility(View.VISIBLE);
 		} else {
-			welcome.setText( welcome.getText());
+			welcome.setText(welcome.getText());
 			qrCodeButton.setVisibility(View.VISIBLE);
-			openRestMenuButton.setVisibility(View.GONE);
-            if (OrderNowConstants.IS_PRODUCTION_SAMPLE_MODE) {
-                qrCodeButton.setText("Open Sample Menu");
-                welcome.setText("Hi Welcome To Order Now");
+			if (OrderNowConstants.IS_PRODUCTION_SAMPLE_MODE) {
+				openRestMenuButton.setVisibility(View.VISIBLE);            
+				openRestMenuButton.setText("Open Sample Menu");
+            } else {
+            	openRestMenuButton.setVisibility(View.GONE);
             }
 		}
 	}
@@ -131,22 +132,20 @@ public class QRCodeScannerActivity extends Activity {
 		
 	}
 
-    public void launchQRScanner(View v) {
-        if (OrderNowConstants.IS_PRODUCTION_SAMPLE_MODE) {
-            loadRestaurantTable((ApplicationState) getApplicationContext(), SAMPLE_TABLE_ID, SAMPLE_REST_ID);
-        } else {
-            if (isCameraAvailable()) {
-                Intent intent = new Intent(this, ZBarScannerActivity.class);
-                intent.putExtra(ZBarConstants.SCAN_MODES, new int[] { Symbol.QRCODE });
-                startActivityForResult(intent, ZBAR_QR_SCANNER_REQUEST);
-            } else {
-                Toast.makeText(this, "Rear Facing Camera Unavailable", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
+	public void launchQRScanner(View v) {
+		if (isCameraAvailable()) {
+			Intent intent = new Intent(this, ZBarScannerActivity.class);
+			intent.putExtra(ZBarConstants.SCAN_MODES, new int[] { Symbol.QRCODE });
+			startActivityForResult(intent, ZBAR_QR_SCANNER_REQUEST);
+		} else {
+			Toast.makeText(this, "Rear Facing Camera Unavailable", Toast.LENGTH_SHORT).show();
+		}
+	}
 
 	public void openRestaurantMenu(View v) {
-		if(activeTableId != null && activeTableId.trim() != "") {
+		if (OrderNowConstants.IS_PRODUCTION_SAMPLE_MODE) {
+			loadRestaurantTable((ApplicationState) getApplicationContext(), SAMPLE_TABLE_ID, SAMPLE_REST_ID);
+		} else if(activeTableId != null && activeTableId.trim() != "") {
 			ApplicationState applicationContext = (ApplicationState) getApplicationContext();
 			ApplicationState.setOpenCategoryDrawer(applicationContext, true);
 			Toast.makeText(this, "Session Table Id = " + activeTableId + " Rest Id = " + activeRestId, Toast.LENGTH_SHORT).show();
@@ -167,12 +166,16 @@ public class QRCodeScannerActivity extends Activity {
 		switch (requestCode) {
 		case ZBAR_QR_SCANNER_REQUEST:
 			if (resultCode == RESULT_OK) {
-				String tableId_restID = data.getStringExtra(ZBarConstants.SCAN_RESULT);
-				String[] scanResultStrings = tableId_restID.split(" ");
-				String tableId = scanResultStrings[0];
-				String restId = (scanResultStrings.length > 1)? scanResultStrings[1] : "";
-				//Toast.makeText(this, "Table Id = " + tableId + " Rest Id = " + restId, Toast.LENGTH_SHORT).show();
-				loadRestaurantTable(applicationContext, tableId, restId);				
+				if (OrderNowConstants.IS_PRODUCTION_SAMPLE_MODE) {
+					loadRestaurantTable((ApplicationState) getApplicationContext(), SAMPLE_TABLE_ID, SAMPLE_REST_ID);
+				} else {
+					String tableId_restID = data.getStringExtra(ZBarConstants.SCAN_RESULT);
+					String[] scanResultStrings = tableId_restID.split(" ");
+					String tableId = scanResultStrings[0];
+					String restId = (scanResultStrings.length > 1)? scanResultStrings[1] : "";
+					//Toast.makeText(this, "Table Id = " + tableId + " Rest Id = " + restId, Toast.LENGTH_SHORT).show();
+					loadRestaurantTable(applicationContext, tableId, restId);
+				}
 
 			} else if(resultCode == RESULT_CANCELED && data != null) {
 				String error = data.getStringExtra(ZBarConstants.ERROR_INFO);
