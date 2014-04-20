@@ -6,16 +6,14 @@
     android:orientation="vertical" >
     
 
-    <com.example.ordernowandroid.fragments.StaggeredGridView
+    <com.biznow.ordernow.fragments.StaggeredGridView
         android:id="@+id/staggeredGridView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/bottomIngredientAdd"
         android:layout_below="@+id/ingredient_generic"
         staggered:drawSelectorOnTop="true"
-        staggered:numColumns="2" >
-
-    </com.example.ordernowandroid.fragments.StaggeredGridView>
+        staggered:numColumns="2" />
 
     <LinearLayout
         android:id="@+id/bottomIngredientAdd"
@@ -32,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.30"
             android:background="@color/white"
-            android:src="@drawable/sub" />
+            android:src="@drawable/ic_action_remove" />
 
         <TextView
             android:id="@+id/quantity"
@@ -50,7 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.30"
             android:background="@color/white"
-            android:src="@drawable/add" />
+            android:src="@drawable/ic_action_new" />
 
         <View
             android:id="@+id/margin"

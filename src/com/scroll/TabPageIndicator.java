@@ -16,7 +16,7 @@
  */
 package com.scroll;
 
-import com.example.ordernowandroid.R;
+import com.biznow.ordernow.R;
 
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;

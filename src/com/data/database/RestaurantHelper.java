@@ -9,11 +9,11 @@ import java.util.Map;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import com.biznow.ordernow.model.FoodMenuItem;
 import com.data.menu.Dish;
 import com.data.menu.MenuPropertyKey;
 import com.data.menu.MenuPropertyValue;
 import com.data.menu.Restaurant;
-import com.example.ordernowandroid.model.FoodMenuItem;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.util.Utilities;
@@ -177,7 +177,9 @@ public class RestaurantHelper extends SQLHelper {
 
 	public void deleteRestaurant(String restId) {
 		if (restId != null && !restId.isEmpty()) {
-			dbManager.delete(REST_TABLE, KEY_REST_ID + "=" + restId, null);
+		    String whereClause = KEY_REST_ID + "=" + "?";
+		    String[] whereArgs = {restId};
+			dbManager.delete(REST_TABLE, KEY_REST_ID + "=" + "?", whereArgs);
 		}
 	}
 	

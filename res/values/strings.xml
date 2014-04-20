@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Order Now</string>
+    <string name="app_name">OrderNow Lite</string>
     <string name="facebook_app_id">602953306452334</string>
     <string name="parse_app_id">vMFTELLhOo9RDRql9HpV9lKRot5xQTCCD63wkYdQ</string>
     <string name="parse_client_key">mdz7n8XUjy3u0MSQRnuwmogqXZrw3qJnRwmRxx0g</string>

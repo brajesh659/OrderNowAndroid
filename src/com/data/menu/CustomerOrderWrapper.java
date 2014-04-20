@@ -6,11 +6,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.example.ordernowandroid.ApplicationState;
-import com.example.ordernowandroid.model.MyOrderItem;
-import com.example.ordernowandroid.model.Order;
-import com.example.ordernowandroid.model.OrderNowConstants;
-import com.example.ordernowandroid.model.OrderStatus;
+import com.biznow.ordernow.ApplicationState;
+import com.biznow.ordernow.model.MyOrderItem;
+import com.biznow.ordernow.model.Order;
+import com.biznow.ordernow.model.OrderNowConstants;
+import com.biznow.ordernow.model.OrderStatus;
 import com.parse.ParseInstallation;
 import com.util.OrderNowUtilities;
 
@@ -53,11 +53,12 @@ public class CustomerOrderWrapper implements Serializable {
             dishes.put(myOrderItem.getFoodMenuItem().getDishId(), orderDish);
         }
 
-        String restaurantId = ApplicationState.getRestaurantId(applicationContext);
+        String restaurantId = OrderNowUtilities.getKeyFromSharedPreferences(applicationContext.getApplicationContext(), OrderNowConstants.KEY_ACTIVE_RESTAURANT_ID);
         String restaurantName = OrderNowUtilities.getKeyFromSharedPreferences(
                 applicationContext.getApplicationContext(), OrderNowConstants.KEY_ACTIVE_RESTAURANT_NAME);
         CharSequence text = ParseInstallation.getCurrentInstallation().getObjectId();
-        CustomerOrder customerOrder = new CustomerOrder(dishes, restaurantId, restaurantName, text.toString(), ApplicationState.getTableId(applicationContext), orderNote);
+        String tableId = OrderNowUtilities.getKeyFromSharedPreferences(applicationContext.getApplicationContext(), OrderNowConstants.KEY_ACTIVE_TABLE_ID);
+        CustomerOrder customerOrder = new CustomerOrder(dishes, restaurantId, restaurantName, text.toString(), tableId, orderNote);
         return customerOrder;
     }
 
