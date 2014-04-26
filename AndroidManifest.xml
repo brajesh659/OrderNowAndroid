@@ -78,6 +78,16 @@
                 android:value="com.biznow.ordernow.QRCodeScannerActivity" />
         </activity>
         <activity
+            android:name="com.biznow.ordernow.DeliveryRestaurantActivity"
+            android:label="@string/app_name"
+            android:parentActivityName="com.biznow.ordernow.QRCodeScannerActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Holo.Light" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.biznow.ordernow.QRCodeScannerActivity" />
+        </activity>
+        <activity
             android:name="com.biznow.ordernow.RestFeedbackActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"

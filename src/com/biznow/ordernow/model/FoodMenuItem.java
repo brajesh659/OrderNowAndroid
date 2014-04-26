@@ -5,14 +5,13 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import android.graphics.Bitmap;
-import android.os.AsyncTask;
 
-import com.biznow.ordernow.adapter.ImageService;
 import com.data.menu.Dish;
 import com.data.menu.Ingredient;
 import com.data.menu.IngredientOption;
 import com.data.menu.MenuPropertyKey;
 import com.data.menu.MenuPropertyValue;
+import com.util.DownloadImageTask;
 
 /**
  * 
@@ -167,15 +166,6 @@ public class FoodMenuItem implements Serializable {
 		// not keeping the asynctask else it wont be serializable
 		// also the underlying class ImageService is singleton so no problem
 		new DownloadImageTask().execute(image);
-
-	}
-
-	private class DownloadImageTask extends AsyncTask<String, Integer, Bitmap> {
-		@Override
-		protected Bitmap doInBackground(String... params) {
-			// "http://www.creativefreedom.co.uk/icon-designers-blog/wp-content/uploads/2013/03/00-android-4-0_icons.png"
-			return ImageService.getInstance().getImageWithCache(params[0]);
-		}
 
 	}
 

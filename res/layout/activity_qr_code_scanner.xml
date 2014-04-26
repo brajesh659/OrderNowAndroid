@@ -34,32 +34,34 @@
         android:id="@+id/rest_image"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
         android:scaleType="fitXY"
         android:contentDescription="Restaurant Image"
         android:layout_weight="0.5"
         android:src="@drawable/rest_food" />
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="bottom"
-        android:layout_weight="0.3" >
+        android:orientation="vertical"
+        android:layout_weight="0.4"
+         >
 
         <TextView
             android:id="@+id/welcome_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="top|center"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="2dp"
             android:text="@string/welcome_text" />
 
         <Button
             android:id="@+id/qrscan_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/welcome_text"
             android:onClick="launchQRScanner"
-            android:layout_marginBottom="5dp"
+            android:layout_weight="0.1"
             android:text="@string/scan_qr_codes" />
         
         <TextView
@@ -67,19 +69,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="top|center"
-            android:layout_below="@id/qrscan_btn"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
+            android:layout_marginTop="3dp"
+            android:layout_weight="0.1"
+            android:layout_marginBottom="1dp"
             android:text="OR" />
 
         <Button
             android:id="@+id/open_res_menu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/or"
-            android:onClick="openRestaurantMenu"
-            android:layout_marginBottom="10dp"
-            android:text="@string/open_res_menu" />
-    </RelativeLayout>
+            android:onClick="openSampleRestaurantMenu"
+            android:layout_weight="0.1"
+            android:layout_marginBottom="2dp"
+            android:text="@string/open_sample_res_menu" />
+    </LinearLayout>
 
 </LinearLayout>
