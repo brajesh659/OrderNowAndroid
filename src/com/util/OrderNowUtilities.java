@@ -182,6 +182,7 @@ public class OrderNowUtilities {
         
         //Clear the Cached History List
         ApplicationState.setMyOrderHistoryList((ApplicationState)applicationContext, null);
+        ApplicationState.setCategoryId((ApplicationState)applicationContext, -1);
     }
 
 }
