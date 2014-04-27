@@ -1,7 +1,5 @@
 package com.biznow.ordernow;
 
-import java.util.ArrayList;
-
 import net.sourceforge.zbar.Symbol;
 import android.app.Activity;
 import android.content.Intent;
@@ -14,9 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.biznow.ordernow.R;
 import com.biznow.ordernow.model.OrderNowConstants;
-import com.data.menu.CustomerOrderWrapper;
 import com.dm.zbar.android.scanner.ZBarConstants;
 import com.dm.zbar.android.scanner.ZBarScannerActivity;
 import com.facebook.Session;
@@ -26,19 +22,17 @@ import com.util.Utilities;
 
 public class QRCodeScannerActivity extends Activity {
 
-	private static final String SAMPLE_REST_ID = "R3";
-    private static final String SAMPLE_TABLE_ID = "T20";
     private static final int ZBAR_QR_SCANNER_REQUEST = 1;
 	private ProfilePictureView profilePictureView;
 	private TextView welcome;
 	private TextView custName;
 	private Button qrCodeButton;
 	private Button openRestMenuButton;
+	private TextView orText;
 
 	private String activeTableId;
 	private String activeRestId;
 	private String activeRestName;
-	private ArrayList<CustomerOrderWrapper> activeSubOrderList;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -49,7 +43,9 @@ public class QRCodeScannerActivity extends Activity {
 		custName = (TextView) findViewById(R.id.selection_profile_name);
 		qrCodeButton = (Button) findViewById(R.id.qrscan_btn);
 		openRestMenuButton = (Button) findViewById(R.id.open_res_menu);
-
+		openRestMenuButton = (Button) findViewById(R.id.open_res_menu);
+		orText = (TextView) findViewById(R.id.or);
+		
 		ApplicationState applicationContext = (ApplicationState) getApplicationContext();
 		if(applicationContext.getUserName() != null && applicationContext.getUserName().trim() != "") {
 			custName.setText(applicationContext.getUserName());
@@ -66,16 +62,34 @@ public class QRCodeScannerActivity extends Activity {
 	private void checkForActiveSessionAndUpdateUI() {
 		if(activeSessionPresent()) {
 			welcome.setText("You are currently logged in " + activeRestName + " restaurant.");
-			qrCodeButton.setVisibility(View.GONE);
-			openRestMenuButton.setVisibility(View.VISIBLE);
+			qrCodeButton.setText(getResources().getString(R.string.open_res_menu));
+			openRestMenuButton.setVisibility(View.GONE);
+			qrCodeButton.setOnClickListener(new View.OnClickListener() {
+                
+                @Override
+                public void onClick(View v) {
+                    openRestaurantMenu(v);
+                    
+                }
+            });
+			openRestMenuButton.setVisibility(View.GONE);
+			orText.setVisibility(View.GONE);
 		} else {
 			welcome.setText(welcome.getText());
 			qrCodeButton.setVisibility(View.VISIBLE);
+			qrCodeButton.setOnClickListener(new View.OnClickListener() {
+                
+                @Override
+                public void onClick(View v) {
+                    launchQRScanner(v); 
+                }
+            });
 			if (OrderNowConstants.IS_PRODUCTION_SAMPLE_MODE) {
-				openRestMenuButton.setVisibility(View.VISIBLE);            
-				openRestMenuButton.setText("Open Sample Menu");
+				openRestMenuButton.setVisibility(View.VISIBLE);
+				orText.setVisibility(View.VISIBLE);
             } else {
             	openRestMenuButton.setVisibility(View.GONE);
+            	orText.setVisibility(View.GONE);
             }
 		}
 	}
@@ -118,14 +132,11 @@ public class QRCodeScannerActivity extends Activity {
 	}
 
 	private boolean activeSessionPresent() {
-	    if(OrderNowConstants.IS_PRODUCTION_SAMPLE_MODE) {
-	        return false;
-	    }
-		activeTableId = OrderNowUtilities.getKeyFromSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_TABLE_ID);
-		if(activeTableId != null && activeTableId.trim() != "") {
+		String activeSession = OrderNowUtilities.getKeyFromSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_SESSION);
+		if(activeSession != null && activeSession.trim() != "" && (Boolean.valueOf(activeSession) == true)) {
+		    activeTableId = OrderNowUtilities.getKeyFromSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_TABLE_ID);
 			activeRestId = OrderNowUtilities.getKeyFromSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_RESTAURANT_ID);
 			activeRestName = OrderNowUtilities.getKeyFromSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_RESTAURANT_NAME);
-			activeSubOrderList = OrderNowUtilities.getObjectFromSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_SUB_ORDER_LIST);
 			return true;
 		}
 		return false;
@@ -142,18 +153,24 @@ public class QRCodeScannerActivity extends Activity {
 		}
 	}
 
-	public void openRestaurantMenu(View v) {
-		if (OrderNowConstants.IS_PRODUCTION_SAMPLE_MODE) {
-			loadRestaurantTable((ApplicationState) getApplicationContext(), SAMPLE_TABLE_ID, SAMPLE_REST_ID);
-		} else if(activeTableId != null && activeTableId.trim() != "") {
-			ApplicationState applicationContext = (ApplicationState) getApplicationContext();
-			ApplicationState.setOpenCategoryDrawer(applicationContext, true);
-			Toast.makeText(this, "Session Table Id = " + activeTableId + " Rest Id = " + activeRestId, Toast.LENGTH_SHORT).show();
+    public void openRestaurantMenu(View v) {
+        if (activeTableId != null && activeTableId.trim() != "") {
+            ApplicationState applicationContext = (ApplicationState) getApplicationContext();
+            ApplicationState.setOpenCategoryDrawer(applicationContext, true);
+            Toast.makeText(this, "Session Table Id = " + activeTableId + " Rest Id = " + activeRestId,
+                    Toast.LENGTH_SHORT).show();
 
-			Intent intent = new Intent(this, FoodMenuActivity.class);
-			startActivity(intent);				
-		} 
-	}
+            Intent intent = new Intent(this, FoodMenuActivity.class);
+            startActivity(intent);
+        }
+    }
+	
+    public void openSampleRestaurantMenu(View v) {
+        //Load all the restaurant for delivery
+        Intent intent = new Intent(this, DeliveryRestaurantActivity.class);
+        startActivity(intent);
+        //loadRestaurantTable((ApplicationState) getApplicationContext(), SAMPLE_TABLE_ID, SAMPLE_REST_ID,true);
+    }
 
 	public boolean isCameraAvailable() {
 		PackageManager pm = getPackageManager();
@@ -166,16 +183,14 @@ public class QRCodeScannerActivity extends Activity {
 		switch (requestCode) {
 		case ZBAR_QR_SCANNER_REQUEST:
 			if (resultCode == RESULT_OK) {
-				if (OrderNowConstants.IS_PRODUCTION_SAMPLE_MODE) {
-					loadRestaurantTable((ApplicationState) getApplicationContext(), SAMPLE_TABLE_ID, SAMPLE_REST_ID);
-				} else {
+
 					String tableId_restID = data.getStringExtra(ZBarConstants.SCAN_RESULT);
 					String[] scanResultStrings = tableId_restID.split(" ");
 					String tableId = scanResultStrings[0];
 					String restId = (scanResultStrings.length > 1)? scanResultStrings[1] : "";
 					//Toast.makeText(this, "Table Id = " + tableId + " Rest Id = " + restId, Toast.LENGTH_SHORT).show();
-					loadRestaurantTable(applicationContext, tableId, restId);
-				}
+					loadRestaurantTable(applicationContext, tableId, restId,false);
+				
 
 			} else if(resultCode == RESULT_CANCELED && data != null) {
 				String error = data.getStringExtra(ZBarConstants.ERROR_INFO);
@@ -186,7 +201,7 @@ public class QRCodeScannerActivity extends Activity {
 		}
 	}
 
-    private void loadRestaurantTable(ApplicationState applicationContext, String tableId, String restId) {
+    private void loadRestaurantTable(ApplicationState applicationContext, String tableId, String restId, boolean sampleMenu) {
 
         //clean order stuff if present
         ApplicationState.cleanFoodMenuItemQuantityMap(applicationContext);
@@ -195,6 +210,9 @@ public class QRCodeScannerActivity extends Activity {
 
         OrderNowUtilities.putKeyToSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_TABLE_ID, tableId);
         OrderNowUtilities.putKeyToSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_RESTAURANT_ID, restId);
+        boolean activeSession = !sampleMenu;
+        OrderNowUtilities.putKeyToSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_SESSION,Boolean.toString(activeSession));
+        
         ApplicationState.setOpenCategoryDrawer(applicationContext, true);
 
         Intent intent = new Intent(this, FoodMenuActivity.class);
