@@ -6,11 +6,11 @@ public class URLBuilder {
 	private static final String actionString = "action";
 	
 	public enum Path {
-		serveTable, order, delivery
+		serveTable, order, delivery, custInfo
 	}
 	
 	public enum URLParam {
-		tableId, order, feedback, lastUpdatedAt, orderId, subOrderId, customerId, restaurantId
+		tableId, order, feedback, lastUpdatedAt, orderId, subOrderId, customerId, restaurantId, custData
 	}
 	
 	public enum URLAction {
