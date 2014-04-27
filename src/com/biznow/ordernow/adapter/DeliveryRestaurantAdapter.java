@@ -38,7 +38,7 @@ public class DeliveryRestaurantAdapter extends ArrayAdapter<Restaurant>{
         ImageView restImage = (ImageView) convertView.findViewById(R.id.rest_photo);
         
         restName.setText(rest.getName());
-        restDescription.setText("rest description comes here");
+        restDescription.setText(rest.getDescription());
         restAddress.setText(rest.getAddress());
         Bitmap img = null;
         try {
