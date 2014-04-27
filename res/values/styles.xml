@@ -75,5 +75,11 @@
         <item name="fadeLength">1000</item>
         <item name="fadeDelay">1000</item>
     </style>
+    
+    <style name="SplashText">
+        <item name="android:textColor">#36495A</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">32sp</item>
+    </style>
 
 </resources>
