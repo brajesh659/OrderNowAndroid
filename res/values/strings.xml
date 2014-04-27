@@ -31,7 +31,7 @@
     <string name="save">"Save"</string>
     <string name="confirmed_order">"Confirmed Order"</string>
     <string name="search_title">"Search Dishes"</string>
-    <string name="search_hint">"Search Dishes Here"</string>
+    <string name="search_hint">"Search Here"</string>
     <string name="no_dishes">"Sorry No Dishes Found! \nPlease Search Again Or Slide For the Category Drawer"</string>
     <string name="confirm_order_comment_hint_text">"Enter additional comments for this order!!"</string>
     <string name="rest_feedback_comment_hint_text">"Your feedback is valuable to us. Enter additional comments here!"</string>

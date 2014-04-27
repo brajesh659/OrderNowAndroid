@@ -62,6 +62,16 @@ CREATE VIRTUAL TABLE [dishes] USING fts3(
 , [dishDetail] nvarchar(300) not null
 );
 
+-- ----------------------------------------------------
+--  Table structure for "restaurants"
+-- ----------------------------------------------------
+DROP TABLE IF EXISTS "restaurants";
+CREATE VIRTUAL TABLE [restaurants] USING fts3(
+  [rId] nvarchar(300) not null
+, [resValue] clob not null
+, primary key ([rId])
+);
+
 CREATE TABLE IF NOT EXISTS[restaurantMenu] (
   [restId] nvarchar(300) not null
 , [menu] clob not null

@@ -30,12 +30,17 @@ public class RestaurantHelper extends SQLHelper {
 	private static final String KEY_REST_ID = "restId";
 	private static final String KEY_REST_MENU = "menu";
 	private static final String KEY_DISH_PROPERTIES = "dishProperties";
+	
+	//keys for restaurants
+	private static final String KEY_RESTAURANT_ID = "rId";
+	private static final String KEY_RESTAURANT_VALUE = "resValue";
 
 	public RestaurantHelper(DatabaseManager dbManager) {
 		super(dbManager);
 	}
 
 	private static final String TABLE_NAME_FTS = "dishes";
+	private static final String TABLE_NAME_RESTAURANTS_FTS = "restaurants";
 	private static final String REST_TABLE = "restaurantMenu";
 
 	@SuppressWarnings("unchecked")
@@ -208,5 +213,44 @@ public class RestaurantHelper extends SQLHelper {
 		}
 		return rest;
 	}
+	
+    public List<Restaurant> getRestaurantList(String query) {
+        List<Restaurant> restList = new ArrayList<Restaurant>();
+        String getQuery = "SELECT * FROM " + TABLE_NAME_RESTAURANTS_FTS + " WHERE " + TABLE_NAME_RESTAURANTS_FTS + " MATCH '"
+                + query + "*'";
+        Cursor cursor = dbManager.rawQuery(getQuery, null);
+
+        Utilities.info(Integer.toString(cursor.getCount()));
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+                String resValue = cursor.getString(cursor.getColumnIndex(KEY_RESTAURANT_VALUE));
+                Gson gs = new Gson();
+                Restaurant rest = gs.fromJson(resValue, Restaurant.class);
+                if (rest != null) {
+                    restList.add(rest);
+                }
+            } while (cursor.moveToNext());
+        }
+        return restList;
+    }
+    
+    public void addRestaurants(List<Restaurant> restList) {
+        if(restList!= null  && !restList.isEmpty()) {
+            for(Restaurant rest: restList) {
+                try {
+                Gson gs = new Gson();
+                String resValue = gs.toJson(rest);
+                ContentValues values = new ContentValues();
+                values.put(KEY_RESTAURANT_ID, rest.getrId());
+                values.put(KEY_RESTAURANT_VALUE, resValue);
+                dbManager.insert(TABLE_NAME_RESTAURANTS_FTS, null, values);
+                Utilities.info("insert " + values);
+                } catch (Exception e) {
+                    Utilities.error("Exception in adding restaurant to restList " + e);
+                }
+            }
+        }
+    }
 
 }
