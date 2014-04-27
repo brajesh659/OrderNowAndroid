@@ -72,18 +72,21 @@ public class LoginFragment extends Fragment {
                             applicationContext.setFirstName(user.getFirstName());
                             applicationContext.setLastName(user.getLastName());
                             applicationContext.setParseId(ParseInstallation.getCurrentInstallation().getObjectId().toString());
-                            
-                            Gson gson = new Gson();
-                            Customer customerData = new Customer(null, user.getFirstName(), user.getLastName(), null, 
+                            try {
+                            	Gson gson = new Gson();
+                            	Customer customerData = new Customer(null, user.getFirstName(), user.getLastName(), null, 
                             		ParseInstallation.getCurrentInstallation().getObjectId().toString(), user.getUsername());
                             
-                            String url = new URLBuilder().
+                            	String url = new URLBuilder().
                             		addPath(URLBuilder.Path.custInfo).
                             		addParam(URLBuilder.URLParam.custData, gson.toJson(customerData).toString())
                             		.build();
                             
-                            Utilities.info("URL: " + url);
-                            new AsyncNetwork().execute(url);
+                            	Utilities.info("URL: " + url);
+                            	new AsyncNetwork().execute(url);
+                            } catch(Exception e) {
+                            	// Handle errors, will do so later.
+                            }
                             
                             if (!OrderNowConstants.IS_DEBUG_MODE) {
                                 Intent intent = new Intent(applicationContext, QRCodeScannerActivity.class);
