@@ -1,23 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/desserts7"
-    android:gravity="center_horizontal"
-    android:orientation="vertical" >
+    android:background="@drawable/desserts7" >
 
     <ImageView
         android:id="@+id/splash_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="30dp"
+        android:layout_centerHorizontal="true"
         android:adjustViewBounds="true"
-        android:src="@drawable/text_logo" />
-
+        android:src="@drawable/title_logo" />
+    
     <com.facebook.widget.LoginButton
         android:id="@+id/facebook_auth_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp" />
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/splash_icon"
+        android:layout_marginTop="150dp" />
 
-</LinearLayout>
+    
+
+</RelativeLayout>

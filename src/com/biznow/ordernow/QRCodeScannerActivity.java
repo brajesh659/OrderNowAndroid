@@ -3,18 +3,22 @@ package com.biznow.ordernow;
 import java.util.ArrayList;
 
 import net.sourceforge.zbar.Symbol;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ExpandableListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.biznow.ordernow.R;
+import com.biznow.ordernow.adapter.DineInListAdapter;
 import com.biznow.ordernow.model.OrderNowConstants;
 import com.data.menu.CustomerOrderWrapper;
 import com.dm.zbar.android.scanner.ZBarConstants;
@@ -39,13 +43,33 @@ public class QRCodeScannerActivity extends Activity {
 	private String activeRestId;
 	private String activeRestName;
 	private ArrayList<CustomerOrderWrapper> activeSubOrderList;
+	
+	DisplayMetrics metrics;
+	int width;
 
+	@SuppressLint("NewApi")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_qr_code_scanner);
+		
+		ExpandableListView dineInList = (ExpandableListView) findViewById(R.id.dine_in_button);
+		
+		DineInListAdapter dineInListAdapter = new DineInListAdapter(this);
+		
+		dineInList.setAdapter(dineInListAdapter);
+		
+		//this code for adjusting the group indicator into right side of the view
+		metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        width = metrics.widthPixels;
+        if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN_MR2) {
+        	dineInList.setIndicatorBounds(width-50, width);
+         } else {
+        	 dineInList.setIndicatorBoundsRelative(width-50, width);
+         }
 
-		welcome = (TextView) findViewById(R.id.welcome_text);
+		/*welcome = (TextView) findViewById(R.id.welcome_text);
 		custName = (TextView) findViewById(R.id.selection_profile_name);
 		qrCodeButton = (Button) findViewById(R.id.qrscan_btn);
 		openRestMenuButton = (Button) findViewById(R.id.open_res_menu);
@@ -60,7 +84,7 @@ public class QRCodeScannerActivity extends Activity {
 			profilePictureView.setProfileId(applicationContext.getProfilePictureId());
 		}
 
-		checkForActiveSessionAndUpdateUI();	
+		checkForActiveSessionAndUpdateUI();*/	
 	}
 
 	private void checkForActiveSessionAndUpdateUI() {
@@ -203,7 +227,7 @@ public class QRCodeScannerActivity extends Activity {
 
 	@Override
 	protected void onResume() {
-		checkForActiveSessionAndUpdateUI();	
+		//checkForActiveSessionAndUpdateUI();	
 		super.onResume();
 	}
 }

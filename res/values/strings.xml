@@ -6,7 +6,7 @@
     <string name="parse_app_id">vMFTELLhOo9RDRql9HpV9lKRot5xQTCCD63wkYdQ</string>
     <string name="parse_client_key">mdz7n8XUjy3u0MSQRnuwmogqXZrw3qJnRwmRxx0g</string>
     <string name="action_settings">Settings</string>
-    <string name="welcome_text">Welcome to Order Now. Please scan the QR code provided on the table.</string>
+    <string name="welcome_text">Scan the QR code on the table.</string>
     <string name="scan_qr_codes">Scan QR Code</string>
     <string name="open_res_menu">Open Restaurant Menu</string>
     <string name="drawer_open">Slider Menu Opened</string>
@@ -285,5 +285,7 @@
     <string name="history_des">History</string>
     <string name="title_activity_splash_screen">SplashScreenActivity</string>
     <string name="hello_world">Hello world!</string>
+    <string name="dine_in">Dine In</string>
+    <string name="delivery_button">Delivery Button</string>
 
 </resources>

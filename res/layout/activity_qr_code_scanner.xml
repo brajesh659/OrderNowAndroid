@@ -1,85 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:facebook="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="1"
-    android:orientation="vertical" >
+    android:background="#94B7DF" >
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <!-- Dine in list view -->
+
+    <ExpandableListView
+        android:id="@+id/dine_in_button"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.2"
-        android:gravity="center_vertical|center_horizontal"
-        android:orientation="horizontal" >
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="25dp"
+        android:background="#FFFFFF" />
 
-        <com.facebook.widget.ProfilePictureView
-            android:id="@+id/selection_profile_pic"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="left"
-            facebook:preset_size="small" >
-        </com.facebook.widget.ProfilePictureView>
+    <!-- delivery button -->
 
-        <TextView
-            android:id="@+id/selection_profile_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:gravity="center_vertical|center_horizontal"
-            android:textSize="20sp" />
-    </LinearLayout>
-    
-    <ImageView
-        android:id="@+id/rest_image"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:scaleType="fitXY"
-        android:contentDescription="Restaurant Image"
-        android:layout_weight="0.5"
-        android:src="@drawable/rest_food" />
+    <Button
+        android:id="@+id/deliveryButton"
+        android:layout_width="fill_parent"
+        android:layout_height="60dp"
+        android:layout_below="@id/dine_in_button"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="15dp"
+        android:background="#FFFFFF"
+        android:drawableLeft="@drawable/delivery_food"
+        android:drawablePadding="10dp"
+        android:gravity="left|center_vertical"
+        android:paddingLeft="10dp"
+        android:text="@string/delivery_button"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="bottom"
-        android:layout_weight="0.3" >
+    <!-- history button -->
 
-        <TextView
-            android:id="@+id/welcome_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="top|center"
-            android:layout_marginBottom="10dp"
-            android:text="@string/welcome_text" />
+    <Button
+        android:id="@+id/history_button"
+        android:layout_width="fill_parent"
+        android:layout_height="60dp"
+        android:layout_below="@id/deliveryButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="15dp"
+        android:background="#FFFFFF"
+        android:drawableLeft="@drawable/ic_action_time"
+        android:drawablePadding="10dp"
+        android:gravity="left|center_vertical"
+        android:onClick="openRestaurantMenu"
+        android:paddingLeft="10dp"
+        android:text="@string/history_des"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/qrscan_btn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/welcome_text"
-            android:onClick="launchQRScanner"
-            android:layout_marginBottom="5dp"
-            android:text="@string/scan_qr_codes" />
-        
-        <TextView
-            android:id="@+id/or"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="top|center"
-            android:layout_below="@id/qrscan_btn"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:text="OR" />
-
-        <Button
-            android:id="@+id/open_res_menu"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/or"
-            android:onClick="openRestaurantMenu"
-            android:layout_marginBottom="10dp"
-            android:text="@string/open_res_menu" />
-    </RelativeLayout>
-
-</LinearLayout>
+</RelativeLayout>
