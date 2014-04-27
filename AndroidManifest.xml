@@ -54,12 +54,8 @@
             android:name="com.biznow.ordernow.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Holo.Light" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar" >
+            
         </activity>
         <activity
             android:name="com.biznow.ordernow.QRCodeScannerActivity"
@@ -177,7 +173,7 @@
                 <action android:name="com.example.orderCompleted" />
                 <action android:name="com.example.modifyOrder" />
             </intent-filter>
-        </receiver>
+        </receiver>
         -->
 
         <service android:name="com.parse.PushService" />
@@ -201,11 +197,24 @@
                 <!--
 				  IMPORTANT: If you change the package name of this sample app,
 				  change "com.parse.tutorials.pushnotifications" in the lines
-				  below to match the new package name.
+				  below to match the new package name.
                 -->
                 <category android:name="com.biznow.ordernow" />
             </intent-filter>
         </receiver>
+
+        <activity
+            android:name="com.biznow.ordernow.SplashScreenActivity"
+            android:label="@string/title_activity_splash_screen"
+            android:noHistory="true" 
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

@@ -21,18 +21,18 @@
     <string name="add_to_cart">"Add To Cart"</string>
     <string name="total">"Total"</string>
     <string name="ok">"OK"</string>
-    <string name="cancel">"Cancel"</string> 
-    <string name="retry">"Retry"</string> 
+    <string name="cancel">"Cancel"</string>
+    <string name="retry">"Retry"</string>
     <string name="yes">"Yes"</string>
     <string name="no">"No"</string>
-    <string name="myorder">"My Order"</string> 
+    <string name="myorder">"My Order"</string>
     <string name="addnotes">"Add Notes"</string>
-    <string name="save">"Save"</string> 
+    <string name="save">"Save"</string>
     <string name="confirmed_order">"Confirmed Order"</string>
     <string name="search_title">"Search Dishes"</string>
-    <string name="search_hint">"Search Dishes Here"</string> 
+    <string name="search_hint">"Search Dishes Here"</string>
     <string name="no_dishes">"Sorry No Dishes Found! \nPlease Search Again Or Slide For the Category Drawer"</string>
-    <string name="confirm_order_comment_hint_text">"Enter additional comments for this order!!"</string>   
+    <string name="confirm_order_comment_hint_text">"Enter additional comments for this order!!"</string>
     <string name="rest_feedback_comment_hint_text">"Your feedback is valuable to us. Enter additional comments here!"</string>
     <string name="filter_menu">"Filter Menu"</string>
     <string name="modify">"Modify"</string>
@@ -43,16 +43,15 @@
     <string name="submit">"Submit"</string>
     <string name="signOut">"Sign Out"</string>
     <string name="send_App_Feedback">"Send App Feedback"</string>
-    
-    
+    <string name="splash_message">Food Kart</string>
+
     <string-array name="ingredients_title">
         <item>Choice of Vegetables</item>
         <item>Choice of Proteins</item>
         <item>Condiments</item>
         <item>Starch</item>
     </string-array>
-
-     <string-array name="chef0">
+    <string-array name="chef0">
         <item>Fresh Malineinse</item>
         <item>Baby Corn</item>
         <item>Chicken</item>
@@ -61,7 +60,6 @@
         <item>Sliced Onion</item>
         <item>Noodles</item>
     </string-array>
-    
     <string-array name="ing0">
         <item>Fresh Malineinse</item>
         <item>Palk Choi</item>
@@ -69,7 +67,6 @@
         <item>Corn Kernel</item>
         <item>Green Beans</item>
     </string-array>
-    
     <string-array name="ing1">
         <item>Egg</item>
         <item>Chicken</item>
@@ -77,21 +74,17 @@
         <item>Pork</item>
         <item>Lamb</item>
     </string-array>
-    
     <string-array name="ing2">
         <item>Ginger</item>
         <item>Garlic</item>
         <item>Red Chilli</item>
         <item>Sliced Onion</item>
     </string-array>
-    
     <string-array name="ing3">
         <item>Rice</item>
         <item>Noodles</item>
     </string-array>
-    
-    
-    
+
     <!-- Nav Drawer Menu Items -->
     <string-array name="nav_drawer_items">
         <item>Soups</item>
@@ -119,7 +112,6 @@
         <item>Consomme Soup</item>
         <item>Spicy Sea Food Soup</item>
     </string-array>
-    
     <string-array name="soups_ids">
         <item>d0</item>
         <item>d1</item>
@@ -135,7 +127,7 @@
         <item>125</item>
         <item>125</item>
     </integer-array>
-    
+
     <string-array name="soups_icons">
         <item>http://files.softicons.com/download/food-drinks-icons/free-food-icons-by-daily-overview/png/48x48/chicken.png</item>
         <item>http://files.softicons.com/download/food-drinks-icons/free-food-icons-by-daily-overview/png/48x48/chicken.png</item>
@@ -143,7 +135,6 @@
         <item>http://files.softicons.com/download/food-drinks-icons/free-food-icons-by-daily-overview/png/48x48/chicken.png</item>
         <item>http://files.softicons.com/download/food-drinks-icons/free-food-icons-by-daily-overview/png/48x48/chicken.png</item>
     </string-array>
-
     <string-array name="starters">
         <item>Nachos with Cheese Sauce</item>
         <item>Italian Cheese Fingers</item>
@@ -158,7 +149,6 @@
         <item>d8</item>
         <item>d9</item>
     </string-array>
-    
     <string-array name="starters_icons">
         <item>http://files.softicons.com/download/food-drinks-icons/free-food-icons-by-daily-overview/png/48x48/chicken.png</item>
         <item>http://files.softicons.com/download/food-drinks-icons/free-food-icons-by-daily-overview/png/48x48/chicken.png</item>
@@ -182,7 +172,6 @@
         <item>Cesar Salad</item>
         <item>Chicken Hawaian Salad</item>
     </string-array>
-    
     <string-array name="salads_ids">
         <item>d10</item>
         <item>d11</item>
@@ -190,8 +179,7 @@
         <item>d14</item>
         <item>d15</item>
     </string-array>
-    
-	<string-array name="salads_icons">
+    <string-array name="salads_icons">
         <item>http://files.softicons.com/download/food-drinks-icons/free-food-icons-by-daily-overview/png/48x48/chicken.png</item>
         <item>http://files.softicons.com/download/food-drinks-icons/free-food-icons-by-daily-overview/png/48x48/chicken.png</item>
         <item>http://files.softicons.com/download/food-drinks-icons/free-food-icons-by-daily-overview/png/48x48/chicken.png</item>
@@ -215,7 +203,6 @@
         <item>Grilled Fish Sizzler</item>
         <item>Prawns Sizzler</item>
     </string-array>
-    
     <string-array name="sizzlers_ids">
         <item>d16</item>
         <item>d17</item>
@@ -224,7 +211,6 @@
         <item>d20</item>
         <item>d21</item>
     </string-array>
-    
     <string-array name="sizzlers_icons">
         <item>http://files.softicons.com/download/food-drinks-icons/free-food-icons-by-daily-overview/png/48x48/cake.png</item>
         <item>http://files.softicons.com/download/food-drinks-icons/free-food-icons-by-daily-overview/png/48x48/chicken.png</item>
@@ -242,8 +228,6 @@
         <item>325</item>
         <item>325</item>
     </integer-array>
-    
-    
 
     <string-array name="favourites">
         <item>Chicken Stroganoff</item>
@@ -251,53 +235,46 @@
         <item>Lamb Marango</item>
         <item>Lamb Stroganoff</item>
     </string-array>
-
     <string-array name="favourites_ids">
         <item>d22</item>
         <item>d23</item>
         <item>d24</item>
         <item>d25</item>
     </string-array>
-    
     <string-array name="favourites_icons">
         <item>http://files.softicons.com/download/food-drinks-icons/free-food-icons-by-daily-overview/png/48x48/chicken.png</item>
         <item>http://files.softicons.com/download/food-drinks-icons/free-food-icons-by-daily-overview/png/48x48/chicken.png</item>
         <item>http://files.softicons.com/download/food-drinks-icons/free-food-icons-by-daily-overview/png/48x48/chicken.png</item>
         <item>http://files.softicons.com/download/food-drinks-icons/free-food-icons-by-daily-overview/png/48x48/chicken.png</item>
     </string-array>
-    
-    
+
     <integer-array name="favourites_prices">
         <item>275</item>
         <item>275</item>
         <item>345</item>
         <item>345</item>
     </integer-array>
-    
+
     <string-array name="frybowl">
         <item>Make Your Bowl</item>
         <item>Chef Recommended</item>
     </string-array>
-
     <string-array name="frybowl_ids">
         <item>d26</item>
         <item>d27</item>
         <item>d28</item>
     </string-array>
-    
     <string-array name="frybowl_icons">
         <item>http://files.softicons.com/download/food-drinks-icons/free-food-icons-by-daily-overview/png/48x48/chicken.png</item>
         <item>http://files.softicons.com/download/food-drinks-icons/free-food-icons-by-daily-overview/png/48x48/chicken.png</item>
         <item>http://files.softicons.com/download/food-drinks-icons/free-food-icons-by-daily-overview/png/48x48/chicken.png</item>
     </string-array>
-    
-    
+
     <integer-array name="frybowl_prices">
         <item>375</item>
         <item>375</item>
         <item>375</item>
     </integer-array>
-    
 
     <!-- Content Description -->
     <string name="desc_list_item_icon">Item Icon</string>
@@ -306,5 +283,7 @@
     <string name="my_order_des">My Order</string>
     <string name="confirmed_order_des">Confirmed Order</string>
     <string name="history_des">History</string>
+    <string name="title_activity_splash_screen">SplashScreenActivity</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>
