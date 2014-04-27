@@ -9,6 +9,7 @@ public class Restaurant {
 	private String _id;
 	private String img;
 	private String name;
+	private String description;
 	private String address;
 	private String contactInfo;
 	private Menu menu;
@@ -98,4 +99,12 @@ public class Restaurant {
 	public String toString() {
 		return "Res = " + name + " " + menu.toString();
 	}
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }

@@ -1,48 +1,35 @@
 package com.biznow.ordernow;
 
-import java.util.ArrayList;
-
-import net.sourceforge.zbar.Symbol;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ExpandableListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.biznow.ordernow.adapter.DineInListAdapter;
 import com.biznow.ordernow.model.OrderNowConstants;
-import com.data.menu.CustomerOrderWrapper;
 import com.dm.zbar.android.scanner.ZBarConstants;
-import com.dm.zbar.android.scanner.ZBarScannerActivity;
 import com.facebook.Session;
-import com.facebook.widget.ProfilePictureView;
 import com.util.OrderNowUtilities;
 import com.util.Utilities;
 
 public class QRCodeScannerActivity extends Activity {
 
-	private static final String SAMPLE_REST_ID = "R3";
-    private static final String SAMPLE_TABLE_ID = "T20";
     private static final int ZBAR_QR_SCANNER_REQUEST = 1;
-	private ProfilePictureView profilePictureView;
-	private TextView welcome;
-	private TextView custName;
-	private Button qrCodeButton;
-	private Button openRestMenuButton;
 
 	private String activeTableId;
 	private String activeRestId;
 	private String activeRestName;
-	private ArrayList<CustomerOrderWrapper> activeSubOrderList;
+	DineInListAdapter dineInListAdapter;
+	Button deliveryButton;
+	Button historyButton;
 	
 	DisplayMetrics metrics;
 	int width;
@@ -55,52 +42,66 @@ public class QRCodeScannerActivity extends Activity {
 		
 		ExpandableListView dineInList = (ExpandableListView) findViewById(R.id.dine_in_button);
 		
-		DineInListAdapter dineInListAdapter = new DineInListAdapter(this);
+		dineInListAdapter = new DineInListAdapter(this);
 		
 		dineInList.setAdapter(dineInListAdapter);
+		
+		deliveryButton = (Button) findViewById(R.id.deliveryButton);
+		historyButton = (Button) findViewById(R.id.history_button);
+		
 		
 		//this code for adjusting the group indicator into right side of the view
 		metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         width = metrics.widthPixels;
         if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN_MR2) {
-        	dineInList.setIndicatorBounds(width-50, width);
+        	dineInList.setIndicatorBounds(width-300, width);
          } else {
-        	 dineInList.setIndicatorBoundsRelative(width-50, width);
+        	 dineInList.setIndicatorBoundsRelative(width-300, width);
          }
 
-		/*welcome = (TextView) findViewById(R.id.welcome_text);
-		custName = (TextView) findViewById(R.id.selection_profile_name);
-		qrCodeButton = (Button) findViewById(R.id.qrscan_btn);
-		openRestMenuButton = (Button) findViewById(R.id.open_res_menu);
-
-		ApplicationState applicationContext = (ApplicationState) getApplicationContext();
-		if(applicationContext.getUserName() != null && applicationContext.getUserName().trim() != "") {
-			custName.setText(applicationContext.getUserName());
-		}
-
-		if(applicationContext.getProfilePictureId() != null) {
-			profilePictureView = (ProfilePictureView) findViewById(R.id.selection_profile_pic);
-			profilePictureView.setProfileId(applicationContext.getProfilePictureId());
-		}
-
-		checkForActiveSessionAndUpdateUI();*/	
+		checkForActiveSessionAndUpdateUI();
 	}
 
 	private void checkForActiveSessionAndUpdateUI() {
 		if(activeSessionPresent()) {
-			welcome.setText("You are currently logged in " + activeRestName + " restaurant.");
-			qrCodeButton.setVisibility(View.GONE);
-			openRestMenuButton.setVisibility(View.VISIBLE);
+			
+			/*welcome.setText("You are currently logged in " + activeRestName + " restaurant.");
+			qrCodeButton.setText(getResources().getString(R.string.open_res_menu));
+			openRestMenuButton.setVisibility(View.GONE);
+			qrCodeButton.setOnClickListener(new View.OnClickListener() {
+                
+                @Override
+                public void onClick(View v) {
+                    openRestaurantMenu(v);
+                    
+                }
+            });
+			openRestMenuButton.setVisibility(View.GONE);
+			orText.setVisibility(View.GONE);*/
+			
+			dineInListAdapter.dineStatusOpenRest(activeRestName, activeRestId, activeTableId);
+			
 		} else {
-			welcome.setText(welcome.getText());
+			/*welcome.setText(welcome.getText());
 			qrCodeButton.setVisibility(View.VISIBLE);
-			if (OrderNowConstants.IS_PRODUCTION_SAMPLE_MODE) {
-				openRestMenuButton.setVisibility(View.VISIBLE);            
-				openRestMenuButton.setText("Open Sample Menu");
+			qrCodeButton.setOnClickListener(new View.OnClickListener() {
+                
+                @Override
+                public void onClick(View v) {
+                    launchQRScanner(v); 
+                }
+            });*/
+			
+			dineInListAdapter.dineStatusQRCode();
+			
+			/*if (OrderNowConstants.IS_PRODUCTION_SAMPLE_MODE) {
+				openRestMenuButton.setVisibility(View.VISIBLE);
+				orText.setVisibility(View.VISIBLE);
             } else {
             	openRestMenuButton.setVisibility(View.GONE);
-            }
+            	orText.setVisibility(View.GONE);
+            }*/
 		}
 	}
 
@@ -113,10 +114,6 @@ public class QRCodeScannerActivity extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.allhistorybutton:
-			Intent historyintent = new Intent(getApplicationContext(), AllCustomerHistoryActivity.class);
-			startActivity(historyintent);
-			return true;
 		case R.id.signOut :
 			Session session = Session.getActiveSession();
 			if (session != null && session.isOpened()) {
@@ -142,21 +139,18 @@ public class QRCodeScannerActivity extends Activity {
 	}
 
 	private boolean activeSessionPresent() {
-	    if(OrderNowConstants.IS_PRODUCTION_SAMPLE_MODE) {
-	        return false;
-	    }
-		activeTableId = OrderNowUtilities.getKeyFromSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_TABLE_ID);
-		if(activeTableId != null && activeTableId.trim() != "") {
+		String activeSession = OrderNowUtilities.getKeyFromSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_SESSION);
+		if(activeSession != null && activeSession.trim() != "" && (Boolean.valueOf(activeSession) == true)) {
+		    activeTableId = OrderNowUtilities.getKeyFromSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_TABLE_ID);
 			activeRestId = OrderNowUtilities.getKeyFromSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_RESTAURANT_ID);
 			activeRestName = OrderNowUtilities.getKeyFromSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_RESTAURANT_NAME);
-			activeSubOrderList = OrderNowUtilities.getObjectFromSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_SUB_ORDER_LIST);
 			return true;
 		}
 		return false;
 		
 	}
 
-	public void launchQRScanner(View v) {
+/*	public void launchQRScanner(View v) {
 		if (isCameraAvailable()) {
 			Intent intent = new Intent(this, ZBarScannerActivity.class);
 			intent.putExtra(ZBarConstants.SCAN_MODES, new int[] { Symbol.QRCODE });
@@ -164,20 +158,36 @@ public class QRCodeScannerActivity extends Activity {
 		} else {
 			Toast.makeText(this, "Rear Facing Camera Unavailable", Toast.LENGTH_SHORT).show();
 		}
+	}*/
+	
+	public void openHistory(View v){
+		Intent historyintent = new Intent(getApplicationContext(), AllCustomerHistoryActivity.class);
+		startActivity(historyintent);
+	}
+	
+	public void openDelivery(View v){
+		Intent intent = new Intent(this, DeliveryRestaurantActivity.class);
+        startActivity(intent);
 	}
 
-	public void openRestaurantMenu(View v) {
-		if (OrderNowConstants.IS_PRODUCTION_SAMPLE_MODE) {
-			loadRestaurantTable((ApplicationState) getApplicationContext(), SAMPLE_TABLE_ID, SAMPLE_REST_ID);
-		} else if(activeTableId != null && activeTableId.trim() != "") {
-			ApplicationState applicationContext = (ApplicationState) getApplicationContext();
-			ApplicationState.setOpenCategoryDrawer(applicationContext, true);
-			Toast.makeText(this, "Session Table Id = " + activeTableId + " Rest Id = " + activeRestId, Toast.LENGTH_SHORT).show();
+    public void openRestaurantMenu(View v) {
+        if (activeTableId != null && activeTableId.trim() != "") {
+            ApplicationState applicationContext = (ApplicationState) getApplicationContext();
+            ApplicationState.setOpenCategoryDrawer(applicationContext, true);
+            Toast.makeText(this, "Session Table Id = " + activeTableId + " Rest Id = " + activeRestId,
+                    Toast.LENGTH_SHORT).show();
 
-			Intent intent = new Intent(this, FoodMenuActivity.class);
-			startActivity(intent);				
-		} 
-	}
+            Intent intent = new Intent(this, FoodMenuActivity.class);
+            startActivity(intent);
+        }
+    }
+	
+    public void openSampleRestaurantMenu(View v) {
+        //Load all the restaurant for delivery
+        Intent intent = new Intent(this, DeliveryRestaurantActivity.class);
+        startActivity(intent);
+        //loadRestaurantTable((ApplicationState) getApplicationContext(), SAMPLE_TABLE_ID, SAMPLE_REST_ID,true);
+    }
 
 	public boolean isCameraAvailable() {
 		PackageManager pm = getPackageManager();
@@ -190,16 +200,14 @@ public class QRCodeScannerActivity extends Activity {
 		switch (requestCode) {
 		case ZBAR_QR_SCANNER_REQUEST:
 			if (resultCode == RESULT_OK) {
-				if (OrderNowConstants.IS_PRODUCTION_SAMPLE_MODE) {
-					loadRestaurantTable((ApplicationState) getApplicationContext(), SAMPLE_TABLE_ID, SAMPLE_REST_ID);
-				} else {
+				Toast.makeText(this, "To be implemented", Toast.LENGTH_SHORT).show();
 					String tableId_restID = data.getStringExtra(ZBarConstants.SCAN_RESULT);
 					String[] scanResultStrings = tableId_restID.split(" ");
 					String tableId = scanResultStrings[0];
 					String restId = (scanResultStrings.length > 1)? scanResultStrings[1] : "";
 					//Toast.makeText(this, "Table Id = " + tableId + " Rest Id = " + restId, Toast.LENGTH_SHORT).show();
-					loadRestaurantTable(applicationContext, tableId, restId);
-				}
+					loadRestaurantTable(applicationContext, tableId, restId,false);
+				
 
 			} else if(resultCode == RESULT_CANCELED && data != null) {
 				String error = data.getStringExtra(ZBarConstants.ERROR_INFO);
@@ -210,7 +218,7 @@ public class QRCodeScannerActivity extends Activity {
 		}
 	}
 
-    private void loadRestaurantTable(ApplicationState applicationContext, String tableId, String restId) {
+    private void loadRestaurantTable(ApplicationState applicationContext, String tableId, String restId, boolean sampleMenu) {
 
         //clean order stuff if present
         ApplicationState.cleanFoodMenuItemQuantityMap(applicationContext);
@@ -219,6 +227,9 @@ public class QRCodeScannerActivity extends Activity {
 
         OrderNowUtilities.putKeyToSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_TABLE_ID, tableId);
         OrderNowUtilities.putKeyToSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_RESTAURANT_ID, restId);
+        boolean activeSession = !sampleMenu;
+        OrderNowUtilities.putKeyToSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_SESSION,Boolean.toString(activeSession));
+        
         ApplicationState.setOpenCategoryDrawer(applicationContext, true);
 
         Intent intent = new Intent(this, FoodMenuActivity.class);
@@ -227,7 +238,7 @@ public class QRCodeScannerActivity extends Activity {
 
 	@Override
 	protected void onResume() {
-		//checkForActiveSessionAndUpdateUI();	
+		checkForActiveSessionAndUpdateUI();	
 		super.onResume();
 	}
 }

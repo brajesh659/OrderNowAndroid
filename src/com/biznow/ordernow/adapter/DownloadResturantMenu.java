@@ -14,6 +14,7 @@ import com.data.menu.Restaurant;
 import com.data.menu.RestaurantWrapper;
 import com.google.gson.Gson;
 import com.util.URLBuilder;
+import com.util.URLBuilder.URLAction;
 import com.util.URLBuilder.URLParam;
 import com.util.Utilities;
 
@@ -30,13 +31,13 @@ public class DownloadResturantMenu {
 	}
 
 	public Restaurant getResturant(String tableId, String restaurantId,
-			RestaurantHelper restHelper) {
+			RestaurantHelper restHelper, boolean deliverySession) {
 
-	    Utilities.info("getResturant " + tableId+restaurantId);
+	    Utilities.info("getResturant " + tableId+restaurantId+deliverySession);
 		Restaurant restaurant = null;
 		RestaurantWrapper restWrapper = null;
 		Restaurant restaurantFromDB = null;
-		if (lruResturant.get(tableId) == null) {
+		if (lruResturant.get(restaurantId) == null) {
 			String lastUpdatedAt = "-1";
 
 			// get details from db if present and pass that
@@ -48,10 +49,19 @@ public class DownloadResturantMenu {
 				}
 			}
 
-			final String urlString = new URLBuilder()
-					.addPath(URLBuilder.Path.serveTable)
-					.addParam(URLBuilder.URLParam.tableId, tableId)
-					.addParam(URLParam.lastUpdatedAt, lastUpdatedAt).build();
+			String urlString = "";
+			if(deliverySession) {
+			    urlString = new URLBuilder()
+                .addPath(URLBuilder.Path.delivery)
+                .addAction(URLAction.restData)
+                .addParam(URLBuilder.URLParam.restaurantId, restaurantId)
+                .addParam(URLParam.lastUpdatedAt, lastUpdatedAt).build();
+			} else {
+			    urlString = new URLBuilder()
+                .addPath(URLBuilder.Path.serveTable)
+                .addParam(URLBuilder.URLParam.tableId, tableId)
+                .addParam(URLParam.lastUpdatedAt, lastUpdatedAt).build();
+			}
 			
 			try {
 				URL url = new URL(urlString);
@@ -87,15 +97,15 @@ public class DownloadResturantMenu {
                     restaurant = restaurantFromDB;
                 }
 				
-				lruResturant.put(tableId, restaurant);
+				lruResturant.put(restaurantId, restaurant);
 			} catch (Exception ex) {
 				ex.printStackTrace();
 				Utilities.error("DownloadResturantMenu" + ex.getMessage()
 						+ "got exception");
 			}
 		} else {
-			Log.i("DownloadResturantMenu from cache", tableId);
+		    Utilities.info("DownloadResturantMenu from cache "+ tableId);
 		}
-		return lruResturant.get(tableId);
+		return lruResturant.get(restaurantId);
 	}
 }

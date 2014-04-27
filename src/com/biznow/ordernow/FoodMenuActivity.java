@@ -816,7 +816,12 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 	        RestaurantHelper restHelper = new RestaurantHelper(dbManager);
 			String tableId = OrderNowUtilities.getKeyFromSharedPreferences(applicationContext.getApplicationContext(), OrderNowConstants.KEY_ACTIVE_TABLE_ID);
             String resturantId = OrderNowUtilities.getKeyFromSharedPreferences(applicationContext.getApplicationContext(), OrderNowConstants.KEY_ACTIVE_RESTAURANT_ID);
-            return DownloadResturantMenu.getInstance().getResturant(tableId, resturantId,restHelper);
+            String activeDeliverySession = OrderNowUtilities.getKeyFromSharedPreferences(applicationContext.getApplicationContext(), OrderNowConstants.KEY_ACTIVE_DELIVERY_SESSION);
+            boolean deliverySession = false;
+            if(activeDeliverySession != null && activeDeliverySession.trim() != "" && (Boolean.valueOf(activeDeliverySession) == true)) {
+                deliverySession = true;
+            }
+            return DownloadResturantMenu.getInstance().getResturant(tableId, resturantId,restHelper, deliverySession);
 		}
 		
 		@Override

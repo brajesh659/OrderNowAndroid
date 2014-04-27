@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <ImageView
+        android:id="@+id/rest_photo"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/scan_qr_codes"
+        android:paddingBottom="5dp"
+        android:paddingRight="15dp"
+        android:paddingTop="5dp"
+        android:scaleType="fitXY" />
+
+    <TextView
+        android:id="@+id/rest_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/rest_photo"
+        android:paddingTop="5sp"
+        android:textColor="@color/itemNameColor"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/rest_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rest_name"
+        android:layout_toRightOf="@id/rest_photo" />
+
+    <TextView
+        android:id="@+id/rest_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rest_description"
+        android:layout_toRightOf="@id/rest_photo"
+        android:textColor="@color/itemPriceColor"
+        android:textSize="8sp"
+        android:textStyle="bold" />
+
+</RelativeLayout>

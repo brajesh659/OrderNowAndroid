@@ -9,6 +9,7 @@
     <string name="welcome_text">Scan the QR code on the table.</string>
     <string name="scan_qr_codes">Scan QR Code</string>
     <string name="open_res_menu">Open Restaurant Menu</string>
+    <string name="open_sample_res_menu">Browse Restaurants For Delivery</string>
     <string name="drawer_open">Slider Menu Opened</string>
     <string name="drawer_close">Slider Menu Closed</string>
     <string name="send_to_kitchen">"Send To Kitchen"</string>

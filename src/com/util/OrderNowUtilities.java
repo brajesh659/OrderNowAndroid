@@ -175,10 +175,14 @@ public class OrderNowUtilities {
         sharedPrefsToRemove.add(OrderNowConstants.KEY_ACTIVE_RESTAURANT_ID);
         sharedPrefsToRemove.add(OrderNowConstants.KEY_ACTIVE_TABLE_ID);
         sharedPrefsToRemove.add(OrderNowConstants.KEY_ACTIVE_SUB_ORDER_LIST);
+        sharedPrefsToRemove.add(OrderNowConstants.KEY_ACTIVE_SESSION);
+        sharedPrefsToRemove.add(OrderNowConstants.KEY_ACTIVE_DELIVERY_SESSION);
+        
         OrderNowUtilities.removeSharedPreferences(applicationContext.getApplicationContext(), sharedPrefsToRemove);
         
         //Clear the Cached History List
         ApplicationState.setMyOrderHistoryList((ApplicationState)applicationContext, null);
+        ApplicationState.setCategoryId((ApplicationState)applicationContext, -1);
     }
 
 }

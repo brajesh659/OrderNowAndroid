@@ -45,7 +45,16 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.biznow.ordernow.FoodMenuActivity" />
         </activity>
-
+        <activity
+            android:name="com.biznow.ordernow.DeliveryRestaurantActivity"
+            android:label="@string/app_name"
+            android:parentActivityName="com.biznow.ordernow.QRCodeScannerActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Holo.Light" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.biznow.ordernow.QRCodeScannerActivity" />
+        </activity>
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
@@ -205,7 +214,7 @@
 
         <activity
             android:name="com.biznow.ordernow.SplashScreenActivity"
-            android:label="@string/title_activity_splash_screen"
+            android:label="@string/app_name"
             android:noHistory="true" 
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar" >

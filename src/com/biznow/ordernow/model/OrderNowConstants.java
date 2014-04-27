@@ -29,6 +29,8 @@ public class OrderNowConstants {
     public static final String KEY_ACTIVE_RESTAURANT_ID = "ActiveRestaurantID";
     public static final String KEY_ACTIVE_RESTAURANT_NAME = "ActiveRestaurantName";
     public static final String KEY_ACTIVE_SUB_ORDER_LIST = "ActiveSubOrderList";
+    public static final String KEY_ACTIVE_SESSION = "ActiveSession";
+    public static final String KEY_ACTIVE_DELIVERY_SESSION = "ActiveDeliverySession";
 
     public static final String KEY_INGREDIENTS_SHOW_SWIPTE_TUT = "IngredientsSwipeHelp";
 
@@ -57,4 +59,5 @@ public class OrderNowConstants {
     public static final String DISH_IDS = "dishIds";
 
     public final static int STATUS_CHANGE_NOTIFICATION_ID = 0;
+
 }
