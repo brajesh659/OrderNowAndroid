@@ -2,20 +2,72 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:facebook="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#94B7DF" >
+    android:layout_height="match_parent" >
 
-    <!-- Dine in list view -->
+    <ImageView
+        android:id="@+id/background"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/food_img5" />
 
-    <ExpandableListView
+    <!-- Dine in Button -->
+
+    <Button
         android:id="@+id/dine_in_button"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="25dp"
-        android:background="#FFFFFF" />
+        android:background="#FFFFFF"
+        android:drawableLeft="@drawable/ic_action_edit"
+        android:drawablePadding="10dp"
+        android:drawableRight="@drawable/arrow_icon_down"
+        android:gravity="left|center_vertical"
+        android:onClick="openDelivery"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:text="@string/delivery_button"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <RelativeLayout
+        android:id="@+id/qrscan_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/dine_in_button"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:background="#80000000"
+        android:paddingBottom="10dp"
+        android:visibility="gone" >
+
+        <TextView
+            android:id="@+id/welcome_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="@string/welcome_text"
+            android:textColor="@color/white" />
+
+        <Button
+            android:id="@+id/qrscan_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/welcome_text"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/button_border"
+            android:paddingBottom="5dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:paddingTop="5dp"
+            android:text="@string/scan_qr_codes"
+            android:textColor="@color/black" />
+    </RelativeLayout>
 
     <!-- delivery button -->
 
@@ -23,7 +75,7 @@
         android:id="@+id/deliveryButton"
         android:layout_width="fill_parent"
         android:layout_height="60dp"
-        android:layout_below="@id/dine_in_button"
+        android:layout_below="@id/qrscan_layout"
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
@@ -32,8 +84,8 @@
         android:drawableLeft="@drawable/delivery_food"
         android:drawablePadding="10dp"
         android:gravity="left|center_vertical"
-        android:paddingLeft="10dp"
         android:onClick="openDelivery"
+        android:paddingLeft="10dp"
         android:text="@string/delivery_button"
         android:textColor="#000000"
         android:textSize="18sp"
