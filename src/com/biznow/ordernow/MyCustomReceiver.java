@@ -113,11 +113,12 @@ public class MyCustomReceiver extends BroadcastReceiver {
                 CustomerOrderWrapper sharedOrder = null ; 
                 for (CustomerOrderWrapper iCustomerOrderWrapper : subOrderList) {
                     // Sample code need to remove
-                    if(sharedOrder==null) {
-                        sharedOrder = new CustomerOrderWrapper(iCustomerOrderWrapper.getMyOrderItemList(), iCustomerOrderWrapper.getOrderNote());
-                        sharedOrder.setCustomerNameForOrder("Govind");
-                        sharedOrder.setOrder(iCustomerOrderWrapper.getOrder());
-                    }
+                    //Commented to avoid confusion for now. 
+//                    if(sharedOrder==null) {
+//                        sharedOrder = new CustomerOrderWrapper(iCustomerOrderWrapper.getMyOrderItemList(), iCustomerOrderWrapper.getOrderNote());
+//                        sharedOrder.setCustomerNameForOrder("Govind");
+//                        sharedOrder.setOrder(iCustomerOrderWrapper.getOrder());
+//                    }
                    
                     // --Remove till here-- 
                     if (order.getSubOrderId() == 0 && orderStatus.equals(OrderStatus.Complete)) { // Special case for order completion
