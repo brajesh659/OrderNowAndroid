@@ -1,6 +1,7 @@
 package com.biznow.ordernow;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Type;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,6 +41,7 @@ import com.util.AsyncURLHandler;
 import com.util.OrderNowUtilities;
 import com.util.URLBuilder;
 import com.util.Utilities;
+import com.google.gson.reflect.TypeToken;
 
 public class MyOrderActivity extends Activity implements AsyncURLHandler {
     
@@ -145,6 +147,7 @@ public class MyOrderActivity extends Activity implements AsyncURLHandler {
 		Log.i("MyOrderActivity ", restaurantId);
 		
 		CustomerOrderWrapper customerOrderWrapper = new CustomerOrderWrapper(myOrderItemList, orderNote);
+		customerOrderWrapper.setCustomerNameForOrder("My Order");
 		ApplicationState.setCustomerOrderWrapper(applicationContext, customerOrderWrapper);
 
 		Gson gs = new Gson();
@@ -200,7 +203,7 @@ public class MyOrderActivity extends Activity implements AsyncURLHandler {
 
             //cut from MyParentOrderActivity
             ArrayList<CustomerOrderWrapper> subOrderList = OrderNowUtilities.getObjectFromSharedPreferences(
-                    getApplicationContext(), OrderNowConstants.KEY_ACTIVE_SUB_ORDER_LIST);
+                    getApplicationContext(), OrderNowConstants.KEY_ACTIVE_SUB_ORDER_LIST, OrderNowConstants.typeForKey(OrderNowConstants.KEY_ACTIVE_SUB_ORDER_LIST));
             if (subOrderList == null) {
                 subOrderList = new ArrayList<CustomerOrderWrapper>();
             }

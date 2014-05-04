@@ -29,7 +29,7 @@
         android:onClick="openDelivery"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:text="@string/delivery_button"
+        android:text="@string/dine_in"
         android:textColor="#000000"
         android:textSize="18sp"
         android:textStyle="bold" />

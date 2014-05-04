@@ -19,7 +19,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.biznow.ordernow.R;
 import com.biznow.ordernow.adapter.MyParentOrderAdapter;
 import com.biznow.ordernow.model.MyOrderItem;
 import com.biznow.ordernow.model.OrderNowConstants;
@@ -49,8 +48,8 @@ public class MyParentOrderActivity extends Activity implements AsyncURLHandler {
 		filter.addAction(OrderNowConstants.ORDER_STATUS_RESET);
 		
         Float totalOrderAmount = (float) 0.00;
-        ApplicationState applicationContext = (ApplicationState)getApplicationContext();
-        subOrderList = OrderNowUtilities.getObjectFromSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_SUB_ORDER_LIST);
+        subOrderList = OrderNowUtilities.getObjectFromSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_SUB_ORDER_LIST,  OrderNowConstants.typeForKey(OrderNowConstants.KEY_ACTIVE_SUB_ORDER_LIST));
+
         if(subOrderList==null){
             subOrderList = new ArrayList<CustomerOrderWrapper>();
         }
@@ -60,11 +59,13 @@ public class MyParentOrderActivity extends Activity implements AsyncURLHandler {
         CustomerOrderWrapper customerOrderWrapper = ApplicationState.getCustomerOrderWrapper((ApplicationState)getApplicationContext());
         Utilities.info("Utilities + " + orderStatus.toString());
         
+        
         if(customerOrderWrapper !=null) { 
             subOrderList.add(customerOrderWrapper);
         }
 		
 		setContentView(R.layout.my_parent_order_summary);
+		
 		TextView totalAmount = (TextView) findViewById(R.id.parentTotalAmount);
         Button requestBillButton = (Button) findViewById(R.id.requestBillButton);
 		setTitle("Confirmed Order");
@@ -79,6 +80,7 @@ public class MyParentOrderActivity extends Activity implements AsyncURLHandler {
 		totalAmount.setText(OrderNowConstants.INDIAN_RUPEE_UNICODE + " " + Float.toString(totalOrderAmount));
 
 		ListView subOrderListView = (ListView) findViewById(R.id.subOrderList);
+		
 		myParentOrderAdapter = new MyParentOrderAdapter(this, subOrderList);
 		subOrderListView.setAdapter(myParentOrderAdapter);
 		myParentOrderAdapter.notifyDataSetChanged();
@@ -184,11 +186,13 @@ public class MyParentOrderActivity extends Activity implements AsyncURLHandler {
 	protected void onNewIntent(Intent intent) {
 	    super.onNewIntent(intent);
 	    Utilities.info("on new intent "+intent.getAction());
+	    ArrayList<CustomerOrderWrapper> subOrderList = OrderNowUtilities.<ArrayList<CustomerOrderWrapper>>getObjectFromSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_SUB_ORDER_LIST,  OrderNowConstants.typeForKey(OrderNowConstants.KEY_ACTIVE_SUB_ORDER_LIST));
+	    OrderNowUtilities.putObjectToSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_SUB_ORDER_LIST, subOrderList);
 	    refreshConfirmedOrderView();
 	}
 
     private void refreshConfirmedOrderView() {
-        ArrayList<CustomerOrderWrapper> subOrderList = OrderNowUtilities.getObjectFromSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_SUB_ORDER_LIST);
+        ArrayList<CustomerOrderWrapper> subOrderList = OrderNowUtilities.<ArrayList<CustomerOrderWrapper>>getObjectFromSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_SUB_ORDER_LIST,  OrderNowConstants.typeForKey(OrderNowConstants.KEY_ACTIVE_SUB_ORDER_LIST));
 	    myParentOrderAdapter.clear();
 	    myParentOrderAdapter.addAll(subOrderList);
 	    myParentOrderAdapter.notifyDataSetChanged();

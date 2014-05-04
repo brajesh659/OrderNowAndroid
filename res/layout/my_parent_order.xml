@@ -3,11 +3,31 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white" >
+  <!-- Header aligned to top -->
 
+    <RelativeLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true" >
+
+        <TextView
+            android:id="@+id/headerText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dp"
+            android:text="My Order"
+            android:textSize="14sp"
+            android:textColor="@color/vpi__background_holo_dark"
+            android:textStyle="italic"
+            android:typeface="sans" />        
+    </RelativeLayout>
+    
     <LinearLayout
         android:id="@+id/subOrderItemListLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/header"
         android:gravity="center_vertical"
         android:orientation="vertical" >
     </LinearLayout>

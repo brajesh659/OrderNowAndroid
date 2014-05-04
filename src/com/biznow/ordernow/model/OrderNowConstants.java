@@ -1,6 +1,14 @@
 package com.biznow.ordernow.model;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+
+import com.data.menu.CustomerOrderWrapper;
+import com.google.gson.reflect.TypeToken;
+import com.util.OrderNowUtilities;
+import com.util.Utilities;
 
 public class OrderNowConstants {
     public static final String ORDER_COMPLETED = "com.example.orderCompleted";
@@ -14,6 +22,8 @@ public class OrderNowConstants {
     public static boolean IS_DEBUG_MODE = false;
     public static boolean IS_LOCAL_RESTURANT_ENABLED = false;
     public static boolean IS_PRODUCTION_SAMPLE_MODE = true;
+
+    public static String KEY_ACTIVE_SHARED_ORDER = "SharedOrder";
 
     public static final String ORDER_STATUS_RESET = "com.example.orderstatusreset";
     public static final String TEXT_COMMENT = "TextComment"; // FIXME: Make the
@@ -59,5 +69,18 @@ public class OrderNowConstants {
     public static final String DISH_IDS = "dishIds";
 
     public final static int STATUS_CHANGE_NOTIFICATION_ID = 0;
+    public static final Map<String, Type> sharedPreferenceTypeForKey = new HashMap<String, Type>();
+
+    static {
+        final Type typeForSharedOrder = new TypeToken<CustomerOrderWrapper>(){}.getType();
+        final Type typeForSubOrderList = new TypeToken<ArrayList<CustomerOrderWrapper>>(){}.getType();
+        sharedPreferenceTypeForKey.put(KEY_ACTIVE_SUB_ORDER_LIST, typeForSubOrderList);
+        sharedPreferenceTypeForKey.put(KEY_ACTIVE_SHARED_ORDER, typeForSharedOrder);
+    };
+    
+    public static Type typeForKey(String key) {
+        return sharedPreferenceTypeForKey.get(key);
+    }
+    
 
 }

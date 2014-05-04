@@ -28,7 +28,8 @@ public class CustomerOrderWrapper implements Serializable {
     private ArrayList<MyOrderItem> myOrderItemList;
     private String orderNote;
     private Order orderId;
-    private boolean resturantacknowledgement = false; 
+    private boolean resturantacknowledgement = false;
+    private String customerNameForOrder = "My order";
 
     public CustomerOrderWrapper(ArrayList<MyOrderItem> myOrderItemList, String orderNote) {
         super();
@@ -56,18 +57,14 @@ public class CustomerOrderWrapper implements Serializable {
         String restaurantId = OrderNowUtilities.getKeyFromSharedPreferences(applicationContext.getApplicationContext(), OrderNowConstants.KEY_ACTIVE_RESTAURANT_ID);
         String restaurantName = OrderNowUtilities.getKeyFromSharedPreferences(
                 applicationContext.getApplicationContext(), OrderNowConstants.KEY_ACTIVE_RESTAURANT_NAME);
-        CharSequence text = ParseInstallation.getCurrentInstallation().getObjectId();
+        CharSequence customerId = ParseInstallation.getCurrentInstallation().getObjectId();
         String tableId = OrderNowUtilities.getKeyFromSharedPreferences(applicationContext.getApplicationContext(), OrderNowConstants.KEY_ACTIVE_TABLE_ID);
-        CustomerOrder customerOrder = new CustomerOrder(dishes, restaurantId, restaurantName, text.toString(), tableId, orderNote);
+        CustomerOrder customerOrder = new CustomerOrder(dishes, restaurantId, restaurantName, customerId.toString(), tableId, orderNote);
         return customerOrder;
     }
 
     public ArrayList<MyOrderItem> getMyOrderItemList() {
         return myOrderItemList;
-    }
-
-    public void setMyOrderItemList(ArrayList<MyOrderItem> myOrderItemList) {
-        this.myOrderItemList = myOrderItemList;
     }
 
     public void modifyItemStatus(OrderStatus orderStatus, List<String> unAvailableItems) {
@@ -105,5 +102,17 @@ public class CustomerOrderWrapper implements Serializable {
 
     public void setResturantacknowledgement(boolean resturantacknowledgement) {
         this.resturantacknowledgement = resturantacknowledgement;
+    }
+
+    public String getCustomerNameForOrder() {
+        return customerNameForOrder ;
+    }
+
+    public void setCustomerNameForOrder(String customerNameForOrder) {
+        this.customerNameForOrder = customerNameForOrder;
+    }
+
+    public String getOrderNote() {
+        return orderNote;
     }
 }

@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.data.menu.CustomerOrderWrapper;
@@ -40,7 +41,12 @@ public class MyParentOrderAdapter extends ArrayAdapter<CustomerOrderWrapper> {
 		//Implement a List View inside a List View Example
 		LinearLayout list = (LinearLayout) convertView.findViewById(R.id.subOrderItemListLinearLayout);
 		list.removeAllViews();
+		RelativeLayout headerLayout = (RelativeLayout) convertView.findViewById(R.id.header);
+		TextView listHeader = (TextView)headerLayout.findViewById(R.id.headerText);
 		CustomerOrderWrapper customerOrderWrapper = subOrderList.get(position);
+
+		listHeader.setText(customerOrderWrapper.getCustomerNameForOrder());
+		
 		for (MyOrderItem myOrderItem : customerOrderWrapper.getMyOrderItemList()) {
 		    OrderStatus orderStatus = myOrderItem.getItemStatus();
 			LayoutInflater li = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);

@@ -412,7 +412,7 @@ public final class Utilities {
 	}
 
 	public static void info(String message) {
-		//Log.i(TRACE_TAG, message);
+		Log.i(TRACE_TAG, message);
 	}
 
 	public static void error(String message) {

@@ -109,7 +109,7 @@ public class OrderNowUtilities {
 		prefsEditor.commit();
 	}
 
-	public static void putObjectToSharedPreferences(Context context, String key, ArrayList<CustomerOrderWrapper> subOrderList) {
+	public static <T> void putObjectToSharedPreferences(Context context, String key, T subOrderList) {
 		Gson gson = new Gson();
 		String json = gson.toJson(subOrderList);
 		Editor prefsEditor = getSharedPreferencesEditor(context);
@@ -118,12 +118,11 @@ public class OrderNowUtilities {
 		Utilities.info("SharedPrefs Object put key " + key + " value " + json);
 	}
 
-	public static ArrayList<CustomerOrderWrapper> getObjectFromSharedPreferences(Context context, String key) {
+	public static <T> T getObjectFromSharedPreferences(Context context, String key, Type typeOfT) {
 		SharedPreferences preferences = getSharedPreferences(context);
 		String json = preferences.getString(key, "");
 		Gson gson = new Gson();
-		Type type = new TypeToken<ArrayList<CustomerOrderWrapper>>(){}.getType();
-		ArrayList<CustomerOrderWrapper> subOrderList = gson.fromJson(json, type);
+		T subOrderList = gson.fromJson(json, typeOfT);
 		Utilities.info("SharedPrefs Object get key " + key + " value "+ json);
 		return subOrderList;
 	}
