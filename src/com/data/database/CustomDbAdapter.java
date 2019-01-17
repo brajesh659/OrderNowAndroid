@@ -22,7 +22,7 @@ public class CustomDbAdapter implements DatabaseManager {
 	private static CustomDbAdapter instance;
 
 	public static final String DATABASE_NAME = "OrderNow.db";
-	public static final int DATABASE_VERSION = 1;
+	public static final int DATABASE_VERSION = 2;
 
 	/**
 	 * Constructor - takes context to allow the database to be opened/created

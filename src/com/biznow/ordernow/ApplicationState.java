@@ -31,6 +31,54 @@ public class ApplicationState extends Application {
 	private ArrayList<RestaurantOrder> myOrderHistoryList;
 	private boolean openCategoryDrawer = true;
 	private int childCategoryId = 0;
+	private String firstName;
+	private String lastName;
+	private String facebookId;
+	private String phoneNo;
+	private String parseId;
+	
+	
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	
+	public String getFacebookId() {
+		return facebookId;
+	}
+
+	public void setFacebookId(String facebookId) {
+		this.facebookId = facebookId;
+	}
+	
+	public String getPhoneNo() {
+		return phoneNo;
+	}
+
+	public void setPhoneNo(String phoneNo) {
+		this.phoneNo = phoneNo;
+	}
+
+	public String getParseId() {
+		return parseId;
+	}
+
+	public void setParseId(String parseId) {
+		this.parseId = parseId;
+	}
 
 	public ApplicationState() {
 		menuFilter = new MenuFilter();

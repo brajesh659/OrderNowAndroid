@@ -1,18 +1,22 @@
 package com.biznow.ordernow.fragments;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.biznow.ordernow.AllCustomerHistoryActivity;
 import com.biznow.ordernow.ApplicationState;
 import com.biznow.ordernow.FoodMenuActivity;
 import com.biznow.ordernow.QRCodeScannerActivity;
 import com.biznow.ordernow.R;
 import com.biznow.ordernow.model.OrderNowConstants;
+import com.data.customers.Customer;
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.Session;
@@ -20,7 +24,12 @@ import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
+import com.google.gson.Gson;
+import com.parse.ParseInstallation;
+import com.util.AsyncNetwork;
 import com.util.OrderNowUtilities;
+import com.util.URLBuilder;
+import com.util.Utilities;
 
 public class LoginFragment extends Fragment {
 
@@ -59,7 +68,26 @@ public class LoginFragment extends Fragment {
                         if (user != null) {
                             applicationContext.setUserName(user.getFirstName() + " " + user.getLastName());
                             applicationContext.setProfilePictureId(user.getId());
-
+                            applicationContext.setFacebookId(user.getUsername());
+                            applicationContext.setFirstName(user.getFirstName());
+                            applicationContext.setLastName(user.getLastName());
+                            applicationContext.setParseId(ParseInstallation.getCurrentInstallation().getObjectId().toString());
+                            try {
+                            	Gson gson = new Gson();
+                            	Customer customerData = new Customer(null, user.getFirstName(), user.getLastName(), null, 
+                            		ParseInstallation.getCurrentInstallation().getObjectId().toString(), user.getUsername());
+                            
+                            	String url = new URLBuilder().
+                            		addPath(URLBuilder.Path.custInfo).
+                            		addParam(URLBuilder.URLParam.custData, gson.toJson(customerData).toString())
+                            		.build();
+                            
+                            	Utilities.info("URL: " + url);
+                            	new AsyncNetwork().execute(url);
+                            } catch(Exception e) {
+                            	// Handle errors, will do so later.
+                            }
+                            
                             if (!OrderNowConstants.IS_DEBUG_MODE) {
                                 Intent intent = new Intent(applicationContext, QRCodeScannerActivity.class);
                                 activityInstance.startActivity(intent);
@@ -67,6 +95,7 @@ public class LoginFragment extends Fragment {
                             } else {
                                 OrderNowUtilities.putKeyToSharedPreferences(applicationContext, OrderNowConstants.KEY_ACTIVE_TABLE_ID, "T1");
                                 OrderNowUtilities.putKeyToSharedPreferences(applicationContext, OrderNowConstants.KEY_ACTIVE_RESTAURANT_ID, "R1");
+                                
                                 Intent intent = new Intent(applicationContext, FoodMenuActivity.class);
                                 activityInstance.startActivity(intent);
                                 activityInstance.finish();

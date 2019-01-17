@@ -1,6 +1,7 @@
 package com.biznow.ordernow;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -73,6 +74,7 @@ import com.data.menu.MenuPropertyKey;
 import com.data.menu.MenuPropertyValue;
 import com.data.menu.Restaurant;
 import com.dm.zbar.android.scanner.ZBarConstants;
+import com.google.gson.reflect.TypeToken;
 import com.util.AsyncNetwork;
 import com.util.OrderNowUtilities;
 import com.util.URLBuilder;
@@ -264,7 +266,7 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 
 
 	private void startParentOrderActivity(final Context context) {
-		ArrayList<CustomerOrderWrapper> subOrderList = OrderNowUtilities.getObjectFromSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_SUB_ORDER_LIST);
+	    ArrayList<CustomerOrderWrapper> subOrderList = OrderNowUtilities.<ArrayList<CustomerOrderWrapper>> getObjectFromSharedPreferences(getApplicationContext(), OrderNowConstants.KEY_ACTIVE_SUB_ORDER_LIST,  OrderNowConstants.typeForKey(OrderNowConstants.KEY_ACTIVE_SUB_ORDER_LIST));
 		if (subOrderList !=null && subOrderList.size() >= 1) {
 			Intent intent = new Intent(context, MyParentOrderActivity.class);
 			startActivity(intent);
@@ -816,7 +818,12 @@ SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
 	        RestaurantHelper restHelper = new RestaurantHelper(dbManager);
 			String tableId = OrderNowUtilities.getKeyFromSharedPreferences(applicationContext.getApplicationContext(), OrderNowConstants.KEY_ACTIVE_TABLE_ID);
             String resturantId = OrderNowUtilities.getKeyFromSharedPreferences(applicationContext.getApplicationContext(), OrderNowConstants.KEY_ACTIVE_RESTAURANT_ID);
-            return DownloadResturantMenu.getInstance().getResturant(tableId, resturantId,restHelper);
+            String activeDeliverySession = OrderNowUtilities.getKeyFromSharedPreferences(applicationContext.getApplicationContext(), OrderNowConstants.KEY_ACTIVE_DELIVERY_SESSION);
+            boolean deliverySession = false;
+            if(activeDeliverySession != null && activeDeliverySession.trim() != "" && (Boolean.valueOf(activeDeliverySession) == true)) {
+                deliverySession = true;
+            }
+            return DownloadResturantMenu.getInstance().getResturant(tableId, resturantId,restHelper, deliverySession);
 		}
 		
 		@Override

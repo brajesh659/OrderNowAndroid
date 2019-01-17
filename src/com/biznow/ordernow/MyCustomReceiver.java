@@ -1,5 +1,6 @@
 package com.biznow.ordernow;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -22,6 +23,7 @@ import com.biznow.ordernow.model.Order;
 import com.biznow.ordernow.model.OrderNowConstants;
 import com.biznow.ordernow.model.OrderStatus;
 import com.data.menu.CustomerOrderWrapper;
+import com.google.gson.reflect.TypeToken;
 import com.util.OrderNowUtilities;
 import com.util.Utilities;
 
@@ -102,17 +104,29 @@ public class MyCustomReceiver extends BroadcastReceiver {
             Order order = new Order(orderId, subOrderId);
             boolean isNotificationRequired = true;
             if (isStatusModificationRequired(action)) {
-                ArrayList<CustomerOrderWrapper> subOrderList = OrderNowUtilities.getObjectFromSharedPreferences(context, OrderNowConstants.KEY_ACTIVE_SUB_ORDER_LIST);
+                ArrayList<CustomerOrderWrapper> subOrderList = OrderNowUtilities.<ArrayList<CustomerOrderWrapper>> getObjectFromSharedPreferences(context, OrderNowConstants.KEY_ACTIVE_SUB_ORDER_LIST, OrderNowConstants.typeForKey(OrderNowConstants.KEY_ACTIVE_SUB_ORDER_LIST));
 
                 if(subOrderList == null){
                     return ;
                 }
 
+                CustomerOrderWrapper sharedOrder = null ; 
                 for (CustomerOrderWrapper iCustomerOrderWrapper : subOrderList) {
+                    // Sample code need to remove
+                    //Commented to avoid confusion for now. 
+//                    if(sharedOrder==null) {
+//                        sharedOrder = new CustomerOrderWrapper(iCustomerOrderWrapper.getMyOrderItemList(), iCustomerOrderWrapper.getOrderNote());
+//                        sharedOrder.setCustomerNameForOrder("Govind");
+//                        sharedOrder.setOrder(iCustomerOrderWrapper.getOrder());
+//                    }
+                   
+                    // --Remove till here-- 
                     if (order.getSubOrderId() == 0 && orderStatus.equals(OrderStatus.Complete)) { // Special case for order completion
                         isNotificationRequired = false;
                         iCustomerOrderWrapper.modifyItemStatus(orderStatus, unAvailableDishes);
                     } else {
+//                        
+//                        
                         isNotificationRequired = true;
                         if (iCustomerOrderWrapper.getOrder().equals(order)) {
                             Utilities.info("Modify order" + order.toString() + " to OrderStatus " + orderStatus);
@@ -120,9 +134,12 @@ public class MyCustomReceiver extends BroadcastReceiver {
                         }
                     }
                 }
-
+                
+                if (sharedOrder != null) {
+                    subOrderList.add(sharedOrder);
+                }
                 OrderNowUtilities.putObjectToSharedPreferences(context, OrderNowConstants.KEY_ACTIVE_SUB_ORDER_LIST, subOrderList);
-
+                
                 OrderNowUtilities.orderStatusResetReceiver(context, message, isNotificationRequired);
 
             } else {
